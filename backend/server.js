@@ -97,7 +97,6 @@ function computeGigScore(data) {
   const varianceHours = hours.reduce((a, b) => a + Math.pow(b - meanHours, 2), 0) / n;
   const stdDevHours = Math.sqrt(varianceHours);
   
-  // Consistency is higher when variation is low and mean hours meet reasonable target (~8 hours)
   const hoursConsistency = Math.max(0, 1 - (stdDevHours / (meanHours || 1)));
   const hoursIntensity = Math.min(1, meanHours / 8.5);
   const hoursScoreNormalized = Math.min(1, Math.max(0, (hoursConsistency * 0.6) + (hoursIntensity * 0.4)));
@@ -105,7 +104,6 @@ function computeGigScore(data) {
   // 2. Platform Customer Rating (35% weight)
   const ratings = data.map(d => d.platform_rating);
   const meanRating = ratings.reduce((a, b) => a + b, 0) / n;
-  // Scaled from 4.0 (min acceptable) to 5.0 (perfect)
   const ratingScoreNormalized = Math.min(1, Math.max(0, (meanRating - 4.2) / 0.8));
 
   // 3. Income Regularity across 30 days (30% weight)
@@ -115,7 +113,6 @@ function computeGigScore(data) {
   const stdDevIncome = Math.sqrt(varianceIncome);
   const coefficientOfVariation = stdDevIncome / (meanIncome || 1);
   
-  // High consistency = low coefficient of variation. Benchmark CV: 0.35
   const incomeRegularityNormalized = Math.min(1, Math.max(0, 1 - (coefficientOfVariation / 0.9)));
 
   // Final Composite GIG-Score computation (Range: 300 to 800)
@@ -218,7 +215,28 @@ app.get('/api/dashboard-data', (req, res) => {
 });
 
 /**
- * 2. POST /api/smooth-income
+ * 2. POST /api/update-profile
+ * Updates the active logged-in worker profile dynamically
+ */
+app.post('/api/update-profile', (req, res) => {
+  const { name, platform, city, hub, phone } = req.body;
+  if (name && name.trim()) appState.workerProfile.name = name.trim();
+  if (platform) {
+    appState.workerProfile.platforms = Array.isArray(platform) ? platform : [platform];
+  }
+  if (city) appState.workerProfile.city = city;
+  if (hub) appState.workerProfile.hub = hub;
+  if (phone) appState.workerProfile.phone = phone;
+
+  res.json({
+    success: true,
+    message: 'Worker profile updated successfully.',
+    worker: appState.workerProfile
+  });
+});
+
+/**
+ * 3. POST /api/smooth-income
  * Takes { daily_income, target_baseline = 1000 }
  * - If daily_income > target_baseline: Auto-sweeps difference into vault_balance
  * - If daily_income < target_baseline: Disburses shortfall from vault_balance into main_balance
@@ -298,12 +316,8 @@ app.post('/api/smooth-income', (req, res) => {
 });
 
 /**
- * 3. POST /api/calculate-gigscore
- * Calculates work-based credit rating (300 to 800) using:
- * - Active Hours consistency (35% weight)
- * - Platform Customer Rating (35% weight)
- * - Income regularity across 30 days (30% weight)
- * Returns { gig_score, risk_category, max_eligible_credit }
+ * 4. POST /api/calculate-gigscore
+ * Calculates work-based credit rating (300 to 800)
  */
 app.post('/api/calculate-gigscore', (req, res) => {
   const customData = req.body.data && Array.isArray(req.body.data) ? req.body.data : historicalData;
@@ -315,7 +329,7 @@ app.post('/api/calculate-gigscore', (req, res) => {
 });
 
 /**
- * 4. POST /api/request-advance
+ * 5. POST /api/request-advance
  * Takes { requested_amount }, verifies eligibility against gig_score,
  * and credits funds instantly into main_balance with automated repayment schedule against upcoming shifts.
  */
@@ -354,7 +368,7 @@ app.post('/api/request-advance', (req, res) => {
       shift_number: i,
       deduction_date: shiftDate.toISOString().split('T')[0],
       amount: i === installmentCount ? (requestedAmount - (perShiftDeduction * (installmentCount - 1))) : perShiftDeduction,
-      source: 'Auto-deducted from daily Swiggy/Uber platform settlement',
+      source: 'Auto-deducted from daily platform settlement',
       status: 'SCHEDULED'
     });
   }
@@ -366,7 +380,7 @@ app.post('/api/request-advance', (req, res) => {
     processing_fee: 0,
     timestamp: new Date().toISOString(),
     status: 'DISBURSED',
-    disbursed_to: 'UPI / Kumar Main Liquid Wallet',
+    disbursed_to: `UPI / ${appState.workerProfile.name} Wallet`,
     installments: installmentCount,
     per_shift_deduction: perShiftDeduction,
     repayment_schedule: repaymentSchedule
@@ -383,8 +397,8 @@ app.post('/api/request-advance', (req, res) => {
     amount: requestedAmount,
     vault_balance_after: appState.vaultBalance,
     main_balance_after: appState.mainBalance,
-    message: `Instant shift-backed advance of ₹${requestedAmount.toLocaleString('en-IN')} credited to Main Wallet.`,
-    message_ta: `₹${requestedAmount.toLocaleString('en-IN')} உடனடி பணி சார்ந்த முன்பணம் உங்கள் பணப்பையில் சேர்க்கப்பட்டது.`
+    message: `Instant shift-backed advance of ₹${requestedAmount.toLocaleString('en-IN')} credited to ${appState.workerProfile.name}'s Wallet.`,
+    message_ta: `₹${requestedAmount.toLocaleString('en-IN')} உடனடி பணி முன்பணம் ${appState.workerProfile.name} பணப்பையில் சேர்க்கப்பட்டது.`
   });
 
   res.json({
@@ -398,8 +412,7 @@ app.post('/api/request-advance', (req, res) => {
 });
 
 /**
- * 5. GET /api/weather-surge
- * Real-time weather and gig surge demand advisory for Chennai
+ * 6. GET /api/weather-surge
  */
 app.get('/api/weather-surge', (req, res) => {
   res.json({
@@ -417,11 +430,17 @@ app.get('/api/weather-surge', (req, res) => {
 });
 
 /**
- * 6. POST /api/reset-demo
- * Helper endpoint to reset balances and records for easy live presentation
+ * 7. POST /api/reset-demo
  */
 app.post('/api/reset-demo', (req, res) => {
+  const currentWorker = JSON.parse(JSON.stringify(appState.workerProfile));
   appState = JSON.parse(JSON.stringify(DEFAULT_STATE));
+  // Preserve custom name if user logged in
+  if (currentWorker && currentWorker.name) {
+    appState.workerProfile.name = currentWorker.name;
+    appState.workerProfile.platforms = currentWorker.platforms;
+    appState.workerProfile.city = currentWorker.city;
+  }
   res.json({
     success: true,
     message: 'Demo state successfully reset to initial defaults.',

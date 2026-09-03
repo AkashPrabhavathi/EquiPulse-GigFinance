@@ -39,7 +39,7 @@
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
   <!-- FontAwesome Icons -->
@@ -85,7 +85,110 @@
     }
   </style>
 </head>
-<body class="min-h-screen text-slate-100 antialiased selection:bg-brand-500 selection:text-white">
+<body class="min-h-screen text-slate-100 antialiased selection:bg-brand-500 selection:text-white relative">
+
+  <!-- ============================================================== -->
+  <!-- 🔐 FRONT LOGIN OVERLAY MODAL                                   -->
+  <!-- ============================================================== -->
+  <div id="loginOverlay" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/90 backdrop-blur-xl transition-all duration-500">
+    <div class="glass-card bg-slate-900/95 border border-slate-700/80 rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl relative overflow-hidden">
+      <!-- Glow decoration -->
+      <div class="absolute -top-16 -right-16 w-36 h-36 bg-brand-500/20 rounded-full blur-2xl pointer-events-none"></div>
+      <div class="absolute -bottom-16 -left-16 w-36 h-36 bg-accent-500/20 rounded-full blur-2xl pointer-events-none"></div>
+
+      <!-- Header Icon & Brand -->
+      <div class="text-center mb-6">
+        <div class="w-14 h-14 mx-auto rounded-2xl bg-gradient-to-tr from-brand-600 via-brand-500 to-accent-400 flex items-center justify-center text-white text-2xl shadow-lg glow-emerald mb-3">
+          <i class="fa-solid fa-bolt"></i>
+        </div>
+        <h2 class="text-2xl font-black tracking-tight text-white flex items-center justify-center gap-2">
+          <span>EquiPulse</span>
+          <span class="text-xs px-2 py-0.5 rounded-full bg-brand-500/20 text-brand-400 border border-brand-500/30">Partner Login</span>
+        </h2>
+        <p class="text-xs text-slate-400 mt-1" data-i18n="loginSub">Enter your name to access your AI Income Smoother & GIG-Score</p>
+      </div>
+
+      <!-- Form -->
+      <form id="loginForm" onsubmit="handleLoginSubmit(event)" class="space-y-4">
+        <!-- Name Input -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1.5" data-i18n="loginNameLabel">
+            Gig Worker / Partner Name: <span class="text-rose-400">*</span>
+          </label>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+              <i class="fa-solid fa-user text-xs"></i>
+            </span>
+            <input type="text" id="loginNameInput" required placeholder="e.g. Akash S. / குமார்" class="w-full pl-9 pr-3 py-2.5 rounded-xl bg-slate-800/90 border border-slate-700 text-white placeholder-slate-500 text-sm font-semibold focus:outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-500/30 transition-all">
+          </div>
+          <p class="text-[11px] text-brand-400/90 mt-1" data-i18n="loginNameHint">💡 This name will appear across your live dashboard & reports</p>
+        </div>
+
+        <!-- Platform Select -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1.5" data-i18n="loginPlatformLabel">
+            Primary Gig Platform:
+          </label>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+              <i class="fa-solid fa-motorcycle text-xs"></i>
+            </span>
+            <select id="loginPlatformSelect" class="w-full pl-9 pr-8 py-2.5 rounded-xl bg-slate-800/90 border border-slate-700 text-white text-xs font-medium focus:outline-none focus:border-brand-400">
+              <option value="Swiggy Super-Partner & Uber Auto">Swiggy Super-Partner & Uber Auto</option>
+              <option value="Swiggy Delivery Partner">Swiggy Delivery Partner (Food & Instamart)</option>
+              <option value="Zomato Delivery Fleet">Zomato Delivery Fleet</option>
+              <option value="Uber Premier Auto / Moto Captain">Uber Premier Auto / Moto Captain</option>
+              <option value="Ola Cabs & Auto Captain">Ola Cabs & Auto Captain</option>
+              <option value="Zepto & Blinkit Express Rider">Zepto & Blinkit Express Rider</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- City & Hub Select -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1.5" data-i18n="loginCityLabel">
+            City & Operating Hub:
+          </label>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+              <i class="fa-solid fa-location-dot text-xs"></i>
+            </span>
+            <select id="loginCitySelect" class="w-full pl-9 pr-8 py-2.5 rounded-xl bg-slate-800/90 border border-slate-700 text-white text-xs font-medium focus:outline-none focus:border-brand-400">
+              <option value="Chennai Hub (T. Nagar / Velachery / OMR)">Chennai Hub (T. Nagar / Velachery / OMR)</option>
+              <option value="Chennai South (Guindy / Airport / Tambaram)">Chennai South (Guindy / Airport / Tambaram)</option>
+              <option value="Bengaluru Hub (Koramangala / HSR / Indiranagar)">Bengaluru Hub (Koramangala / HSR / Indiranagar)</option>
+              <option value="Coimbatore Hub (RS Puram / Gandhipuram)">Coimbatore Hub (RS Puram / Gandhipuram)</option>
+              <option value="Hyderabad Hub (Madhapur / Hitec City)">Hyderabad Hub (Madhapur / Hitec City)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Quick 1-Click Demo Profiles -->
+        <div class="pt-1">
+          <span class="text-[11px] text-slate-400 block mb-1.5 font-medium" data-i18n="loginQuickPillLabel">Or select a quick demo profile:</span>
+          <div class="flex flex-wrap gap-1.5">
+            <button type="button" onclick="fillQuickLogin('Akash S.', 'Uber Premier Auto / Moto Captain', 'Chennai Hub (T. Nagar / Velachery / OMR)')" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 text-[11px] font-medium transition-colors">
+              ⚡ Akash S.
+            </button>
+            <button type="button" onclick="fillQuickLogin('Kumaravel S. (குமார்)', 'Swiggy Super-Partner & Uber Auto', 'Chennai Hub (T. Nagar / Velachery / OMR)')" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 text-[11px] font-medium transition-colors">
+              🛵 Kumaravel S.
+            </button>
+            <button type="button" onclick="fillQuickLogin('Priya M.', 'Zepto & Blinkit Express Rider', 'Chennai South (Guindy / Airport / Tambaram)')" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 text-[11px] font-medium transition-colors">
+              📦 Priya M.
+            </button>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="pt-2">
+          <button type="submit" id="loginBtn" class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-brand-500 via-brand-600 to-emerald-700 hover:from-brand-400 hover:to-emerald-600 text-white font-bold text-sm shadow-lg glow-emerald flex items-center justify-center gap-2 transition-all">
+            <span data-i18n="loginSubmitBtn">Launch Partner Dashboard</span>
+            <i class="fa-solid fa-arrow-right text-xs"></i>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
 
   <!-- Top Notification Toast -->
   <div id="toast" class="fixed top-5 right-5 z-50 transform translate-x-full transition-transform duration-300 max-w-md p-4 rounded-xl shadow-2xl flex items-start gap-3 bg-slate-800 border border-slate-700 text-slate-100 pointer-events-none">
@@ -93,7 +196,7 @@
       <i class="fa-solid fa-check"></i>
     </div>
     <div class="flex-1">
-      <h4 id="toastTitle" class="font-bold text-sm text-white">Transaction Recorded</h4>
+      <h4 id="toastTitle" class="font-bold text-sm text-white">Notice</h4>
       <p id="toastMessage" class="text-xs text-slate-300 mt-1">Details will appear here.</p>
     </div>
   </div>
@@ -116,25 +219,31 @@
         </div>
       </div>
 
-      <!-- User Badge -->
-      <div class="hidden md:flex items-center gap-3 px-4 py-2 rounded-xl bg-slate-800/60 border border-slate-700/60">
-        <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center text-sm font-bold text-white shadow">
-          கு
+      <!-- Center / User Badge (Dynamically Updated with Login Name!) -->
+      <div class="flex items-center gap-3 px-4 py-2 rounded-xl bg-slate-800/60 border border-slate-700/60 cursor-pointer hover:border-slate-600 transition-all" onclick="showLoginModal()" title="Click to switch partner / rename">
+        <div id="userAvatar" class="w-9 h-9 rounded-full bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center text-sm font-bold text-white shadow">
+          A
         </div>
         <div class="text-left">
           <div class="flex items-center gap-2">
-            <span class="text-sm font-bold text-slate-200" id="userName">Kumaravel S. (குமார்)</span>
+            <span class="text-sm font-bold text-slate-200" id="userName">Akash S.</span>
             <span class="text-[11px] px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 font-semibold">★ 4.89</span>
           </div>
-          <div class="text-[11px] text-slate-400 flex items-center gap-1.5">
-            <span class="w-2 h-2 rounded-full bg-brand-400 inline-block animate-pulse"></span>
-            <span id="userPlatform">Swiggy Super-Partner & Uber Auto • Chennai Hub</span>
+          <div class="text-[11px] text-slate-400 flex items-center gap-1.5 max-w-[200px] sm:max-w-xs truncate">
+            <span class="w-2 h-2 rounded-full bg-brand-400 inline-block animate-pulse shrink-0"></span>
+            <span id="userPlatform" class="truncate">Uber Premier Auto • Chennai Hub</span>
           </div>
         </div>
       </div>
 
-      <!-- Right Controls: Balances, Language Toggle, Quick Actions -->
-      <div class="flex items-center gap-3">
+      <!-- Right Controls: Balances, Language Toggle, Switch User, Quick Actions -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <!-- Switch Partner / Logout Button -->
+        <button onclick="showLoginModal()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 border border-slate-700 text-xs font-semibold text-slate-300 transition-colors" title="Change login partner name">
+          <i class="fa-solid fa-user-pen text-brand-400 text-xs"></i>
+          <span class="hidden sm:inline" data-i18n="btnSwitchUser">Switch Partner</span>
+        </button>
+
         <!-- Language Switcher -->
         <button id="langToggleBtn" onclick="toggleLanguage()" class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-semibold text-slate-300 transition-colors">
           <i class="fa-solid fa-language text-accent-400 text-sm"></i>
@@ -149,7 +258,7 @@
         <!-- Advance Action CTA -->
         <button onclick="openAdvanceModal()" class="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-gradient-to-r from-accent-500 to-blue-600 hover:from-accent-400 hover:to-blue-500 text-white text-xs font-bold shadow-md transition-all">
           <i class="fa-solid fa-hand-holding-dollar"></i>
-          <span data-i18n="btnAdvance">Get Micro-Advance</span>
+          <span class="hidden sm:inline" data-i18n="btnAdvance">Get Micro-Advance</span>
         </button>
       </div>
 
@@ -555,7 +664,7 @@
         </div>
         <div>
           <h3 class="text-lg font-bold text-white" data-i18n="modalTitle">Request Shift-Backed Micro-Advance</h3>
-          <p class="text-xs text-slate-400" data-i18n="modalSub">Instant liquid credit based on your GIG-Score (738) • 0% Interest</p>
+          <p class="text-xs text-slate-400" id="modalSubCredit">Instant liquid credit based on your GIG-Score • 0% Interest</p>
         </div>
       </div>
 
@@ -590,12 +699,16 @@
           <span class="font-bold text-brand-400">0.0% APR (Zero Predatory Debt)</span>
         </div>
         <div class="flex justify-between text-xs">
+          <span class="text-slate-400" data-i18n="modalDisburseTarget">Disburse To:</span>
+          <span class="font-bold text-emerald-400" id="modalDisburseTargetName">Akash S. UPI Wallet</span>
+        </div>
+        <div class="flex justify-between text-xs">
           <span class="text-slate-400" data-i18n="modalProcessing">Platform Processing Fee:</span>
           <span class="font-bold text-slate-200">₹0 (Waived for Prime Partners)</span>
         </div>
         <div class="flex justify-between text-xs">
           <span class="text-slate-400" data-i18n="modalRepaymentMode">Repayment Mechanism:</span>
-          <span class="font-bold text-slate-200">4 Micro-Deductions via Swiggy/Uber Payouts</span>
+          <span class="font-bold text-slate-200">4 Micro-Deductions via Daily Settlements</span>
         </div>
         <div class="flex justify-between text-xs pt-2 border-t border-slate-800">
           <span class="text-slate-300 font-semibold" data-i18n="modalPerShift">Per-Shift Deduction:</span>
@@ -632,19 +745,33 @@
     </div>
   </footer>
 
-  <!-- Inline Script for UI & API Wire-up (Part A) -->
+  <!-- Inline Script (Part A) -->
   <script>
     const API_BASE = window.location.port === '5000' ? '' : 'http://localhost:5000';
     let currentLang = 'en';
     let dashboardState = null;
     let chartInstance = null;
     let currentAdvanceAmount = 2000;
+    let activeProfile = {
+      name: 'Akash S.',
+      platform: 'Uber Premier Auto / Moto Captain',
+      city: 'Chennai Hub (T. Nagar / Velachery / OMR)'
+    };
 
     // Bilingual Dictionary
     const i18n = {
       en: {
         tagline: "Financial Resilience for Gig & Informal Workers",
         btnAdvance: "Get Micro-Advance",
+        btnSwitchUser: "Switch Partner",
+        loginSub: "Enter your name to access your AI Income Smoother & GIG-Score",
+        loginNameLabel: "Gig Worker / Partner Name:",
+        loginNameHint: "💡 This name will appear across your live dashboard & reports",
+        loginPlatformLabel: "Primary Gig Platform:",
+        loginCityLabel: "City & Operating Hub:",
+        loginQuickPillLabel: "Or select a quick demo profile:",
+        loginSubmitBtn: "Launch Partner Dashboard",
+        modalDisburseTarget: "Disburse To:",
         mainWalletTitle: "Main Liquid Wallet",
         mainWalletSub: "Available for daily grocery, fuel & instant spending",
         vaultTitle: "Safety Vault Buffer",
@@ -692,7 +819,6 @@
         thVaultAction: "Autonomous Vault Action",
         thFinalWallet: "Effective Wallet",
         modalTitle: "Request Shift-Backed Micro-Advance",
-        modalSub: "Instant liquid credit based on your GIG-Score (738) • 0% Interest",
         modalSelectAmount: "Select Advance Amount:",
         modalChosenAmount: "Selected Advance:",
         modalInterest: "Interest Rate:",
@@ -705,6 +831,15 @@
       ta: {
         tagline: "கிக் & முறைசாரா தொழிலாளர்களுக்கான நிதிப் பாதுகாப்பு",
         btnAdvance: "உடனடி முன்பணம் பெறுக",
+        btnSwitchUser: "பெயர் மாற்று",
+        loginSub: "உங்கள் பெயர் மற்றும் விவரங்களை உள்ளிட்டு AI வருமான சமநிலையை அணுகவும்",
+        loginNameLabel: "கிக் தொழிலாளர் / பார்ட்னர் பெயர்:",
+        loginNameHint: "💡 இந்த பெயரே உங்கள் நேரலை டாஷ்போர்டில் காட்டப்படும்",
+        loginPlatformLabel: "முக்கிய கிக் தளம்:",
+        loginCityLabel: "நகரம் மற்றும் இயக்க மையம்:",
+        loginQuickPillLabel: "அல்லது டெமோ சுயவிவரத்தை தேர்வு செய்யவும்:",
+        loginSubmitBtn: "பார்ட்னர் டாஷ்போர்டை திறக்கவும்",
+        modalDisburseTarget: "வரவு வைக்கப்படும் கணக்கு:",
         mainWalletTitle: "முதன்மை பணப்பை",
         mainWalletSub: "மளிகை, பெட்ரோல் மற்றும் தினசரி செலவுகளுக்கு உடனே பயன்படுத்தலாம்",
         vaultTitle: "பாதுகாப்பு சேமிப்பு பெட்டகம்",
@@ -752,7 +887,6 @@
         thVaultAction: "பெட்டக நடவடிக்கை",
         thFinalWallet: "பயன்பாட்டு பணப்பை",
         modalTitle: "ஷிப்ட் சார்ந்த உடனடி முன்பணம்",
-        modalSub: "உங்கள் நன்மதிப்பீடு (738) அடிப்படையில் உடனடி பண வரவு • 0% வட்டி",
         modalSelectAmount: "முன்பணத் தொகையை தேர்ந்தெடுக்கவும்:",
         modalChosenAmount: "தேர்ந்தெடுக்கப்பட்ட தொகை:",
         modalInterest: "வட்டி விகிதம்:",
@@ -783,12 +917,128 @@
       }
     }
 
+    // ==========================================
+    // 🔐 LOGIN & DYNAMIC USER NAME LOGIC
+    // ==========================================
+    function initUserAuth() {
+      const savedUser = localStorage.getItem('equipulse_partner');
+      if (savedUser) {
+        try {
+          activeProfile = JSON.parse(savedUser);
+          applyUserProfile(activeProfile);
+          hideLoginModal();
+        } catch (e) {
+          showLoginModal();
+        }
+      } else {
+        showLoginModal();
+      }
+    }
+
+    function showLoginModal() {
+      const overlay = document.getElementById('loginOverlay');
+      overlay.classList.remove('hidden', 'opacity-0', 'pointer-events-none');
+      if (activeProfile && activeProfile.name) {
+        document.getElementById('loginNameInput').value = activeProfile.name;
+      }
+      setTimeout(() => {
+        document.getElementById('loginNameInput').focus();
+      }, 100);
+    }
+
+    function hideLoginModal() {
+      const overlay = document.getElementById('loginOverlay');
+      overlay.classList.add('opacity-0', 'pointer-events-none');
+      setTimeout(() => {
+        overlay.classList.add('hidden');
+      }, 500);
+    }
+
+    function fillQuickLogin(name, platform, city) {
+      document.getElementById('loginNameInput').value = name;
+      if (platform) document.getElementById('loginPlatformSelect').value = platform;
+      if (city) document.getElementById('loginCitySelect').value = city;
+    }
+
+    async function handleLoginSubmit(event) {
+      event.preventDefault();
+      const enteredName = document.getElementById('loginNameInput').value.trim();
+      const enteredPlatform = document.getElementById('loginPlatformSelect').value;
+      const enteredCity = document.getElementById('loginCitySelect').value;
+
+      if (!enteredName) {
+        alert('Please enter your name.');
+        return;
+      }
+
+      activeProfile = {
+        name: enteredName,
+        platform: enteredPlatform,
+        city: enteredCity
+      };
+
+      // Store in localStorage so name persists across refreshes
+      localStorage.setItem('equipulse_partner', JSON.stringify(activeProfile));
+
+      // Dynamically sync name across the frontend
+      applyUserProfile(activeProfile);
+      hideLoginModal();
+
+      // Sync with backend API
+      try {
+        await fetch(`${API_BASE}/api/update-profile`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: enteredName,
+            platform: enteredPlatform,
+            city: enteredCity
+          })
+        });
+      } catch (err) {
+        console.warn('Backend profile sync notice:', err);
+      }
+
+      const welcomeMsg = currentLang === 'ta'
+        ? `வணக்கம் ${enteredName}! உங்கள் AI வருமான பாதுகாப்பு தயார்.`
+        : `Welcome, ${enteredName}! Your EquiPulse Resilience Engine is active.`;
+      showToast(welcomeMsg, true);
+    }
+
+    function applyUserProfile(profile) {
+      // 1. Update Name in Header Badge
+      document.getElementById('userName').innerText = profile.name;
+      
+      // 2. Update Avatar Initial
+      const initial = profile.name.trim().charAt(0).toUpperCase() || 'P';
+      document.getElementById('userAvatar').innerText = initial;
+
+      // 3. Update Platform Subtitle
+      document.getElementById('userPlatform').innerText = `${profile.platform} • ${profile.city}`;
+
+      // 4. Update Micro-Advance Disbursal Target Name
+      const targetNameElem = document.getElementById('modalDisburseTargetName');
+      if (targetNameElem) {
+        targetNameElem.innerText = `${profile.name} UPI Wallet`;
+      }
+    }
+
     async function fetchDashboardData() {
       try {
         const res = await fetch(`${API_BASE}/api/dashboard-data`);
         if (!res.ok) throw new Error('Failed to fetch dashboard data');
         const data = await res.json();
         dashboardState = data;
+        
+        // If user already logged in locally, respect local name
+        if (activeProfile && activeProfile.name) {
+          data.worker.name = activeProfile.name;
+          applyUserProfile(activeProfile);
+        } else if (data.worker && data.worker.name) {
+          activeProfile.name = data.worker.name;
+          applyUserProfile(activeProfile);
+        }
+
         updateUI(data);
         renderChart(data.history, data.smoothed_comparison);
         renderHistoryTable(data.history);
@@ -1274,6 +1524,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
+      initUserAuth();
       fetchDashboardData();
     });
   </script>
