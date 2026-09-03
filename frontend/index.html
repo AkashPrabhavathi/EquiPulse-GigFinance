@@ -33,14 +33,6 @@
               600: '#059669',
               700: '#047857',
             },
-            accent: {
-              50: '#fefce8',
-              100: '#fef9c3',
-              400: '#facc15',
-              500: '#eab308',
-              600: '#ca8a04',
-              700: '#a16207',
-            },
             warmgray: {
               50: '#fafaf9',
               100: '#f5f5f4',
@@ -97,6 +89,30 @@
     .glow-emerald {
       box-shadow: 0 0 20px -3px rgba(16, 185, 129, 0.35);
     }
+    /* Page View Transitions */
+    @keyframes viewFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(14px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .view-animate {
+      animation: viewFadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    .nav-item-active {
+      background: #996d48 !important;
+      color: #ffffff !important;
+      box-shadow: 0 4px 12px rgba(153, 109, 72, 0.35);
+      border-color: transparent !important;
+    }
+    .nav-item-active span.icon-box {
+      background: rgba(255, 255, 255, 0.25) !important;
+      color: #ffffff !important;
+    }
     ::-webkit-scrollbar {
       width: 6px;
       height: 6px;
@@ -113,15 +129,13 @@
 <body class="min-h-screen bg-[#faf6ee] text-warmgray-800 antialiased selection:bg-sandal-300 selection:text-warmgray-900">
 
   <!-- ============================================================== -->
-  <!-- 🔐 FRONT LOGIN OVERLAY MODAL (Sandal & White Theme)           -->
+  <!-- 🔐 FRONT LOGIN OVERLAY MODAL                                   -->
   <!-- ============================================================== -->
   <div id="loginOverlay" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-warmgray-900/40 backdrop-blur-md transition-all duration-500">
     <div class="sandal-card bg-white border-2 border-sandal-300 rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl relative overflow-hidden">
-      <!-- Glow decoration -->
       <div class="absolute -top-16 -right-16 w-36 h-36 bg-sandal-200 rounded-full blur-2xl pointer-events-none"></div>
       <div class="absolute -bottom-16 -left-16 w-36 h-36 bg-brand-100 rounded-full blur-2xl pointer-events-none"></div>
 
-      <!-- Header Icon & Brand -->
       <div class="text-center mb-6">
         <div class="w-14 h-14 mx-auto rounded-2xl bg-gradient-to-tr from-sandal-600 via-sandal-500 to-brand-500 flex items-center justify-center text-white text-2xl shadow-lg glow-sandal mb-3">
           <i class="fa-solid fa-bolt"></i>
@@ -133,9 +147,7 @@
         <p class="text-xs text-warmgray-500 mt-1" data-i18n="loginSub">Enter your name to access your AI Income Smoother & GIG-Score</p>
       </div>
 
-      <!-- Form -->
       <form id="loginForm" onsubmit="handleLoginSubmit(event)" class="space-y-4">
-        <!-- Name Input -->
         <div>
           <label class="block text-xs font-bold text-warmgray-700 mb-1.5" data-i18n="loginNameLabel">
             Gig Worker / Partner Name: <span class="text-rose-500">*</span>
@@ -149,7 +161,6 @@
           <p class="text-[11px] text-brand-600 mt-1 font-medium" data-i18n="loginNameHint">💡 This name will appear across your live dashboard & reports</p>
         </div>
 
-        <!-- Platform Select -->
         <div>
           <label class="block text-xs font-bold text-warmgray-700 mb-1.5" data-i18n="loginPlatformLabel">
             Primary Gig Platform:
@@ -169,7 +180,6 @@
           </div>
         </div>
 
-        <!-- City & Hub Select -->
         <div>
           <label class="block text-xs font-bold text-warmgray-700 mb-1.5" data-i18n="loginCityLabel">
             City & Operating Hub:
@@ -188,7 +198,6 @@
           </div>
         </div>
 
-        <!-- Quick 1-Click Demo Profiles -->
         <div class="pt-1">
           <span class="text-[11px] text-warmgray-500 block mb-1.5 font-bold" data-i18n="loginQuickPillLabel">Or select a quick demo profile:</span>
           <div class="flex flex-wrap gap-1.5">
@@ -204,7 +213,6 @@
           </div>
         </div>
 
-        <!-- Submit Button -->
         <div class="pt-2">
           <button type="submit" id="loginBtn" class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-sandal-700 via-sandal-600 to-brand-600 hover:from-sandal-600 hover:to-brand-500 text-white font-bold text-sm shadow-md glow-sandal flex items-center justify-center gap-2 transition-all">
             <span data-i18n="loginSubmitBtn">Launch Partner Dashboard</span>
@@ -231,8 +239,8 @@
   <!-- ============================================================== -->
   <div class="min-h-screen flex flex-col lg:flex-row bg-[#faf6ee]">
 
-    <!-- Mobile Top Header (Visible on screens < lg) -->
-    <div class="lg:hidden flex items-center justify-between p-4 bg-[#f4ece0] border-b border-sandal-300 sticky top-0 z-30">
+    <!-- Mobile Top Header (Screens < lg) -->
+    <div class="lg:hidden flex items-center justify-between p-4 bg-[#f4ece0] border-b border-sandal-300 sticky top-0 z-30 shadow-sm">
       <div class="flex items-center gap-2.5">
         <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-sandal-700 via-sandal-600 to-brand-600 flex items-center justify-center text-white shadow glow-sandal">
           <i class="fa-solid fa-bolt text-sm"></i>
@@ -244,18 +252,18 @@
       </button>
     </div>
 
-    <!-- Backdrop for mobile sidebar -->
+    <!-- Backdrop for mobile sidebar drawer -->
     <div id="mobileBackdrop" onclick="toggleMobileSidebar()" class="fixed inset-0 bg-warmgray-900/30 backdrop-blur-sm z-30 hidden lg:hidden transition-opacity duration-300"></div>
 
     <!-- ============================================================== -->
-    <!-- 🧭 LEFT SIDEBAR NAVIGATION                                     -->
+    <!-- 🧭 LEFT SIDEBAR NAVIGATION (6 Dedicated Pages)                 -->
     <!-- ============================================================== -->
     <aside id="leftSidebar" class="sandal-sidebar w-72 shrink-0 p-5 flex flex-col justify-between fixed lg:sticky top-0 h-screen z-40 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 overflow-y-auto">
       
-      <!-- Top Half: Brand, Profile, Nav Links -->
+      <!-- Top Section -->
       <div class="space-y-6">
         
-        <!-- Brand Logo & Tagline -->
+        <!-- Brand Logo -->
         <div class="flex items-center gap-3 pt-1">
           <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-sandal-700 via-sandal-600 to-brand-600 flex items-center justify-center text-white shadow-md glow-sandal">
             <i class="fa-solid fa-bolt text-xl"></i>
@@ -269,8 +277,8 @@
           </div>
         </div>
 
-        <!-- User Profile Box (Clickable to switch partner) -->
-        <div onclick="showLoginModal()" class="sandal-card rounded-2xl p-3.5 flex items-center gap-3 cursor-pointer hover:border-sandal-400 transition-all group" title="Click to change partner profile">
+        <!-- User Profile Box -->
+        <div onclick="showLoginModal()" class="sandal-card rounded-2xl p-3.5 flex items-center gap-3 cursor-pointer hover:border-sandal-400 transition-all group shadow-sm" title="Click to change partner profile">
           <div id="userAvatar" class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sandal-600 to-brand-600 flex items-center justify-center text-sm font-bold text-white shadow shrink-0">
             A
           </div>
@@ -279,61 +287,67 @@
               <span class="text-sm font-bold text-warmgray-900 truncate" id="userName">Akash S.</span>
               <span class="text-[10px] px-1.5 py-0.2 rounded bg-amber-100 text-amber-800 border border-amber-300 font-bold">★ 4.89</span>
             </div>
-            <div class="text-[11px] text-warmgray-500 flex items-center gap-1.5 truncate mt-0.5">
+            <div class="text-[11px] text-warmgray-500 flex items-center gap-1.5 truncate mt-0.5 font-medium">
               <span class="w-2 h-2 rounded-full bg-brand-500 inline-block shrink-0 animate-pulse"></span>
               <span id="userPlatform" class="truncate">Uber Premier Auto • Chennai Hub</span>
             </div>
           </div>
         </div>
 
-        <!-- Navigation Links -->
+        <!-- 6 Dedicated Page Navigation Links with Smooth Animations -->
         <nav class="space-y-1.5">
-          <div class="text-[10px] font-bold uppercase tracking-wider text-warmgray-400 px-3 pb-1" data-i18n="menuSectionMain">Features & Engines</div>
+          <div class="text-[10px] font-bold uppercase tracking-wider text-warmgray-400 px-3 pb-1" data-i18n="menuSectionMain">6 Core Features</div>
           
-          <a href="#overviewSection" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-white text-warmgray-900 font-bold text-xs shadow-sm border border-sandal-300 hover:border-sandal-400 transition-all">
-            <span class="w-7 h-7 rounded-lg bg-sandal-100 text-sandal-800 flex items-center justify-center text-xs">
+          <!-- Page 1: Overview -->
+          <button id="btn-nav-overview" onclick="navigateTo('overview')" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl nav-item-active font-bold text-xs shadow-sm transition-all text-left">
+            <span class="icon-box w-7 h-7 rounded-lg bg-white/20 text-white flex items-center justify-center text-xs shrink-0">
               <i class="fa-solid fa-chart-pie"></i>
             </span>
             <span data-i18n="menuOverview">Overview Dashboard</span>
-          </a>
+          </button>
 
-          <a href="#smootherSection" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-warmgray-700 hover:bg-white/80 font-semibold text-xs transition-all hover:text-warmgray-900">
-            <span class="w-7 h-7 rounded-lg bg-sandal-200/60 text-sandal-700 flex items-center justify-center text-xs">
+          <!-- Page 2: AI Smoother -->
+          <button id="btn-nav-smoother" onclick="navigateTo('smoother')" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-warmgray-700 hover:bg-white/80 font-semibold text-xs transition-all hover:text-warmgray-900 text-left">
+            <span class="icon-box w-7 h-7 rounded-lg bg-sandal-200/80 text-sandal-800 flex items-center justify-center text-xs shrink-0">
               <i class="fa-solid fa-sliders"></i>
             </span>
             <span data-i18n="menuSmoother">AI Income Smoother</span>
-          </a>
+          </button>
 
-          <a href="#gigScoreSection" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-warmgray-700 hover:bg-white/80 font-semibold text-xs transition-all hover:text-warmgray-900">
-            <span class="w-7 h-7 rounded-lg bg-amber-100 text-amber-800 flex items-center justify-center text-xs">
+          <!-- Page 3: GIG-Score Credit -->
+          <button id="btn-nav-gigscore" onclick="navigateTo('gigscore')" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-warmgray-700 hover:bg-white/80 font-semibold text-xs transition-all hover:text-warmgray-900 text-left">
+            <span class="icon-box w-7 h-7 rounded-lg bg-amber-100 text-amber-800 flex items-center justify-center text-xs shrink-0">
               <i class="fa-solid fa-id-card-clip"></i>
             </span>
-            <span data-i18n="menuGigScore">GIG-Score Credit</span>
-          </a>
+            <span data-i18n="menuGigScore">GIG-Score Credit Engine</span>
+          </button>
 
-          <a href="#weatherSection" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-warmgray-700 hover:bg-white/80 font-semibold text-xs transition-all hover:text-warmgray-900">
-            <span class="w-7 h-7 rounded-lg bg-blue-100 text-blue-800 flex items-center justify-center text-xs">
+          <!-- Page 4: Monsoon & Surge Radar -->
+          <button id="btn-nav-weather" onclick="navigateTo('weather')" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-warmgray-700 hover:bg-white/80 font-semibold text-xs transition-all hover:text-warmgray-900 text-left">
+            <span class="icon-box w-7 h-7 rounded-lg bg-blue-100 text-blue-800 flex items-center justify-center text-xs shrink-0">
               <i class="fa-solid fa-cloud-showers-heavy"></i>
             </span>
-            <span data-i18n="menuWeather">Monsoon & Surge</span>
-          </a>
+            <span data-i18n="menuWeather">Monsoon & Surge Radar</span>
+          </button>
 
-          <a href="#chartSection" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-warmgray-700 hover:bg-white/80 font-semibold text-xs transition-all hover:text-warmgray-900">
-            <span class="w-7 h-7 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center text-xs">
+          <!-- Page 5: Volatility Chart -->
+          <button id="btn-nav-chart" onclick="navigateTo('chart')" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-warmgray-700 hover:bg-white/80 font-semibold text-xs transition-all hover:text-warmgray-900 text-left">
+            <span class="icon-box w-7 h-7 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center text-xs shrink-0">
               <i class="fa-solid fa-chart-line"></i>
             </span>
-            <span data-i18n="menuChart">Income Volatility Chart</span>
-          </a>
+            <span data-i18n="menuChart">Income Volatility Visualizer</span>
+          </button>
 
-          <a href="#ledgerSection" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-warmgray-700 hover:bg-white/80 font-semibold text-xs transition-all hover:text-warmgray-900">
-            <span class="w-7 h-7 rounded-lg bg-purple-100 text-purple-800 flex items-center justify-center text-xs">
+          <!-- Page 6: Shift Ledger -->
+          <button id="btn-nav-ledger" onclick="navigateTo('ledger')" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-warmgray-700 hover:bg-white/80 font-semibold text-xs transition-all hover:text-warmgray-900 text-left">
+            <span class="icon-box w-7 h-7 rounded-lg bg-purple-100 text-purple-800 flex items-center justify-center text-xs shrink-0">
               <i class="fa-solid fa-clock-rotate-left"></i>
             </span>
-            <span data-i18n="menuLedger">30-Day Shift Ledger</span>
-          </a>
+            <span data-i18n="menuLedger">30-Day Activity Ledger</span>
+          </button>
         </nav>
 
-        <!-- Primary Action CTA in Sidebar: Get Micro-Advance -->
+        <!-- Sidebar Micro-Advance CTA -->
         <div class="pt-2">
           <button onclick="openAdvanceModal()" class="w-full py-2.5 px-3.5 rounded-xl bg-gradient-to-r from-brand-600 to-emerald-700 hover:from-brand-500 hover:to-emerald-600 text-white text-xs font-bold shadow-md glow-emerald flex items-center justify-center gap-2 transition-all">
             <i class="fa-solid fa-hand-holding-dollar"></i>
@@ -343,7 +357,7 @@
 
       </div>
 
-      <!-- Bottom Half: Settings, Language, Logout -->
+      <!-- Bottom Controls -->
       <div class="pt-6 border-t border-sandal-300 space-y-2.5">
         
         <!-- Language Switcher Button -->
@@ -364,7 +378,7 @@
           <i class="fa-solid fa-pen text-[10px] text-warmgray-400"></i>
         </button>
 
-        <!-- Logout Button (Rose Accent) -->
+        <!-- Logout Button -->
         <button onclick="handleLogout()" class="w-full flex items-center justify-between px-3.5 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 border border-rose-200 text-xs font-bold text-rose-700 transition-colors shadow-sm">
           <span class="flex items-center gap-2">
             <i class="fa-solid fa-arrow-right-from-bracket text-rose-600 text-xs"></i>
@@ -373,7 +387,7 @@
           <i class="fa-solid fa-power-off text-[10px] text-rose-400"></i>
         </button>
 
-        <!-- Quick Reset Demo Button -->
+        <!-- Reset Demo Defaults -->
         <button onclick="resetDemoState()" class="w-full flex items-center justify-center gap-1.5 py-1.5 text-[11px] font-semibold text-warmgray-500 hover:text-warmgray-800 transition-colors">
           <i class="fa-solid fa-arrow-rotate-right text-[10px]"></i>
           <span>Reset Demo Defaults</span>
@@ -388,415 +402,557 @@
     <main class="flex-1 min-w-0 p-4 sm:p-6 lg:p-8 space-y-6 overflow-y-auto">
 
       <!-- Top Greeting & Live Liquid Balances Bar -->
-      <header id="overviewSection" class="sandal-card rounded-2xl p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <header class="sandal-card rounded-2xl p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h1 class="text-xl sm:text-2xl font-black text-warmgray-900 flex items-center gap-2">
             <span id="greetingPrefix" data-i18n="greetingHello">Welcome back,</span>
             <span class="text-sandal-700" id="headerDisplayName">Akash S.</span>
             <span>👋</span>
           </h1>
-          <p class="text-xs text-warmgray-500 mt-0.5" data-i18n="headerSubtitle">
+          <p class="text-xs text-warmgray-500 mt-0.5 font-medium" data-i18n="headerSubtitle">
             Your Autonomous AI Income Smoother & Safety Vault are actively protecting today's shift.
           </p>
         </div>
 
         <!-- Live Balances Quick Pills -->
         <div class="flex items-center gap-3 flex-wrap">
-          <div class="px-3.5 py-2 rounded-xl bg-sandal-100 border border-sandal-300 flex items-center gap-2.5">
+          <div class="px-3.5 py-2 rounded-xl bg-sandal-100 border border-sandal-300 flex items-center gap-2.5 shadow-sm">
             <span class="w-7 h-7 rounded-lg bg-brand-500 text-white flex items-center justify-center text-xs">
               <i class="fa-solid fa-wallet"></i>
             </span>
             <div>
               <div class="text-[10px] font-bold uppercase text-warmgray-500" data-i18n="mainWalletTitle">Main Wallet</div>
-              <div class="text-sm font-extrabold text-warmgray-900" id="pillMainBalance">₹1,850</div>
+              <div class="text-sm font-black text-warmgray-900" id="pillMainBalance">₹1,850</div>
             </div>
           </div>
 
-          <div class="px-3.5 py-2 rounded-xl bg-sandal-100 border border-sandal-300 flex items-center gap-2.5">
+          <div class="px-3.5 py-2 rounded-xl bg-sandal-100 border border-sandal-300 flex items-center gap-2.5 shadow-sm">
             <span class="w-7 h-7 rounded-lg bg-sandal-600 text-white flex items-center justify-center text-xs">
               <i class="fa-solid fa-shield-halved"></i>
             </span>
             <div>
               <div class="text-[10px] font-bold uppercase text-warmgray-500" data-i18n="vaultTitle">Safety Vault</div>
-              <div class="text-sm font-extrabold text-sandal-800" id="pillVaultBalance">₹4,250</div>
+              <div class="text-sm font-black text-sandal-800" id="pillVaultBalance">₹4,250</div>
             </div>
           </div>
         </div>
       </header>
 
-      <!-- 4 Top KPI Cards (Sandal & White Cards) -->
-      <section class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+      <!-- ============================================================== -->
+      <!-- 📄 PAGE 1: 📊 OVERVIEW DASHBOARD VIEW (#view-overview)          -->
+      <!-- ============================================================== -->
+      <div id="view-overview" class="page-view view-animate space-y-6">
         
-        <!-- Main Liquid Wallet -->
-        <div class="sandal-card rounded-2xl p-5 relative overflow-hidden group">
-          <div class="flex items-center justify-between text-warmgray-500 mb-2">
-            <span class="text-xs font-bold uppercase tracking-wider text-warmgray-600" data-i18n="mainWalletTitle">Main Liquid Wallet</span>
-            <span class="p-2 rounded-xl bg-brand-50 text-brand-700 border border-brand-200 text-sm">
-              <i class="fa-solid fa-wallet"></i>
-            </span>
-          </div>
-          <div class="flex items-baseline gap-2">
-            <span class="text-3xl font-black text-warmgray-900 tracking-tight" id="dispMainBalance">₹1,850</span>
-            <span class="text-xs text-brand-700 bg-brand-50 border border-brand-200 px-2 py-0.5 rounded-md font-bold flex items-center gap-1">
-              <i class="fa-solid fa-circle-check text-[10px]"></i> UPI Ready
-            </span>
-          </div>
-          <p class="text-[11px] text-warmgray-500 mt-2 font-medium" data-i18n="mainWalletSub">Available for daily grocery, fuel & instant spending</p>
-        </div>
-
-        <!-- Autonomous Safety Vault Buffer -->
-        <div class="sandal-card rounded-2xl p-5 relative overflow-hidden group border-sandal-400">
-          <div class="flex items-center justify-between text-warmgray-500 mb-2">
-            <span class="text-xs font-bold uppercase tracking-wider text-sandal-800" data-i18n="vaultTitle">Safety Vault Buffer</span>
-            <span class="p-2 rounded-xl bg-sandal-100 text-sandal-800 border border-sandal-300 text-sm">
-              <i class="fa-solid fa-shield-halved"></i>
-            </span>
-          </div>
-          <div class="flex items-baseline gap-2">
-            <span class="text-3xl font-black text-sandal-900 tracking-tight" id="dispVaultBalance">₹4,250</span>
-            <span class="text-xs px-2 py-0.5 rounded-md bg-sandal-100 text-sandal-800 border border-sandal-300 font-bold" id="dispVaultDays">4.25 Days</span>
-          </div>
-          <div class="mt-3 flex items-center justify-between text-[11px] text-warmgray-600 font-semibold">
-            <span data-i18n="vaultGoal">10-Day Reserve Goal: ₹10,000</span>
-            <span id="dispVaultPct" class="font-bold text-sandal-800">42.5%</span>
-          </div>
-          <div class="w-full h-2 bg-sandal-100 rounded-full mt-1.5 overflow-hidden border border-sandal-200">
-            <div id="vaultProgressBar" class="h-full bg-gradient-to-r from-sandal-500 to-brand-500 rounded-full transition-all duration-500" style="width: 42.5%;"></div>
-          </div>
-        </div>
-
-        <!-- GIG-Score Live Meter Card -->
-        <div class="sandal-card rounded-2xl p-5 relative overflow-hidden group">
-          <div class="flex items-center justify-between text-warmgray-500 mb-2">
-            <span class="text-xs font-bold uppercase tracking-wider text-warmgray-600" data-i18n="gigScoreTitle">Active GIG-Score</span>
-            <span class="p-2 rounded-xl bg-amber-50 text-amber-700 border border-amber-200 text-sm">
-              <i class="fa-solid fa-id-card-clip"></i>
-            </span>
-          </div>
-          <div class="flex items-baseline gap-2">
-            <span class="text-3xl font-black text-amber-600 tracking-tight" id="dispGigScore">693</span>
-            <span class="text-xs text-warmgray-400 font-bold">/ 800</span>
-          </div>
-          <div class="mt-2 flex items-center gap-1.5">
-            <span class="w-2 h-2 rounded-full bg-brand-500"></span>
-            <span class="text-[11px] font-bold text-brand-700" id="dispRiskTier" data-i18n="riskTier">Consistent Worker / Prime Partner</span>
-          </div>
-          <p class="text-[11px] text-warmgray-500 mt-1 font-medium" data-i18n="creditPreApproved">Pre-approved credit: <strong class="text-warmgray-900" id="dispMaxCredit">₹8,000</strong></p>
-        </div>
-
-        <!-- 30-Day Total & Net Income -->
-        <div class="sandal-card rounded-2xl p-5 relative overflow-hidden group">
-          <div class="flex items-center justify-between text-warmgray-500 mb-2">
-            <span class="text-xs font-bold uppercase tracking-wider text-warmgray-600" data-i18n="totalIncomeTitle">30-Day Platform Income</span>
-            <span class="p-2 rounded-xl bg-purple-50 text-purple-700 border border-purple-200 text-sm">
-              <i class="fa-solid fa-chart-pie"></i>
-            </span>
-          </div>
-          <div class="flex items-baseline gap-2">
-            <span class="text-3xl font-black text-warmgray-900 tracking-tight" id="dispTotalIncome">₹36,150</span>
-          </div>
-          <div class="mt-2 flex items-center justify-between text-[11px] text-warmgray-500 font-medium">
-            <span>Net after fuel & expenses:</span>
-            <span class="font-bold text-warmgray-800" id="dispNetEarnings">₹26,530</span>
-          </div>
-          <p class="text-[11px] text-warmgray-400 mt-1 font-medium">478 Deliveries • 268 Working Hours</p>
-        </div>
-
-      </section>
-
-      <!-- Weather & Monsoon Surge Alert Banner -->
-      <section id="weatherSection" class="sandal-card rounded-2xl p-5 border-l-4 border-l-sandal-600 bg-gradient-to-r from-white via-sandal-50 to-white shadow-md">
-        <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-          <div class="flex items-start gap-4">
-            <div class="w-12 h-12 rounded-2xl bg-sandal-200 text-sandal-800 flex items-center justify-center shrink-0 text-2xl shadow-sm">
-              <i class="fa-solid fa-cloud-showers-heavy"></i>
+        <!-- 4 Top KPI Cards -->
+        <section class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+          <!-- Main Liquid Wallet -->
+          <div class="sandal-card rounded-2xl p-5 relative overflow-hidden group">
+            <div class="flex items-center justify-between text-warmgray-500 mb-2">
+              <span class="text-xs font-bold uppercase tracking-wider text-warmgray-600" data-i18n="mainWalletTitle">Main Liquid Wallet</span>
+              <span class="p-2 rounded-xl bg-brand-50 text-brand-700 border border-brand-200 text-sm">
+                <i class="fa-solid fa-wallet"></i>
+              </span>
             </div>
+            <div class="flex items-baseline gap-2">
+              <span class="text-3xl font-black text-warmgray-900 tracking-tight" id="dispMainBalance">₹1,850</span>
+              <span class="text-xs text-brand-700 bg-brand-50 border border-brand-200 px-2 py-0.5 rounded-md font-bold flex items-center gap-1">
+                <i class="fa-solid fa-circle-check text-[10px]"></i> UPI Ready
+              </span>
+            </div>
+            <p class="text-[11px] text-warmgray-500 mt-2 font-medium" data-i18n="mainWalletSub">Available for daily grocery, fuel & instant spending</p>
+          </div>
+
+          <!-- Autonomous Safety Vault Buffer -->
+          <div class="sandal-card rounded-2xl p-5 relative overflow-hidden group border-sandal-400">
+            <div class="flex items-center justify-between text-warmgray-500 mb-2">
+              <span class="text-xs font-bold uppercase tracking-wider text-sandal-800" data-i18n="vaultTitle">Safety Vault Buffer</span>
+              <span class="p-2 rounded-xl bg-sandal-100 text-sandal-800 border border-sandal-300 text-sm">
+                <i class="fa-solid fa-shield-halved"></i>
+              </span>
+            </div>
+            <div class="flex items-baseline gap-2">
+              <span class="text-3xl font-black text-sandal-900 tracking-tight" id="dispVaultBalance">₹4,250</span>
+              <span class="text-xs px-2 py-0.5 rounded-md bg-sandal-100 text-sandal-800 border border-sandal-300 font-bold" id="dispVaultDays">4.25 Days</span>
+            </div>
+            <div class="mt-3 flex items-center justify-between text-[11px] text-warmgray-600 font-semibold">
+              <span data-i18n="vaultGoal">10-Day Reserve Goal: ₹10,000</span>
+              <span id="dispVaultPct" class="font-bold text-sandal-800">42.5%</span>
+            </div>
+            <div class="w-full h-2 bg-sandal-100 rounded-full mt-1.5 overflow-hidden border border-sandal-200">
+              <div id="vaultProgressBar" class="h-full bg-gradient-to-r from-sandal-500 to-brand-500 rounded-full transition-all duration-500" style="width: 42.5%;"></div>
+            </div>
+          </div>
+
+          <!-- GIG-Score Live Meter Card -->
+          <div class="sandal-card rounded-2xl p-5 relative overflow-hidden group">
+            <div class="flex items-center justify-between text-warmgray-500 mb-2">
+              <span class="text-xs font-bold uppercase tracking-wider text-warmgray-600" data-i18n="gigScoreTitle">Active GIG-Score</span>
+              <span class="p-2 rounded-xl bg-amber-50 text-amber-700 border border-amber-200 text-sm">
+                <i class="fa-solid fa-id-card-clip"></i>
+              </span>
+            </div>
+            <div class="flex items-baseline gap-2">
+              <span class="text-3xl font-black text-amber-600 tracking-tight" id="dispGigScore">693</span>
+              <span class="text-xs text-warmgray-400 font-bold">/ 800</span>
+            </div>
+            <div class="mt-2 flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-brand-500"></span>
+              <span class="text-[11px] font-bold text-brand-700" id="dispRiskTier" data-i18n="riskTier">Consistent Worker / Prime Partner</span>
+            </div>
+            <p class="text-[11px] text-warmgray-500 mt-1 font-medium" data-i18n="creditPreApproved">Pre-approved credit: <strong class="text-warmgray-900" id="dispMaxCredit">₹8,000</strong></p>
+          </div>
+
+          <!-- 30-Day Total & Net Income -->
+          <div class="sandal-card rounded-2xl p-5 relative overflow-hidden group">
+            <div class="flex items-center justify-between text-warmgray-500 mb-2">
+              <span class="text-xs font-bold uppercase tracking-wider text-warmgray-600" data-i18n="totalIncomeTitle">30-Day Platform Income</span>
+              <span class="p-2 rounded-xl bg-purple-50 text-purple-700 border border-purple-200 text-sm">
+                <i class="fa-solid fa-chart-pie"></i>
+              </span>
+            </div>
+            <div class="flex items-baseline gap-2">
+              <span class="text-3xl font-black text-warmgray-900 tracking-tight" id="dispTotalIncome">₹36,150</span>
+            </div>
+            <div class="mt-2 flex items-center justify-between text-[11px] text-warmgray-500 font-medium">
+              <span>Net after fuel & expenses:</span>
+              <span class="font-bold text-warmgray-800" id="dispNetEarnings">₹26,530</span>
+            </div>
+            <p class="text-[11px] text-warmgray-400 mt-1 font-medium">478 Deliveries • 268 Working Hours</p>
+          </div>
+        </section>
+
+        <!-- Quick Feature Hub Cards (Navigates to other dedicated pages) -->
+        <section class="grid grid-cols-1 md:grid-cols-3 gap-5">
+          
+          <div onclick="navigateTo('smoother')" class="sandal-card rounded-2xl p-5 cursor-pointer hover:border-sandal-500 transition-all group shadow-sm flex flex-col justify-between">
             <div>
-              <div class="flex items-center gap-2 flex-wrap">
-                <h3 class="text-base font-black text-warmgray-900 flex items-center gap-2">
-                  <span data-i18n="weatherTitle">⚠️ Chennai Monsoon Surge Advisory</span>
-                  <span class="text-xs px-2.5 py-0.5 rounded-full bg-rose-100 text-rose-800 font-bold border border-rose-200">1.45x Surge Expected</span>
-                </h3>
-                <span class="text-xs text-warmgray-500 font-medium">South Chennai, OMR & Velachery Hubs</span>
+              <div class="w-10 h-10 rounded-xl bg-sandal-100 text-sandal-800 flex items-center justify-center text-lg mb-3">
+                <i class="fa-solid fa-sliders"></i>
               </div>
-              <p class="text-xs text-warmgray-600 mt-1 leading-relaxed font-medium" id="dispWeatherAdvisory" data-i18n="weatherBody">
-                Heavy rain forecast tomorrow evening! Food & parcel demand projected to spike by 60%. EquiPulse AI projects +₹650 extra surge earnings during 17:00-22:00. Working this peak shift allows auto-sweeping ₹750 surplus directly into your Safety Vault!
+              <h3 class="text-sm font-bold text-warmgray-900 group-hover:text-sandal-700 transition-colors">AI Income Smoother</h3>
+              <p class="text-xs text-warmgray-500 mt-1 leading-relaxed">
+                Experience autonomous sweep of surplus earnings and automated top-up on lean days.
+              </p>
+            </div>
+            <div class="mt-4 flex items-center gap-1.5 text-xs font-bold text-sandal-700 group-hover:translate-x-1 transition-transform">
+              <span>Open Smoother Studio</span>
+              <i class="fa-solid fa-arrow-right text-[10px]"></i>
+            </div>
+          </div>
+
+          <div onclick="navigateTo('gigscore')" class="sandal-card rounded-2xl p-5 cursor-pointer hover:border-amber-400 transition-all group shadow-sm flex flex-col justify-between">
+            <div>
+              <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center text-lg mb-3">
+                <i class="fa-solid fa-id-card-clip"></i>
+              </div>
+              <h3 class="text-sm font-bold text-warmgray-900 group-hover:text-amber-700 transition-colors">GIG-Score & Micro-Advance</h3>
+              <p class="text-xs text-warmgray-500 mt-1 leading-relaxed">
+                Work-based algorithmic credit rating granting up to ₹8,000 instant 0% interest advances.
+              </p>
+            </div>
+            <div class="mt-4 flex items-center gap-1.5 text-xs font-bold text-amber-700 group-hover:translate-x-1 transition-transform">
+              <span>View Credit Engine</span>
+              <i class="fa-solid fa-arrow-right text-[10px]"></i>
+            </div>
+          </div>
+
+          <div onclick="navigateTo('weather')" class="sandal-card rounded-2xl p-5 cursor-pointer hover:border-blue-400 transition-all group shadow-sm flex flex-col justify-between">
+            <div>
+              <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center text-lg mb-3">
+                <i class="fa-solid fa-cloud-showers-heavy"></i>
+              </div>
+              <h3 class="text-sm font-bold text-warmgray-900 group-hover:text-blue-700 transition-colors">Monsoon Surge Radar</h3>
+              <p class="text-xs text-warmgray-500 mt-1 leading-relaxed">
+                Hyperlocal weather forecast & zone surge alerts to maximize peak shift earnings.
+              </p>
+            </div>
+            <div class="mt-4 flex items-center gap-1.5 text-xs font-bold text-blue-700 group-hover:translate-x-1 transition-transform">
+              <span>Explore Weather Radar</span>
+              <i class="fa-solid fa-arrow-right text-[10px]"></i>
+            </div>
+          </div>
+
+        </section>
+
+      </div>
+
+      <!-- ============================================================== -->
+      <!-- 📄 PAGE 2: 🛡️ AI INCOME SMOOTHER VIEW (#view-smoother)          -->
+      <!-- ============================================================== -->
+      <div id="view-smoother" class="page-view hidden view-animate space-y-6">
+        
+        <div class="sandal-card rounded-2xl p-6">
+          <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pb-5 border-b border-sandal-200">
+            <div>
+              <h2 class="text-xl font-black text-warmgray-900 flex items-center gap-2">
+                <i class="fa-solid fa-sliders text-sandal-700"></i>
+                <span data-i18n="smootherHeading">Autonomous AI Income Smoother</span>
+              </h2>
+              <p class="text-xs text-warmgray-500 mt-1 font-medium" data-i18n="smootherSub">
+                Eliminates the "feast or famine" volatility of gig work. Surpluses are banked; shortfalls are topped up automatically.
+              </p>
+            </div>
+            <div class="flex items-center gap-3 bg-sandal-100 px-4 py-2 rounded-xl border border-sandal-300">
+              <span class="text-xs uppercase font-bold text-warmgray-600" data-i18n="targetBaselineLabel">Target Baseline:</span>
+              <span class="text-base font-black text-brand-700">₹1,000 / day</span>
+            </div>
+          </div>
+
+          <!-- Scenario Presets -->
+          <div class="mt-6 space-y-2">
+            <label class="text-xs font-bold text-warmgray-700" data-i18n="presetLabel">Select or Simulate Today's Shift Earnings:</label>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <button onclick="setSimulatePreset(350)" class="preset-btn px-4 py-3 rounded-xl bg-rose-50 hover:bg-rose-100 border border-rose-200 text-left transition-all group">
+                <div class="text-[10px] text-rose-700 font-bold" data-i18n="presetBreakdown">Bike Puncture / Lean</div>
+                <div class="text-base font-black text-warmgray-900 mt-0.5">₹350</div>
+                <div class="text-[10px] text-rose-600 mt-1 font-semibold">-₹650 Shortfall</div>
+              </button>
+              <button onclick="setSimulatePreset(750)" class="preset-btn px-4 py-3 rounded-xl bg-amber-50 hover:bg-amber-100 border border-amber-200 text-left transition-all group">
+                <div class="text-[10px] text-amber-700 font-bold" data-i18n="presetSlow">Slow Mid-Week Day</div>
+                <div class="text-base font-black text-warmgray-900 mt-0.5">₹750</div>
+                <div class="text-[10px] text-amber-600 mt-1 font-semibold">-₹250 Shortfall</div>
+              </button>
+              <button onclick="setSimulatePreset(1000)" class="preset-btn px-4 py-3 rounded-xl bg-brand-50 hover:bg-brand-100 border border-brand-200 text-left transition-all group">
+                <div class="text-[10px] text-brand-700 font-bold" data-i18n="presetStandard">Standard Baseline</div>
+                <div class="text-base font-black text-warmgray-900 mt-0.5">₹1,000</div>
+                <div class="text-[10px] text-brand-600 mt-1 font-semibold">Exact Equilibrium</div>
+              </button>
+              <button onclick="setSimulatePreset(1750)" class="preset-btn px-4 py-3 rounded-xl bg-sandal-100 hover:bg-sandal-200 border border-sandal-300 text-left transition-all group">
+                <div class="text-[10px] text-sandal-800 font-bold" data-i18n="presetSurge">Monsoon / Weekend</div>
+                <div class="text-base font-black text-warmgray-900 mt-0.5">₹1,750</div>
+                <div class="text-[10px] text-sandal-700 mt-1 font-semibold">+₹750 Auto-Sweep</div>
+              </button>
+            </div>
+          </div>
+
+          <!-- Slider & Manual Input -->
+          <div class="bg-sandal-50 border border-sandal-200 rounded-2xl p-5 space-y-4 mt-6">
+            <div class="flex items-center justify-between">
+              <span class="text-xs text-warmgray-700 font-bold" data-i18n="earningInputLabel">Simulated Shift Income (₹):</span>
+              <div class="flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-xl border border-sandal-300 shadow-sm">
+                <span class="text-sandal-700 font-bold text-sm">₹</span>
+                <input type="number" id="simEarningInput" value="1650" min="100" max="3000" step="50" oninput="syncSlider(this.value)" class="w-24 bg-transparent text-warmgray-900 font-black text-sm outline-none">
+              </div>
+            </div>
+
+            <input type="range" id="simEarningSlider" min="200" max="2500" step="50" value="1650" oninput="syncInput(this.value)" class="w-full accent-sandal-700 h-2 bg-sandal-200 rounded-lg cursor-pointer">
+
+            <div class="flex justify-between text-[11px] text-warmgray-500 font-bold">
+              <span>₹200 (Sluggish Day)</span>
+              <span class="text-brand-700">₹1,000 (Target Baseline)</span>
+              <span>₹2,500 (Peak Festival Surge)</span>
+            </div>
+          </div>
+
+          <!-- Dynamic Projected Box -->
+          <div id="simPreviewBox" class="mt-6 p-4 rounded-xl bg-brand-50 border border-brand-200 text-xs text-warmgray-800 flex items-start gap-3 shadow-sm">
+            <div id="simPreviewIcon" class="w-7 h-7 rounded-full bg-brand-600 text-white flex items-center justify-center shrink-0 mt-0.5 text-xs shadow-sm">
+              <i class="fa-solid fa-arrow-down"></i>
+            </div>
+            <div class="flex-1">
+              <div class="font-bold text-warmgray-900 text-sm" id="simPreviewTitle">Auto-Sweep Mode: Surplus Detected</div>
+              <p class="text-warmgray-600 text-xs mt-0.5 leading-relaxed font-medium" id="simPreviewDesc">
+                Today's earning (₹1,650) is ₹650 above your target baseline. EquiPulse will auto-sweep ₹650 to your Safety Vault buffer and credit ₹1,000 to your spending wallet.
               </p>
             </div>
           </div>
-          <div class="flex items-center gap-2 shrink-0 self-end md:self-center">
-            <button onclick="setSimulatePreset(1750)" class="px-4 py-2.5 rounded-xl bg-sandal-700 hover:bg-sandal-800 text-white text-xs font-bold shadow-sm flex items-center gap-1.5 transition-all">
-              <i class="fa-solid fa-bolt text-xs"></i>
-              <span data-i18n="simulateSurgeBtn">Simulate This Surge Shift</span>
-            </button>
-          </div>
-        </div>
-      </section>
 
-      <!-- Middle Section: AI Income Smoother Simulator + GIG-Score Analytics -->
-      <section class="grid grid-cols-1 xl:grid-cols-12 gap-6">
-
-        <!-- LEFT: Interactive AI Income Smoother Simulator (7 Cols) -->
-        <div id="smootherSection" class="xl:col-span-7 sandal-card rounded-2xl p-6 flex flex-col justify-between">
-          <div>
-            <div class="flex items-center justify-between mb-4">
-              <div>
-                <h3 class="text-lg font-black text-warmgray-900 flex items-center gap-2">
-                  <i class="fa-solid fa-sliders text-sandal-700"></i>
-                  <span data-i18n="smootherHeading">Autonomous AI Income Smoother</span>
-                </h3>
-                <p class="text-xs text-warmgray-500 mt-0.5 font-medium" data-i18n="smootherSub">
-                  Eliminates the "feast or famine" volatility of gig work. Surpluses are banked; shortfalls are topped up automatically.
-                </p>
-              </div>
-              <div class="text-right">
-                <span class="text-[10px] uppercase font-bold text-warmgray-400" data-i18n="targetBaselineLabel">Target Baseline</span>
-                <div class="text-sm font-black text-brand-700">₹1,000 / day</div>
-              </div>
-            </div>
-
-            <!-- Quick Preset Buttons -->
-            <div class="space-y-2 mb-5">
-              <label class="text-xs font-bold text-warmgray-700" data-i18n="presetLabel">Select or Simulate Today's Shift Earnings:</label>
-              <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                <button onclick="setSimulatePreset(350)" class="preset-btn px-3 py-2.5 rounded-xl bg-rose-50 hover:bg-rose-100 border border-rose-200 text-left transition-all">
-                  <div class="text-[10px] text-rose-700 font-bold" data-i18n="presetBreakdown">Bike Puncture / Lean</div>
-                  <div class="text-sm font-black text-warmgray-900">₹350</div>
-                </button>
-                <button onclick="setSimulatePreset(750)" class="preset-btn px-3 py-2.5 rounded-xl bg-amber-50 hover:bg-amber-100 border border-amber-200 text-left transition-all">
-                  <div class="text-[10px] text-amber-700 font-bold" data-i18n="presetSlow">Slow Mid-Week Day</div>
-                  <div class="text-sm font-black text-warmgray-900">₹750</div>
-                </button>
-                <button onclick="setSimulatePreset(1000)" class="preset-btn px-3 py-2.5 rounded-xl bg-brand-50 hover:bg-brand-100 border border-brand-200 text-left transition-all">
-                  <div class="text-[10px] text-brand-700 font-bold" data-i18n="presetStandard">Standard Baseline</div>
-                  <div class="text-sm font-black text-warmgray-900">₹1,000</div>
-                </button>
-                <button onclick="setSimulatePreset(1750)" class="preset-btn px-3 py-2.5 rounded-xl bg-sandal-100 hover:bg-sandal-200 border border-sandal-300 text-left transition-all">
-                  <div class="text-[10px] text-sandal-800 font-bold" data-i18n="presetSurge">Monsoon / Weekend</div>
-                  <div class="text-sm font-black text-warmgray-900">₹1,750</div>
-                </button>
-              </div>
-            </div>
-
-            <!-- Slider & Manual Input -->
-            <div class="bg-sandal-50 border border-sandal-200 rounded-2xl p-4 space-y-4">
-              <div class="flex items-center justify-between">
-                <span class="text-xs text-warmgray-700 font-bold" data-i18n="earningInputLabel">Simulated Shift Income (₹):</span>
-                <div class="flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-xl border border-sandal-300 shadow-sm">
-                  <span class="text-sandal-700 font-bold text-sm">₹</span>
-                  <input type="number" id="simEarningInput" value="1650" min="100" max="3000" step="50" oninput="syncSlider(this.value)" class="w-20 bg-transparent text-warmgray-900 font-black text-sm outline-none">
-                </div>
-              </div>
-
-              <!-- Range Slider -->
-              <input type="range" id="simEarningSlider" min="200" max="2500" step="50" value="1650" oninput="syncInput(this.value)" class="w-full accent-sandal-700 h-2 bg-sandal-200 rounded-lg cursor-pointer">
-
-              <div class="flex justify-between text-[10px] text-warmgray-500 font-bold">
-                <span>₹200 (Sluggish Day)</span>
-                <span class="text-brand-700">₹1,000 (Target Baseline)</span>
-                <span>₹2,500 (Peak Festival Surge)</span>
-              </div>
-            </div>
-
-            <!-- Real-Time Projected Adjustment Preview -->
-            <div id="simPreviewBox" class="mt-4 p-4 rounded-xl bg-brand-50 border border-brand-200 text-xs text-warmgray-800 flex items-start gap-3 shadow-sm">
-              <div id="simPreviewIcon" class="w-6 h-6 rounded-full bg-brand-600 text-white flex items-center justify-center shrink-0 mt-0.5 text-xs">
-                <i class="fa-solid fa-arrow-down"></i>
-              </div>
-              <div class="flex-1">
-                <div class="font-bold text-warmgray-900 text-sm" id="simPreviewTitle">Auto-Sweep Mode: Surplus Detected</div>
-                <p class="text-warmgray-600 text-xs mt-0.5 leading-relaxed font-medium" id="simPreviewDesc">
-                  Today's earning (₹1,650) is ₹650 above your target baseline. EquiPulse will auto-sweep ₹650 to your Safety Vault buffer and credit ₹1,000 to your spending wallet.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Run Smoother Action Button -->
-          <div class="mt-5 flex items-center justify-end">
-            <button id="runSmootherBtn" onclick="runIncomeSmoother()" class="w-full sm:w-auto px-6 py-3 rounded-xl bg-gradient-to-r from-brand-600 to-emerald-700 hover:from-brand-500 hover:to-emerald-600 text-white font-bold text-sm shadow-md glow-emerald flex items-center justify-center gap-2 transition-all">
+          <!-- Action Button -->
+          <div class="mt-6 flex items-center justify-end">
+            <button id="runSmootherBtn" onclick="runIncomeSmoother()" class="w-full sm:w-auto px-7 py-3.5 rounded-xl bg-gradient-to-r from-brand-600 to-emerald-700 hover:from-brand-500 hover:to-emerald-600 text-white font-bold text-sm shadow-md glow-emerald flex items-center justify-center gap-2 transition-all">
               <i class="fa-solid fa-wand-magic-sparkles"></i>
               <span data-i18n="runSmootherCTA">Execute Autonomous AI Smoother</span>
             </button>
           </div>
         </div>
 
-        <!-- RIGHT: Dynamic GIG-Score & Alternative Credit Engine (5 Cols) -->
-        <div id="gigScoreSection" class="xl:col-span-5 sandal-card rounded-2xl p-6 flex flex-col justify-between">
-          <div>
-            <div class="flex items-center justify-between mb-4">
-              <div>
-                <h3 class="text-lg font-black text-warmgray-900 flex items-center gap-2">
-                  <i class="fa-solid fa-award text-amber-600"></i>
-                  <span data-i18n="gigScoreEngineHeading">GIG-Score Credit Engine</span>
-                </h3>
-                <p class="text-xs text-warmgray-500 mt-0.5 font-medium" data-i18n="gigScoreEngineSub">
-                  Work-based algorithmic credit scoring bypassing traditional CIBIL/payslip barriers.
-                </p>
-              </div>
+      </div>
+
+      <!-- ============================================================== -->
+      <!-- 📄 PAGE 3: 💳 GIG-SCORE CREDIT ENGINE VIEW (#view-gigscore)    -->
+      <!-- ============================================================== -->
+      <div id="view-gigscore" class="page-view hidden view-animate space-y-6">
+        
+        <div class="sandal-card rounded-2xl p-6">
+          <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pb-5 border-b border-sandal-200">
+            <div>
+              <h2 class="text-xl font-black text-warmgray-900 flex items-center gap-2">
+                <i class="fa-solid fa-award text-amber-600"></i>
+                <span data-i18n="gigScoreEngineHeading">GIG-Score Credit Engine</span>
+              </h2>
+              <p class="text-xs text-warmgray-500 mt-1 font-medium" data-i18n="gigScoreEngineSub">
+                Work-based algorithmic credit scoring bypassing traditional CIBIL/payslip barriers.
+              </p>
             </div>
-
-            <!-- Score Visual Radial / Card -->
-            <div class="bg-gradient-to-br from-sandal-50 to-sandal-100/60 border border-sandal-200 rounded-2xl p-5 text-center relative">
-              <div class="text-[11px] font-bold text-warmgray-500 uppercase tracking-wider" data-i18n="scoreMetricLabel">Alternative Credit Score</div>
-              
-              <div class="my-3 flex items-center justify-center gap-3">
-                <div class="w-24 h-24 rounded-2xl border-2 border-sandal-400 flex flex-col items-center justify-center bg-white shadow-md">
-                  <span class="text-3xl font-black text-sandal-800" id="meterScoreVal">693</span>
-                  <span class="text-[10px] text-brand-700 font-bold">/ 800</span>
-                </div>
-                <div class="text-left space-y-1">
-                  <span class="inline-block px-2.5 py-0.5 rounded-md bg-brand-100 text-brand-800 text-xs font-bold border border-brand-300" id="meterRiskBadge">
-                    Consistent Worker
-                  </span>
-                  <p class="text-xs text-warmgray-700 font-bold" data-i18n="meterApproval">Instant Loan Approval: <strong class="text-brand-700">Yes</strong></p>
-                  <p class="text-[11px] text-warmgray-500 font-medium">Pre-Approved Credit: <strong class="text-warmgray-900" id="meterCreditLimit">₹8,000</strong></p>
-                </div>
-              </div>
-
-              <!-- Score Weights Explanation -->
-              <div class="space-y-2.5 mt-4 pt-4 border-t border-sandal-200 text-left">
-                <!-- Metric 1: Hours Consistency (35%) -->
-                <div>
-                  <div class="flex justify-between text-xs mb-1">
-                    <span class="text-warmgray-700 font-semibold flex items-center gap-1.5">
-                      <i class="fa-regular fa-clock text-sandal-700 text-[11px]"></i>
-                      <span data-i18n="metricHours">Active Hours Consistency</span>
-                      <span class="text-[10px] text-warmgray-400 font-normal">(35% weight)</span>
-                    </span>
-                    <span class="font-bold text-warmgray-900" id="barHoursVal">86%</span>
-                  </div>
-                  <div class="w-full h-2 bg-sandal-200 rounded-full overflow-hidden">
-                    <div id="barHours" class="h-full bg-sandal-600 rounded-full" style="width: 86%;"></div>
-                  </div>
-                </div>
-
-                <!-- Metric 2: Platform Rating (35%) -->
-                <div>
-                  <div class="flex justify-between text-xs mb-1">
-                    <span class="text-warmgray-700 font-semibold flex items-center gap-1.5">
-                      <i class="fa-regular fa-star text-amber-600 text-[11px]"></i>
-                      <span data-i18n="metricRating">Customer Rating</span>
-                      <span class="text-[10px] text-warmgray-400 font-normal">(35% weight)</span>
-                    </span>
-                    <span class="font-bold text-warmgray-900" id="barRatingVal">84%</span>
-                  </div>
-                  <div class="w-full h-2 bg-sandal-200 rounded-full overflow-hidden">
-                    <div id="barRating" class="h-full bg-amber-500 rounded-full" style="width: 84%;"></div>
-                  </div>
-                </div>
-
-                <!-- Metric 3: Income Regularity (30%) -->
-                <div>
-                  <div class="flex justify-between text-xs mb-1">
-                    <span class="text-warmgray-700 font-semibold flex items-center gap-1.5">
-                      <i class="fa-solid fa-arrow-trend-up text-brand-700 text-[11px]"></i>
-                      <span data-i18n="metricRegularity">30-Day Income Regularity</span>
-                      <span class="text-[10px] text-warmgray-400 font-normal">(30% weight)</span>
-                    </span>
-                    <span class="font-bold text-warmgray-900" id="barRegularityVal">64%</span>
-                  </div>
-                  <div class="w-full h-2 bg-sandal-200 rounded-full overflow-hidden">
-                    <div id="barRegularity" class="h-full bg-brand-600 rounded-full" style="width: 64%;"></div>
-                  </div>
-                </div>
-              </div>
-
+            <div class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-brand-50 border border-brand-200 text-xs font-bold text-brand-700">
+              <i class="fa-solid fa-shield-check"></i>
+              <span>0% Predatory Interest Guaranteed</span>
             </div>
           </div>
 
-          <div class="mt-4 pt-3 border-t border-sandal-200 flex items-center justify-between">
-            <div class="text-[11px] text-warmgray-500 font-bold flex items-center gap-1">
-              <i class="fa-solid fa-shield-halved text-brand-600"></i>
-              <span data-i18n="antiPredatoryTag">0% Predatory Interest Guaranteed</span>
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-6">
+            
+            <!-- Left: Credit Score Radial / Meter (5 cols) -->
+            <div class="lg:col-span-5 bg-gradient-to-br from-sandal-50 to-sandal-100/60 border border-sandal-200 rounded-2xl p-6 text-center flex flex-col justify-between">
+              <div>
+                <div class="text-xs font-bold text-warmgray-500 uppercase tracking-wider" data-i18n="scoreMetricLabel">Alternative Credit Score</div>
+                <div class="my-4 w-28 h-28 mx-auto rounded-3xl border-2 border-sandal-400 flex flex-col items-center justify-center bg-white shadow-md">
+                  <span class="text-4xl font-black text-sandal-800" id="meterScoreVal">693</span>
+                  <span class="text-[11px] text-brand-700 font-bold">/ 800</span>
+                </div>
+                <span class="inline-block px-3 py-1 rounded-lg bg-brand-100 text-brand-800 text-xs font-bold border border-brand-300" id="meterRiskBadge">
+                  Consistent Worker (Low Risk)
+                </span>
+              </div>
+
+              <div class="mt-4 pt-4 border-t border-sandal-200 space-y-1.5 text-xs text-left">
+                <div class="flex justify-between">
+                  <span class="text-warmgray-600 font-medium">Instant Loan Approval:</span>
+                  <strong class="text-brand-700">Yes (Pre-Approved)</strong>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-warmgray-600 font-medium">Max Eligible Credit:</span>
+                  <strong class="text-warmgray-900" id="meterCreditLimit">₹8,000</strong>
+                </div>
+              </div>
             </div>
-            <button onclick="openAdvanceModal()" class="text-xs font-black text-sandal-700 hover:text-sandal-900 flex items-center gap-1 transition-colors">
-              <span data-i18n="quickApply">Apply Micro-Advance</span>
-              <i class="fa-solid fa-arrow-right text-[10px]"></i>
+
+            <!-- Right: Tri-Factor Breakdown (7 cols) -->
+            <div class="lg:col-span-7 space-y-4 flex flex-col justify-between">
+              <div>
+                <h4 class="text-sm font-bold text-warmgray-800 mb-3">Tri-Factor Algorithmic Breakdown:</h4>
+                <div class="space-y-4">
+                  <!-- Metric 1: Hours Consistency (35%) -->
+                  <div class="bg-white p-4 rounded-xl border border-sandal-200 shadow-sm">
+                    <div class="flex justify-between text-xs mb-1.5">
+                      <span class="text-warmgray-800 font-bold flex items-center gap-1.5">
+                        <i class="fa-regular fa-clock text-sandal-700"></i>
+                        <span data-i18n="metricHours">Active Hours Consistency</span>
+                        <span class="text-[10px] text-warmgray-400 font-normal">(35% weight)</span>
+                      </span>
+                      <span class="font-black text-sandal-900" id="barHoursVal">86%</span>
+                    </div>
+                    <div class="w-full h-2.5 bg-sandal-100 rounded-full overflow-hidden">
+                      <div id="barHours" class="h-full bg-sandal-600 rounded-full" style="width: 86%;"></div>
+                    </div>
+                  </div>
+
+                  <!-- Metric 2: Platform Rating (35%) -->
+                  <div class="bg-white p-4 rounded-xl border border-sandal-200 shadow-sm">
+                    <div class="flex justify-between text-xs mb-1.5">
+                      <span class="text-warmgray-800 font-bold flex items-center gap-1.5">
+                        <i class="fa-regular fa-star text-amber-600"></i>
+                        <span data-i18n="metricRating">Customer Rating</span>
+                        <span class="text-[10px] text-warmgray-400 font-normal">(35% weight)</span>
+                      </span>
+                      <span class="font-black text-amber-600" id="barRatingVal">84%</span>
+                    </div>
+                    <div class="w-full h-2.5 bg-sandal-100 rounded-full overflow-hidden">
+                      <div id="barRating" class="h-full bg-amber-500 rounded-full" style="width: 84%;"></div>
+                    </div>
+                  </div>
+
+                  <!-- Metric 3: Income Regularity (30%) -->
+                  <div class="bg-white p-4 rounded-xl border border-sandal-200 shadow-sm">
+                    <div class="flex justify-between text-xs mb-1.5">
+                      <span class="text-warmgray-800 font-bold flex items-center gap-1.5">
+                        <i class="fa-solid fa-arrow-trend-up text-brand-700"></i>
+                        <span data-i18n="metricRegularity">30-Day Income Regularity</span>
+                        <span class="text-[10px] text-warmgray-400 font-normal">(30% weight)</span>
+                      </span>
+                      <span class="font-black text-brand-700" id="barRegularityVal">64%</span>
+                    </div>
+                    <div class="w-full h-2.5 bg-sandal-100 rounded-full overflow-hidden">
+                      <div id="barRegularity" class="h-full bg-brand-600 rounded-full" style="width: 64%;"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Quick Micro-Advance Button -->
+              <div class="pt-3">
+                <button onclick="openAdvanceModal()" class="w-full py-3 rounded-xl bg-sandal-700 hover:bg-sandal-800 text-white text-xs font-bold shadow-md flex items-center justify-center gap-2 transition-all">
+                  <i class="fa-solid fa-hand-holding-dollar"></i>
+                  <span>Apply for Shift-Backed Micro-Advance (0% Interest)</span>
+                </button>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ============================================================== -->
+      <!-- 📄 PAGE 4: 🌧️ MONSOON & SURGE RADAR VIEW (#view-weather)        -->
+      <!-- ============================================================== -->
+      <div id="view-weather" class="page-view hidden view-animate space-y-6">
+        
+        <!-- Weather Banner -->
+        <div class="sandal-card rounded-2xl p-6 border-l-4 border-l-sandal-600 bg-gradient-to-r from-white via-sandal-50 to-white">
+          <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <div class="flex items-start gap-4">
+              <div class="w-14 h-14 rounded-2xl bg-sandal-200 text-sandal-800 flex items-center justify-center shrink-0 text-3xl shadow-sm">
+                <i class="fa-solid fa-cloud-showers-heavy"></i>
+              </div>
+              <div>
+                <div class="flex items-center gap-2 flex-wrap">
+                  <h3 class="text-lg font-black text-warmgray-900" data-i18n="weatherTitle">⚠️ Chennai Monsoon Surge Advisory</h3>
+                  <span class="text-xs px-2.5 py-0.5 rounded-full bg-rose-100 text-rose-800 font-bold border border-rose-200">1.45x Surge Expected</span>
+                </div>
+                <p class="text-xs text-warmgray-600 mt-1.5 leading-relaxed font-medium" data-i18n="weatherBody">
+                  Heavy rain forecast tomorrow evening! Food & parcel demand projected to spike by 60%. EquiPulse AI projects +₹650 extra surge earnings during 17:00-22:00. Working this peak shift allows auto-sweeping ₹750 surplus directly into your Safety Vault!
+                </p>
+              </div>
+            </div>
+            <button onclick="navigateTo('smoother'); setSimulatePreset(1750);" class="px-5 py-3 rounded-xl bg-sandal-700 hover:bg-sandal-800 text-white text-xs font-bold shadow-sm flex items-center gap-2 shrink-0 transition-all">
+              <i class="fa-solid fa-bolt text-xs"></i>
+              <span data-i18n="simulateSurgeBtn">Simulate This Surge Shift</span>
             </button>
           </div>
         </div>
 
-      </section>
-
-      <!-- Visual Time Series Chart (30-Day Volatile vs Smoothed Income) -->
-      <section id="chartSection" class="sandal-card rounded-2xl p-6">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
-          <div>
-            <h3 class="text-lg font-black text-warmgray-900 flex items-center gap-2">
-              <i class="fa-solid fa-chart-line text-brand-600"></i>
-              <span data-i18n="chartHeading">Income Volatility vs. EquiPulse Smoothed Security</span>
-            </h3>
-            <p class="text-xs text-warmgray-500 mt-0.5 font-medium" data-i18n="chartSub">
-              Demonstrating how autonomous sweeps and disbursements turn irregular gig earnings into a predictable daily salary.
-            </p>
-          </div>
-          <div class="flex items-center gap-3">
-            <div class="flex items-center gap-2 text-xs">
-              <span class="inline-block w-3 h-3 rounded-full bg-rose-500"></span>
-              <span class="text-warmgray-700 font-semibold" data-i18n="chartLegendRaw">Raw Volatile</span>
+        <!-- Zone-Wise Demand Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="sandal-card rounded-2xl p-4 bg-white border border-sandal-200">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-warmgray-900">OMR IT Corridor</span>
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-rose-100 text-rose-700 border border-rose-200">1.5x Surge</span>
             </div>
-            <div class="flex items-center gap-2 text-xs">
-              <span class="inline-block w-3 h-3 rounded-full bg-brand-600"></span>
-              <span class="text-warmgray-700 font-semibold" data-i18n="chartLegendSmoothed">Smoothed Baseline</span>
+            <p class="text-xs text-warmgray-500 font-medium">Sholinganallur & Navalur dinner deliveries</p>
+          </div>
+          <div class="sandal-card rounded-2xl p-4 bg-white border border-sandal-200">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-warmgray-900">T. Nagar / Central</span>
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-100 text-amber-700 border border-amber-200">1.6x Surge</span>
             </div>
-            <div class="flex items-center gap-2 text-xs">
-              <span class="inline-block w-3 h-1 bg-warmgray-400"></span>
-              <span class="text-warmgray-500 font-medium" data-i18n="chartLegendExpense">Expenses</span>
+            <p class="text-xs text-warmgray-500 font-medium">Shopping peak & quick auto trips</p>
+          </div>
+          <div class="sandal-card rounded-2xl p-4 bg-white border border-sandal-200">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-warmgray-900">Velachery Hub</span>
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-brand-100 text-brand-700 border border-brand-200">1.45x Surge</span>
+            </div>
+            <p class="text-xs text-warmgray-500 font-medium">Phoenix Marketcity food parcel demand</p>
+          </div>
+          <div class="sandal-card rounded-2xl p-4 bg-white border border-sandal-200">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-warmgray-900">Guindy & Airport</span>
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-sandal-100 text-sandal-800 border border-sandal-300">1.25x Normal</span>
+            </div>
+            <p class="text-xs text-warmgray-500 font-medium">Airport and transit hub mobility</p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ============================================================== -->
+      <!-- 📄 PAGE 5: 📈 VOLATILITY CHART VIEW (#view-chart)               -->
+      <!-- ============================================================== -->
+      <div id="view-chart" class="page-view hidden view-animate space-y-6">
+        
+        <div class="sandal-card rounded-2xl p-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
+            <div>
+              <h2 class="text-xl font-black text-warmgray-900 flex items-center gap-2">
+                <i class="fa-solid fa-chart-line text-brand-600"></i>
+                <span data-i18n="chartHeading">Income Volatility vs. EquiPulse Smoothed Security</span>
+              </h2>
+              <p class="text-xs text-warmgray-500 mt-0.5 font-medium" data-i18n="chartSub">
+                Demonstrating how autonomous sweeps and disbursements turn irregular gig earnings into a predictable daily salary.
+              </p>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="flex items-center gap-2 text-xs">
+                <span class="inline-block w-3 h-3 rounded-full bg-rose-500"></span>
+                <span class="text-warmgray-700 font-semibold" data-i18n="chartLegendRaw">Raw Volatile</span>
+              </div>
+              <div class="flex items-center gap-2 text-xs">
+                <span class="inline-block w-3 h-3 rounded-full bg-brand-600"></span>
+                <span class="text-warmgray-700 font-semibold" data-i18n="chartLegendSmoothed">Smoothed Baseline</span>
+              </div>
+              <div class="flex items-center gap-2 text-xs">
+                <span class="inline-block w-3 h-1 bg-warmgray-400"></span>
+                <span class="text-warmgray-500 font-medium" data-i18n="chartLegendExpense">Expenses</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Chart Canvas Container -->
+          <div class="w-full h-96 relative bg-sandal-50/50 rounded-xl p-2 border border-sandal-200">
+            <canvas id="incomeComparisonChart"></canvas>
+          </div>
+
+          <!-- Financial Resilience Stats Row -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6 pt-5 border-t border-sandal-200 text-center">
+            <div class="p-3 rounded-xl bg-brand-50 border border-brand-200">
+              <div class="text-[10px] uppercase font-bold text-brand-700">Income Stability Index</div>
+              <div class="text-xl font-black text-warmgray-900 mt-0.5">92% Stabilized</div>
+            </div>
+            <div class="p-3 rounded-xl bg-sandal-100 border border-sandal-300">
+              <div class="text-[10px] uppercase font-bold text-sandal-800">Total Surpluses Swept</div>
+              <div class="text-xl font-black text-warmgray-900 mt-0.5">₹6,840</div>
+            </div>
+            <div class="p-3 rounded-xl bg-amber-50 border border-amber-200">
+              <div class="text-[10px] uppercase font-bold text-amber-700">Total Deficits Covered</div>
+              <div class="text-xl font-black text-warmgray-900 mt-0.5">₹2,590</div>
             </div>
           </div>
         </div>
 
-        <!-- Chart Canvas Container -->
-        <div class="w-full h-80 relative bg-sandal-50/50 rounded-xl p-2 border border-sandal-200">
-          <canvas id="incomeComparisonChart"></canvas>
-        </div>
-      </section>
+      </div>
 
-      <!-- Recent 30-Day Shifts & Financial Ledger -->
-      <section id="ledgerSection" class="sandal-card rounded-2xl p-6">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
-          <div>
-            <h3 class="text-lg font-black text-warmgray-900 flex items-center gap-2">
-              <i class="fa-solid fa-clock-rotate-left text-sandal-700"></i>
-              <span data-i18n="historyHeading">Shift Activity & Autonomous Buffer Ledger</span>
-            </h3>
-            <p class="text-xs text-warmgray-500 mt-0.5 font-medium" data-i18n="historySub">
-              Detailed chronological record of daily earnings, expenses, weather, and automated vault actions.
-            </p>
+      <!-- ============================================================== -->
+      <!-- 📄 PAGE 6: 📋 30-DAY SHIFT LEDGER VIEW (#view-ledger)           -->
+      <!-- ============================================================== -->
+      <div id="view-ledger" class="page-view hidden view-animate space-y-6">
+        
+        <div class="sandal-card rounded-2xl p-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
+            <div>
+              <h2 class="text-xl font-black text-warmgray-900 flex items-center gap-2">
+                <i class="fa-solid fa-clock-rotate-left text-sandal-700"></i>
+                <span data-i18n="historyHeading">Shift Activity & Autonomous Buffer Ledger</span>
+              </h2>
+              <p class="text-xs text-warmgray-500 mt-0.5 font-medium" data-i18n="historySub">
+                Detailed chronological record of daily earnings, expenses, weather, and automated vault actions.
+              </p>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="text-xs text-warmgray-500 font-bold" data-i18n="filterLabel">Filter:</span>
+              <select id="weatherFilter" onchange="filterHistoryTable()" class="bg-white border border-sandal-300 text-warmgray-800 text-xs font-semibold rounded-xl px-3 py-1.5 outline-none shadow-sm focus:border-sandal-500">
+                <option value="ALL">All 30 Days</option>
+                <option value="Heavy Rain">Heavy Rain Days</option>
+                <option value="Surge Demand">Surge Days</option>
+                <option value="Clear">Normal / Lean Days</option>
+              </select>
+            </div>
           </div>
-          <div class="flex items-center gap-2">
-            <span class="text-xs text-warmgray-500 font-bold" data-i18n="filterLabel">Filter:</span>
-            <select id="weatherFilter" onchange="filterHistoryTable()" class="bg-white border border-sandal-300 text-warmgray-800 text-xs font-semibold rounded-xl px-3 py-1.5 outline-none shadow-sm focus:border-sandal-500">
-              <option value="ALL">All 30 Days</option>
-              <option value="Heavy Rain">Heavy Rain Days</option>
-              <option value="Surge Demand">Surge Days</option>
-              <option value="Clear">Normal / Lean Days</option>
-            </select>
+
+          <!-- Table Container -->
+          <div class="overflow-x-auto rounded-xl border border-sandal-200 shadow-sm">
+            <table class="w-full text-left text-xs text-warmgray-700">
+              <thead class="bg-sandal-100 uppercase font-bold text-warmgray-600 text-[10px] tracking-wider border-b border-sandal-200">
+                <tr>
+                  <th class="py-3.5 px-4" data-i18n="thDate">Date</th>
+                  <th class="py-3.5 px-4" data-i18n="thWeather">Weather / Demand</th>
+                  <th class="py-3.5 px-4" data-i18n="thHours">Active Hours</th>
+                  <th class="py-3.5 px-4" data-i18n="thTrips">Trips</th>
+                  <th class="py-3.5 px-4" data-i18n="thRaw">Raw Income</th>
+                  <th class="py-3.5 px-4" data-i18n="thExpenses">Expenses</th>
+                  <th class="py-3.5 px-4" data-i18n="thVaultAction">Autonomous Vault Action</th>
+                  <th class="py-3.5 px-4" data-i18n="thFinalWallet">Effective Wallet</th>
+                </tr>
+              </thead>
+              <tbody id="historyTableBody" class="divide-y divide-sandal-100 bg-white font-medium">
+                <!-- Populated dynamically by JavaScript -->
+              </tbody>
+            </table>
           </div>
         </div>
 
-        <!-- Table Container -->
-        <div class="overflow-x-auto rounded-xl border border-sandal-200 shadow-sm">
-          <table class="w-full text-left text-xs text-warmgray-700">
-            <thead class="bg-sandal-100 uppercase font-bold text-warmgray-600 text-[10px] tracking-wider border-b border-sandal-200">
-              <tr>
-                <th class="py-3 px-4" data-i18n="thDate">Date</th>
-                <th class="py-3 px-4" data-i18n="thWeather">Weather / Demand</th>
-                <th class="py-3 px-4" data-i18n="thHours">Active Hours</th>
-                <th class="py-3 px-4" data-i18n="thTrips">Trips</th>
-                <th class="py-3 px-4" data-i18n="thRaw">Raw Income</th>
-                <th class="py-3 px-4" data-i18n="thExpenses">Expenses</th>
-                <th class="py-3 px-4" data-i18n="thVaultAction">Autonomous Vault Action</th>
-                <th class="py-3 px-4" data-i18n="thFinalWallet">Effective Wallet</th>
-              </tr>
-            </thead>
-            <tbody id="historyTableBody" class="divide-y divide-sandal-100 bg-white font-medium">
-              <!-- Populated dynamically by JavaScript -->
-            </tbody>
-          </table>
-        </div>
-      </section>
+      </div>
 
       <!-- Footer -->
       <footer class="pt-4 pb-2 border-t border-sandal-200 text-center text-xs text-warmgray-500">
@@ -808,7 +964,7 @@
             <span>EquiPulse Fintech • Built for Hackathon PS-4 (Financial Resilience for Gig Workers)</span>
           </div>
           <div class="font-medium text-warmgray-400">
-            <span>Sandal & White Theme • Tamil & English Bilingual Engine</span>
+            <span>Sandal & White Theme • Multi-Page Architecture with Smooth Animations</span>
           </div>
         </div>
       </footer>
@@ -816,16 +972,13 @@
     </main>
   </div>
 
-  <!-- MODAL: Shift-Backed Micro-Advance (Sandal & White Theme) -->
+  <!-- MODAL: Shift-Backed Micro-Advance -->
   <div id="advanceModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-warmgray-900/40 backdrop-blur-md hidden opacity-0 transition-opacity duration-300">
     <div class="sandal-card bg-white border-2 border-sandal-300 rounded-3xl max-w-lg w-full p-6 sm:p-7 shadow-2xl relative transform scale-95 transition-transform duration-300" id="advanceModalCard">
-      
-      <!-- Close Button -->
       <button onclick="closeAdvanceModal()" class="absolute top-4 right-4 text-warmgray-400 hover:text-warmgray-800 p-1.5 rounded-xl hover:bg-sandal-100 transition-colors">
         <i class="fa-solid fa-xmark text-lg"></i>
       </button>
 
-      <!-- Modal Header -->
       <div class="flex items-center gap-3 mb-4">
         <div class="w-12 h-12 rounded-2xl bg-sandal-100 text-sandal-800 flex items-center justify-center text-xl shadow-sm">
           <i class="fa-solid fa-hand-holding-dollar"></i>
@@ -836,7 +989,6 @@
         </div>
       </div>
 
-      <!-- Advance Presets -->
       <div class="space-y-2.5 mb-5">
         <label class="text-xs font-bold text-warmgray-700" data-i18n="modalSelectAmount">Select Advance Amount:</label>
         <div class="grid grid-cols-4 gap-2">
@@ -847,7 +999,6 @@
         </div>
       </div>
 
-      <!-- Custom Amount Slider -->
       <div class="bg-sandal-50 p-4 rounded-2xl border border-sandal-200 mb-5">
         <div class="flex items-center justify-between mb-2">
           <span class="text-xs text-warmgray-600 font-bold" data-i18n="modalChosenAmount">Selected Advance:</span>
@@ -860,7 +1011,6 @@
         </div>
       </div>
 
-      <!-- Repayment Schedule Transparency -->
       <div class="bg-white rounded-2xl p-4 border border-sandal-200 space-y-2 mb-6 shadow-sm">
         <div class="flex justify-between text-xs">
           <span class="text-warmgray-500 font-medium" data-i18n="modalInterest">Interest Rate:</span>
@@ -884,7 +1034,6 @@
         </div>
       </div>
 
-      <!-- Action Buttons -->
       <div class="flex items-center justify-end gap-3">
         <button onclick="closeAdvanceModal()" class="px-4 py-2.5 rounded-xl bg-sandal-100 hover:bg-sandal-200 text-xs font-bold text-warmgray-700 transition-colors" data-i18n="modalCancel">
           Cancel
@@ -894,22 +1043,77 @@
           <span data-i18n="modalConfirm">Instant 1-Click Disbursal</span>
         </button>
       </div>
-
     </div>
   </div>
 
-  <!-- Inline Script (Part B1: State, i18n, and Auth) -->
   <script>
     const API_BASE = window.location.port === '5000' ? '' : 'http://localhost:5000';
     let currentLang = 'en';
     let dashboardState = null;
     let chartInstance = null;
     let currentAdvanceAmount = 2000;
+    let activePage = 'overview';
     let activeProfile = {
       name: 'Akash S.',
       platform: 'Uber Premier Auto / Moto Captain',
       city: 'Chennai Hub (T. Nagar / Velachery / OMR)'
     };
+
+    // ==========================================
+    // 🔀 MULTI-PAGE VIEW ROUTER WITH ANIMATIONS
+    // ==========================================
+    function navigateTo(pageId) {
+      activePage = pageId;
+
+      // Update sidebar nav buttons styling
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.className = "nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-warmgray-700 hover:bg-white/80 font-semibold text-xs transition-all hover:text-warmgray-900 text-left";
+        const iconBox = btn.querySelector('.icon-box');
+        if (iconBox) {
+          iconBox.className = "icon-box w-7 h-7 rounded-lg bg-sandal-200/80 text-sandal-800 flex items-center justify-center text-xs shrink-0";
+        }
+      });
+
+      const activeBtn = document.getElementById('btn-nav-' + pageId);
+      if (activeBtn) {
+        activeBtn.className = "nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl nav-item-active font-bold text-xs shadow-sm transition-all text-left";
+        const iconBox = activeBtn.querySelector('.icon-box');
+        if (iconBox) {
+          iconBox.className = "icon-box w-7 h-7 rounded-lg bg-white/20 text-white flex items-center justify-center text-xs shrink-0";
+        }
+      }
+
+      // Hide all pages, show target page with animation
+      document.querySelectorAll('.page-view').forEach(view => {
+        view.classList.add('hidden');
+        view.classList.remove('view-animate');
+      });
+
+      const targetView = document.getElementById('view-' + pageId);
+      if (targetView) {
+        targetView.classList.remove('hidden');
+        // Force reflow to re-trigger CSS animation
+        void targetView.offsetWidth;
+        targetView.classList.add('view-animate');
+      }
+
+      // If switching to Chart page, resize chart to fit canvas perfectly
+      if (pageId === 'chart' && chartInstance) {
+        setTimeout(() => {
+          chartInstance.resize();
+        }, 50);
+      }
+
+      // Close mobile drawer if open
+      const sidebar = document.getElementById('leftSidebar');
+      const backdrop = document.getElementById('mobileBackdrop');
+      if (sidebar && !sidebar.classList.contains('-translate-x-full') && window.innerWidth < 1024) {
+        sidebar.classList.add('-translate-x-full');
+        if (backdrop) backdrop.classList.add('hidden');
+      }
+
+      window.location.hash = pageId;
+    }
 
     function toggleMobileSidebar() {
       const sidebar = document.getElementById('leftSidebar');
@@ -925,6 +1129,13 @@
       }
     }
 
+    window.addEventListener('hashchange', () => {
+      const hash = window.location.hash.replace('#', '');
+      if (hash && ['overview', 'smoother', 'gigscore', 'weather', 'chart', 'ledger'].includes(hash)) {
+        navigateTo(hash);
+      }
+    });
+
     const i18n = {
       en: {
         tagline: "Financial Resilience for Gig Workers",
@@ -933,13 +1144,13 @@
         btnLogout: "Logout",
         greetingHello: "Welcome back,",
         headerSubtitle: "Your Autonomous AI Income Smoother & Safety Vault are actively protecting today's shift.",
-        menuSectionMain: "Features & Engines",
+        menuSectionMain: "6 Core Features",
         menuOverview: "Overview Dashboard",
         menuSmoother: "AI Income Smoother",
-        menuGigScore: "GIG-Score Credit",
-        menuWeather: "Monsoon & Surge",
-        menuChart: "Income Volatility Chart",
-        menuLedger: "30-Day Shift Ledger",
+        menuGigScore: "GIG-Score Credit Engine",
+        menuWeather: "Monsoon & Surge Radar",
+        menuChart: "Income Volatility Visualizer",
+        menuLedger: "30-Day Activity Ledger",
         loginSub: "Enter your name to access your AI Income Smoother & GIG-Score",
         loginNameLabel: "Gig Worker / Partner Name:",
         loginNameHint: "💡 This name will appear across your live dashboard & reports",
@@ -1011,11 +1222,11 @@
         btnLogout: "வெளியேறு",
         greetingHello: "வணக்கம்,",
         headerSubtitle: "உங்கள் AI வருமான சமநிலைப்படுத்தி & பாதுகாப்பு பெட்டகம் இன்றைய ஷிப்டை பாதுகாக்கிறது.",
-        menuSectionMain: "முக்கிய அம்சங்கள்",
+        menuSectionMain: "6 முக்கிய அம்சங்கள்",
         menuOverview: "கண்ணோட்டம்",
         menuSmoother: "AI வருமான சமநிலைப்படுத்தி",
         menuGigScore: "கிக்-கிரெடிட் நன்மதிப்பீடு",
-        menuWeather: "மழை மற்றும் சர்ஜ்",
+        menuWeather: "மழை & சர்ஜ் ரேடார்",
         menuChart: "வருமான வரைபடம்",
         menuLedger: "30-நாள் பதிவு ஏடு",
         loginSub: "உங்கள் பெயர் மற்றும் விவரங்களை உள்ளிட்டு AI வருமான சமநிலையை அணுகவும்",
@@ -1302,8 +1513,8 @@
 
       if (dailyIncome > baseline) {
         const surplus = dailyIncome - baseline;
-        previewBox.className = "mt-4 p-4 rounded-xl bg-brand-50 border border-brand-200 text-xs text-warmgray-800 flex items-start gap-3 shadow-sm";
-        previewIcon.className = "w-6 h-6 rounded-full bg-brand-600 text-white flex items-center justify-center shrink-0 mt-0.5 text-xs";
+        previewBox.className = "mt-6 p-4 rounded-xl bg-brand-50 border border-brand-200 text-xs text-warmgray-800 flex items-start gap-3 shadow-sm";
+        previewIcon.className = "w-7 h-7 rounded-full bg-brand-600 text-white flex items-center justify-center shrink-0 mt-0.5 text-xs shadow-sm";
         previewIcon.innerHTML = '<i class="fa-solid fa-arrow-down"></i>';
         
         if (currentLang === 'ta') {
@@ -1315,8 +1526,8 @@
         }
       } else if (dailyIncome < baseline) {
         const shortfall = baseline - dailyIncome;
-        previewBox.className = "mt-4 p-4 rounded-xl bg-amber-50 border border-amber-200 text-xs text-warmgray-800 flex items-start gap-3 shadow-sm";
-        previewIcon.className = "w-6 h-6 rounded-full bg-amber-600 text-white flex items-center justify-center shrink-0 mt-0.5 text-xs";
+        previewBox.className = "mt-6 p-4 rounded-xl bg-amber-50 border border-amber-200 text-xs text-warmgray-800 flex items-start gap-3 shadow-sm";
+        previewIcon.className = "w-7 h-7 rounded-full bg-amber-600 text-white flex items-center justify-center shrink-0 mt-0.5 text-xs shadow-sm";
         previewIcon.innerHTML = '<i class="fa-solid fa-arrow-up"></i>';
         
         if (currentLang === 'ta') {
@@ -1327,8 +1538,8 @@
           previewDesc.innerText = `Today's earning (₹${dailyIncome.toLocaleString('en-IN')}) is ₹${shortfall.toLocaleString('en-IN')} below baseline. EquiPulse will disburse ₹${shortfall.toLocaleString('en-IN')} from your Safety Vault so you still receive ₹1,000 guaranteed living income today.`;
         }
       } else {
-        previewBox.className = "mt-4 p-4 rounded-xl bg-sandal-100 border border-sandal-300 text-xs text-warmgray-800 flex items-start gap-3 shadow-sm";
-        previewIcon.className = "w-6 h-6 rounded-full bg-sandal-600 text-white flex items-center justify-center shrink-0 mt-0.5 text-xs";
+        previewBox.className = "mt-6 p-4 rounded-xl bg-sandal-100 border border-sandal-300 text-xs text-warmgray-800 flex items-start gap-3 shadow-sm";
+        previewIcon.className = "w-7 h-7 rounded-full bg-sandal-600 text-white flex items-center justify-center shrink-0 mt-0.5 text-xs shadow-sm";
         previewIcon.innerHTML = '<i class="fa-solid fa-check"></i>';
         
         if (currentLang === 'ta') {
@@ -1405,14 +1616,14 @@
           : `<span class="px-2 py-0.5 rounded-md bg-sandal-100 text-sandal-800 font-bold">Balanced</span>`);
 
       tr.innerHTML = `
-        <td class="py-3 px-4 text-warmgray-900 font-bold">${txn.date} <span class="text-[10px] text-brand-700 font-medium block">${txn.time || 'Live'}</span></td>
-        <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-md bg-sandal-100 text-sandal-800 font-semibold">Live Simulation</span></td>
-        <td class="py-3 px-4">8.5 hrs</td>
-        <td class="py-3 px-4">16</td>
-        <td class="py-3 px-4 font-bold text-warmgray-900">₹${txn.daily_income.toLocaleString('en-IN')}</td>
-        <td class="py-3 px-4 text-warmgray-500">₹280</td>
-        <td class="py-3 px-4">${actionBadge}</td>
-        <td class="py-3 px-4 font-bold text-brand-700">₹${txn.main_balance_after.toLocaleString('en-IN')}</td>
+        <td class="py-3.5 px-4 text-warmgray-900 font-bold">${txn.date} <span class="text-[10px] text-brand-700 font-medium block">${txn.time || 'Live'}</span></td>
+        <td class="py-3.5 px-4"><span class="px-2 py-0.5 rounded-md bg-sandal-100 text-sandal-800 font-semibold">Live Simulation</span></td>
+        <td class="py-3.5 px-4">8.5 hrs</td>
+        <td class="py-3.5 px-4">16</td>
+        <td class="py-3.5 px-4 font-bold text-warmgray-900">₹${txn.daily_income.toLocaleString('en-IN')}</td>
+        <td class="py-3.5 px-4 text-warmgray-500">₹280</td>
+        <td class="py-3.5 px-4">${actionBadge}</td>
+        <td class="py-3.5 px-4 font-bold text-brand-700">₹${txn.main_balance_after.toLocaleString('en-IN')}</td>
       `;
 
       if (tbody.firstChild) {
@@ -1547,7 +1758,9 @@
     }
 
     function renderChart(history, smoothed) {
-      const ctx = document.getElementById('incomeComparisonChart').getContext('2d');
+      const canvas = document.getElementById('incomeComparisonChart');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
       if (chartInstance) chartInstance.destroy();
 
       const labels = history.map(d => d.date.slice(5));
@@ -1645,6 +1858,7 @@
 
     function renderHistoryTable(data) {
       const tbody = document.getElementById('historyTableBody');
+      if (!tbody) return;
       tbody.innerHTML = '';
 
       data.slice().reverse().forEach(record => {
@@ -1678,14 +1892,14 @@
         }
 
         tr.innerHTML = `
-          <td class="py-3 px-4 text-warmgray-900 font-bold">${record.date}</td>
-          <td class="py-3 px-4">${weatherBadge}</td>
-          <td class="py-3 px-4">${record.active_hours} hrs</td>
-          <td class="py-3 px-4">${record.completed_trips}</td>
-          <td class="py-3 px-4 font-black ${record.daily_income < 700 ? 'text-rose-600' : 'text-warmgray-900'}">₹${record.daily_income.toLocaleString('en-IN')}</td>
-          <td class="py-3 px-4 text-warmgray-500">₹${record.expenses}</td>
-          <td class="py-3 px-4">${vaultActionHTML}</td>
-          <td class="py-3 px-4 font-black text-brand-700">₹${effectiveWallet.toLocaleString('en-IN')}</td>
+          <td class="py-3.5 px-4 text-warmgray-900 font-bold">${record.date}</td>
+          <td class="py-3.5 px-4">${weatherBadge}</td>
+          <td class="py-3.5 px-4">${record.active_hours} hrs</td>
+          <td class="py-3.5 px-4">${record.completed_trips}</td>
+          <td class="py-3.5 px-4 font-black ${record.daily_income < 700 ? 'text-rose-600' : 'text-warmgray-900'}">₹${record.daily_income.toLocaleString('en-IN')}</td>
+          <td class="py-3.5 px-4 text-warmgray-500">₹${record.expenses}</td>
+          <td class="py-3.5 px-4">${vaultActionHTML}</td>
+          <td class="py-3.5 px-4 font-black text-brand-700">₹${effectiveWallet.toLocaleString('en-IN')}</td>
         `;
         tbody.appendChild(tr);
       });
@@ -1706,6 +1920,13 @@
     document.addEventListener('DOMContentLoaded', () => {
       initUserAuth();
       fetchDashboardData();
+      
+      const initialHash = window.location.hash.replace('#', '') || 'overview';
+      if (['overview', 'smoother', 'gigscore', 'weather', 'chart', 'ledger'].includes(initialHash)) {
+        navigateTo(initialHash);
+      } else {
+        navigateTo('overview');
+      }
     });
   </script>
 </body>
