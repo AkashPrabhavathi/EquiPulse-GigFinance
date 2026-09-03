@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
   <meta charset="UTF-8">
@@ -238,10 +238,16 @@
 
       <!-- Right Controls: Balances, Language Toggle, Switch User, Quick Actions -->
       <div class="flex items-center gap-2 sm:gap-3">
-        <!-- Switch Partner / Logout Button -->
+        <!-- Switch Partner Button -->
         <button onclick="showLoginModal()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 border border-slate-700 text-xs font-semibold text-slate-300 transition-colors" title="Change login partner name">
           <i class="fa-solid fa-user-pen text-brand-400 text-xs"></i>
           <span class="hidden sm:inline" data-i18n="btnSwitchUser">Switch Partner</span>
+        </button>
+
+        <!-- Logout Button -->
+        <button onclick="handleLogout()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-xs font-semibold text-rose-300 hover:text-rose-200 transition-colors" title="Logout from session">
+          <i class="fa-solid fa-arrow-right-from-bracket text-rose-400 text-xs"></i>
+          <span class="hidden sm:inline" data-i18n="btnLogout">Logout</span>
         </button>
 
         <!-- Language Switcher -->
@@ -764,6 +770,7 @@
         tagline: "Financial Resilience for Gig & Informal Workers",
         btnAdvance: "Get Micro-Advance",
         btnSwitchUser: "Switch Partner",
+        btnLogout: "Logout",
         loginSub: "Enter your name to access your AI Income Smoother & GIG-Score",
         loginNameLabel: "Gig Worker / Partner Name:",
         loginNameHint: "💡 This name will appear across your live dashboard & reports",
@@ -832,6 +839,7 @@
         tagline: "கிக் & முறைசாரா தொழிலாளர்களுக்கான நிதிப் பாதுகாப்பு",
         btnAdvance: "உடனடி முன்பணம் பெறுக",
         btnSwitchUser: "பெயர் மாற்று",
+        btnLogout: "வெளியேறு",
         loginSub: "உங்கள் பெயர் மற்றும் விவரங்களை உள்ளிட்டு AI வருமான சமநிலையை அணுகவும்",
         loginNameLabel: "கிக் தொழிலாளர் / பார்ட்னர் பெயர்:",
         loginNameHint: "💡 இந்த பெயரே உங்கள் நேரலை டாஷ்போர்டில் காட்டப்படும்",
@@ -952,6 +960,21 @@
       setTimeout(() => {
         overlay.classList.add('hidden');
       }, 500);
+    }
+
+    function handleLogout() {
+      localStorage.removeItem('equipulse_partner');
+      activeProfile = {
+        name: '',
+        platform: 'Swiggy Super-Partner & Uber Auto',
+        city: 'Chennai Hub (T. Nagar / Velachery / OMR)'
+      };
+      document.getElementById('loginNameInput').value = '';
+      showLoginModal();
+      const logoutMsg = currentLang === 'ta'
+        ? 'வெற்றிகரமாக வெளியேறிவிட்டீர்கள். மீண்டும் நுழைய உங்கள் பெயரை உள்ளிடவும்.'
+        : 'Logged out successfully. Enter your name to login.';
+      showToast(logoutMsg, false);
     }
 
     function fillQuickLogin(name, platform, city) {
