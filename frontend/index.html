@@ -1,0 +1,1281 @@
+﻿<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EquiPulse | Financial Resilience Engine for Gig Workers</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#ecfdf5',
+              100: '#d1fae5',
+              400: '#34d399',
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857',
+            },
+            accent: {
+              400: '#22d3ee',
+              500: '#06b6d4',
+              600: '#0891b2',
+            },
+            darkcard: '#131c31',
+            darksurface: '#0d1322'
+          },
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'Noto Sans Tamil', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', 'Noto Sans Tamil', sans-serif;
+      background-color: #0b0f19;
+      color: #f1f5f9;
+    }
+    .glass-card {
+      background: rgba(19, 28, 49, 0.78);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+    }
+    .glass-card:hover {
+      border-color: rgba(16, 185, 129, 0.25);
+    }
+    .glow-emerald {
+      box-shadow: 0 0 25px -5px rgba(16, 185, 129, 0.4);
+    }
+    .glow-cyan {
+      box-shadow: 0 0 25px -5px rgba(6, 182, 212, 0.4);
+    }
+    .glow-amber {
+      box-shadow: 0 0 25px -5px rgba(245, 158, 11, 0.4);
+    }
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0d1322;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 9999px;
+    }
+  </style>
+</head>
+<body class="min-h-screen text-slate-100 antialiased selection:bg-brand-500 selection:text-white">
+
+  <!-- Top Notification Toast -->
+  <div id="toast" class="fixed top-5 right-5 z-50 transform translate-x-full transition-transform duration-300 max-w-md p-4 rounded-xl shadow-2xl flex items-start gap-3 bg-slate-800 border border-slate-700 text-slate-100 pointer-events-none">
+    <div id="toastIcon" class="w-8 h-8 rounded-full flex items-center justify-center shrink-0 mt-0.5 bg-brand-500/20 text-brand-400">
+      <i class="fa-solid fa-check"></i>
+    </div>
+    <div class="flex-1">
+      <h4 id="toastTitle" class="font-bold text-sm text-white">Transaction Recorded</h4>
+      <p id="toastMessage" class="text-xs text-slate-300 mt-1">Details will appear here.</p>
+    </div>
+  </div>
+
+  <!-- Header Navigation -->
+  <header class="sticky top-0 z-40 bg-[#0b0f19]/90 backdrop-blur-md border-b border-slate-800/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      
+      <!-- Brand & Tagline -->
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-xl bg-gradient-to-tr from-brand-600 via-brand-500 to-accent-400 flex items-center justify-center text-white shadow-lg glow-emerald">
+          <i class="fa-solid fa-bolt text-xl"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-2xl font-black tracking-tight bg-gradient-to-r from-white via-slate-100 to-brand-400 bg-clip-text text-transparent">EquiPulse</span>
+            <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-brand-500/10 text-brand-400 border border-brand-500/30">PS-4 Fintech</span>
+          </div>
+          <p class="text-xs text-slate-400 hidden sm:block" data-i18n="tagline">Financial Resilience for Gig & Informal Workers</p>
+        </div>
+      </div>
+
+      <!-- User Badge -->
+      <div class="hidden md:flex items-center gap-3 px-4 py-2 rounded-xl bg-slate-800/60 border border-slate-700/60">
+        <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center text-sm font-bold text-white shadow">
+          கு
+        </div>
+        <div class="text-left">
+          <div class="flex items-center gap-2">
+            <span class="text-sm font-bold text-slate-200" id="userName">Kumaravel S. (குமார்)</span>
+            <span class="text-[11px] px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 font-semibold">★ 4.89</span>
+          </div>
+          <div class="text-[11px] text-slate-400 flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-brand-400 inline-block animate-pulse"></span>
+            <span id="userPlatform">Swiggy Super-Partner & Uber Auto • Chennai Hub</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Controls: Balances, Language Toggle, Quick Actions -->
+      <div class="flex items-center gap-3">
+        <!-- Language Switcher -->
+        <button id="langToggleBtn" onclick="toggleLanguage()" class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-semibold text-slate-300 transition-colors">
+          <i class="fa-solid fa-language text-accent-400 text-sm"></i>
+          <span id="langText">English / தமிழ்</span>
+        </button>
+
+        <!-- Quick Demo Reset -->
+        <button onclick="resetDemoState()" title="Reset demo numbers" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-400 hover:text-white text-xs transition-colors">
+          <i class="fa-solid fa-arrow-rotate-right"></i>
+        </button>
+
+        <!-- Advance Action CTA -->
+        <button onclick="openAdvanceModal()" class="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-gradient-to-r from-accent-500 to-blue-600 hover:from-accent-400 hover:to-blue-500 text-white text-xs font-bold shadow-md transition-all">
+          <i class="fa-solid fa-hand-holding-dollar"></i>
+          <span data-i18n="btnAdvance">Get Micro-Advance</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+    <!-- Live Wallet Status Bar -->
+    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      
+      <!-- Main Liquid Wallet -->
+      <div class="glass-card rounded-2xl p-5 relative overflow-hidden group">
+        <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-brand-500/10 rounded-full blur-xl group-hover:bg-brand-500/20 transition-all"></div>
+        <div class="flex items-center justify-between text-slate-400 mb-2">
+          <span class="text-xs font-medium uppercase tracking-wider" data-i18n="mainWalletTitle">Main Liquid Wallet</span>
+          <span class="p-2 rounded-lg bg-brand-500/10 text-brand-400 text-sm">
+            <i class="fa-solid fa-wallet"></i>
+          </span>
+        </div>
+        <div class="flex items-baseline gap-2">
+          <span class="text-3xl font-extrabold text-white tracking-tight" id="dispMainBalance">₹1,850</span>
+          <span class="text-xs text-brand-400 font-semibold flex items-center gap-1">
+            <i class="fa-solid fa-circle-check text-[10px]"></i> UPI Ready
+          </span>
+        </div>
+        <p class="text-[11px] text-slate-400 mt-2" data-i18n="mainWalletSub">Available for daily grocery, fuel & instant spending</p>
+      </div>
+
+      <!-- Autonomous Safety Vault Buffer -->
+      <div class="glass-card rounded-2xl p-5 relative overflow-hidden group border-brand-500/30">
+        <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-accent-500/10 rounded-full blur-xl group-hover:bg-accent-500/20 transition-all"></div>
+        <div class="flex items-center justify-between text-slate-400 mb-2">
+          <span class="text-xs font-medium uppercase tracking-wider text-accent-400" data-i18n="vaultTitle">Safety Vault Buffer</span>
+          <span class="p-2 rounded-lg bg-accent-500/10 text-accent-400 text-sm">
+            <i class="fa-solid fa-shield-halved"></i>
+          </span>
+        </div>
+        <div class="flex items-baseline gap-2">
+          <span class="text-3xl font-extrabold text-white tracking-tight" id="dispVaultBalance">₹4,250</span>
+          <span class="text-xs px-2 py-0.5 rounded-full bg-brand-500/20 text-brand-300 font-bold" id="dispVaultDays">4.25 Days</span>
+        </div>
+        <div class="mt-3 flex items-center justify-between text-[11px] text-slate-400">
+          <span data-i18n="vaultGoal">10-Day Reserve Goal: ₹10,000</span>
+          <span id="dispVaultPct" class="font-bold text-accent-400">42.5%</span>
+        </div>
+        <div class="w-full h-1.5 bg-slate-700/60 rounded-full mt-1.5 overflow-hidden">
+          <div id="vaultProgressBar" class="h-full bg-gradient-to-r from-accent-400 to-brand-500 rounded-full transition-all duration-500" style="width: 42.5%;"></div>
+        </div>
+      </div>
+
+      <!-- GIG-Score Live Meter -->
+      <div class="glass-card rounded-2xl p-5 relative overflow-hidden group">
+        <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-amber-500/10 rounded-full blur-xl group-hover:bg-amber-500/20 transition-all"></div>
+        <div class="flex items-center justify-between text-slate-400 mb-2">
+          <span class="text-xs font-medium uppercase tracking-wider" data-i18n="gigScoreTitle">Active GIG-Score</span>
+          <span class="p-2 rounded-lg bg-amber-500/10 text-amber-400 text-sm">
+            <i class="fa-solid fa-id-card-clip"></i>
+          </span>
+        </div>
+        <div class="flex items-baseline gap-2">
+          <span class="text-3xl font-extrabold text-amber-400 tracking-tight" id="dispGigScore">738</span>
+          <span class="text-xs text-slate-400 font-medium">/ 800</span>
+        </div>
+        <div class="mt-2 flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-brand-400"></span>
+          <span class="text-[11px] font-semibold text-brand-400" id="dispRiskTier" data-i18n="riskTier">Low Risk / Prime Partner</span>
+        </div>
+        <p class="text-[11px] text-slate-400 mt-1" data-i18n="creditPreApproved">Pre-approved micro-credit: <strong class="text-white" id="dispMaxCredit">₹15,000</strong></p>
+      </div>
+
+      <!-- 30-Day Total & Net Income -->
+      <div class="glass-card rounded-2xl p-5 relative overflow-hidden group">
+        <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-purple-500/10 rounded-full blur-xl group-hover:bg-purple-500/20 transition-all"></div>
+        <div class="flex items-center justify-between text-slate-400 mb-2">
+          <span class="text-xs font-medium uppercase tracking-wider" data-i18n="totalIncomeTitle">30-Day Platform Income</span>
+          <span class="p-2 rounded-lg bg-purple-500/10 text-purple-400 text-sm">
+            <i class="fa-solid fa-chart-pie"></i>
+          </span>
+        </div>
+        <div class="flex items-baseline gap-2">
+          <span class="text-3xl font-extrabold text-white tracking-tight" id="dispTotalIncome">₹35,460</span>
+        </div>
+        <div class="mt-2 flex items-center justify-between text-[11px] text-slate-400">
+          <span>Net after fuel & expenses:</span>
+          <span class="font-bold text-slate-200" id="dispNetEarnings">₹25,830</span>
+        </div>
+        <p class="text-[11px] text-slate-400 mt-1">478 Deliveries • 268 Working Hours</p>
+      </div>
+
+    </section>
+
+    <!-- Weather & Monsoon Surge Alert Banner -->
+    <section class="glass-card rounded-2xl p-5 border-l-4 border-l-accent-400 bg-gradient-to-r from-slate-900 via-darkcard to-slate-900 shadow-xl">
+      <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div class="flex items-start gap-4">
+          <div class="w-12 h-12 rounded-xl bg-accent-500/20 text-accent-400 flex items-center justify-center shrink-0 text-2xl">
+            <i class="fa-solid fa-cloud-showers-heavy"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-2 flex-wrap">
+              <h3 class="text-base font-bold text-white flex items-center gap-2">
+                <span data-i18n="weatherTitle">⚠️ Chennai Monsoon Surge Advisory</span>
+                <span class="text-xs px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 font-semibold border border-rose-500/30">1.45x Surge Expected</span>
+              </h3>
+              <span class="text-xs text-slate-400">South Chennai, OMR & Velachery Hubs</span>
+            </div>
+            <p class="text-xs text-slate-300 mt-1" id="dispWeatherAdvisory" data-i18n="weatherBody">
+              Heavy rain forecast tomorrow evening! Food & parcel demand projected to spike by 60%. EquiPulse AI projects +₹650 extra surge earnings during 17:00-22:00. Working this peak shift allows auto-sweeping ₹750 surplus directly into your Safety Vault!
+            </p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2 shrink-0 self-end md:self-center">
+          <button onclick="setSimulatePreset(1750)" class="px-3.5 py-2 rounded-xl bg-brand-500/20 hover:bg-brand-500/30 border border-brand-500/40 text-brand-300 text-xs font-semibold flex items-center gap-1.5 transition-all">
+            <i class="fa-solid fa-bolt"></i>
+            <span data-i18n="simulateSurgeBtn">Simulate This Surge Shift</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Middle Section: AI Income Smoother Simulator + GIG-Score Analytics -->
+    <section class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+      <!-- LEFT: Interactive AI Income Smoother Simulator (7 Cols) -->
+      <div class="lg:col-span-7 glass-card rounded-2xl p-6 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-sliders text-brand-400"></i>
+                <span data-i18n="smootherHeading">Autonomous AI Income Smoother</span>
+              </h3>
+              <p class="text-xs text-slate-400 mt-0.5" data-i18n="smootherSub">
+                Eliminates the "feast or famine" volatility of gig work. Surpluses are banked; shortfalls are topped up automatically.
+              </p>
+            </div>
+            <div class="text-right">
+              <span class="text-[10px] uppercase font-bold text-slate-400" data-i18n="targetBaselineLabel">Target Baseline</span>
+              <div class="text-sm font-bold text-brand-400">₹1,000 / day</div>
+            </div>
+          </div>
+
+          <!-- Quick Preset Buttons -->
+          <div class="space-y-2 mb-5">
+            <label class="text-xs font-semibold text-slate-300" data-i18n="presetLabel">Select or Simulate Today's Shift Earnings:</label>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              <button onclick="setSimulatePreset(350)" class="preset-btn px-3 py-2 rounded-xl bg-slate-800/80 hover:bg-rose-950/40 border border-slate-700/80 hover:border-rose-500/50 text-left transition-all">
+                <div class="text-[10px] text-rose-400 font-bold" data-i18n="presetBreakdown">Bike Puncture / Lean</div>
+                <div class="text-sm font-extrabold text-white">₹350</div>
+              </button>
+              <button onclick="setSimulatePreset(750)" class="preset-btn px-3 py-2 rounded-xl bg-slate-800/80 hover:bg-amber-950/40 border border-slate-700/80 hover:border-amber-500/50 text-left transition-all">
+                <div class="text-[10px] text-amber-400 font-bold" data-i18n="presetSlow">Slow Mid-Week Day</div>
+                <div class="text-sm font-extrabold text-white">₹750</div>
+              </button>
+              <button onclick="setSimulatePreset(1000)" class="preset-btn px-3 py-2 rounded-xl bg-slate-800/80 hover:bg-brand-950/40 border border-slate-700/80 hover:border-brand-500/50 text-left transition-all">
+                <div class="text-[10px] text-brand-400 font-bold" data-i18n="presetStandard">Standard Baseline</div>
+                <div class="text-sm font-extrabold text-white">₹1,000</div>
+              </button>
+              <button onclick="setSimulatePreset(1750)" class="preset-btn px-3 py-2 rounded-xl bg-slate-800/80 hover:bg-cyan-950/40 border border-slate-700/80 hover:border-cyan-500/50 text-left transition-all">
+                <div class="text-[10px] text-accent-400 font-bold" data-i18n="presetSurge">Monsoon / Weekend</div>
+                <div class="text-sm font-extrabold text-white">₹1,750</div>
+              </button>
+            </div>
+          </div>
+
+          <!-- Slider & Manual Input -->
+          <div class="bg-slate-800/50 border border-slate-700/60 rounded-xl p-4 space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="text-xs text-slate-300 font-medium" data-i18n="earningInputLabel">Simulated Shift Income (₹):</span>
+              <div class="flex items-center gap-1.5 bg-slate-900 px-3 py-1.5 rounded-lg border border-slate-700">
+                <span class="text-slate-400 font-bold text-sm">₹</span>
+                <input type="number" id="simEarningInput" value="1650" min="100" max="3000" step="50" oninput="syncSlider(this.value)" class="w-20 bg-transparent text-white font-bold text-sm outline-none">
+              </div>
+            </div>
+
+            <!-- Range Slider -->
+            <input type="range" id="simEarningSlider" min="200" max="2500" step="50" value="1650" oninput="syncInput(this.value)" class="w-full accent-brand-500 h-2 bg-slate-700 rounded-lg cursor-pointer">
+
+            <div class="flex justify-between text-[10px] text-slate-500 font-semibold">
+              <span>₹200 (Sluggish Day)</span>
+              <span class="text-brand-400 font-bold">₹1,000 (Target Line)</span>
+              <span>₹2,500 (Peak Festival Surge)</span>
+            </div>
+          </div>
+
+          <!-- Real-Time Projected Adjustment Preview -->
+          <div id="simPreviewBox" class="mt-4 p-4 rounded-xl bg-brand-500/10 border border-brand-500/30 text-xs text-slate-200 flex items-start gap-3">
+            <div id="simPreviewIcon" class="w-6 h-6 rounded-full bg-brand-500 text-white flex items-center justify-center shrink-0 mt-0.5 text-xs">
+              <i class="fa-solid fa-arrow-down"></i>
+            </div>
+            <div class="flex-1">
+              <div class="font-bold text-white text-sm" id="simPreviewTitle">Auto-Sweep Mode: Surplus Detected</div>
+              <p class="text-slate-300 text-xs mt-0.5" id="simPreviewDesc">
+                Today's earning (₹1,650) is ₹650 above your target baseline. EquiPulse will auto-sweep ₹650 to your Safety Vault buffer and credit ₹1,000 to your spending wallet.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Run Smoother Action Button -->
+        <div class="mt-5 flex items-center justify-end gap-3">
+          <button id="runSmootherBtn" onclick="runIncomeSmoother()" class="w-full sm:w-auto px-6 py-3 rounded-xl bg-gradient-to-r from-brand-500 via-brand-600 to-emerald-700 hover:from-brand-400 hover:to-emerald-600 text-white font-bold text-sm shadow-lg glow-emerald flex items-center justify-center gap-2 transition-all">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+            <span data-i18n="runSmootherCTA">Execute Autonomous AI Smoother</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- RIGHT: Dynamic GIG-Score & Alternative Credit Engine (5 Cols) -->
+      <div class="lg:col-span-5 glass-card rounded-2xl p-6 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-award text-amber-400"></i>
+                <span data-i18n="gigScoreEngineHeading">GIG-Score Credit Engine</span>
+              </h3>
+              <p class="text-xs text-slate-400 mt-0.5" data-i18n="gigScoreEngineSub">
+                Work-based algorithmic credit scoring bypassing traditional CIBIL/payslip barriers.
+              </p>
+            </div>
+          </div>
+
+          <!-- Score Visual Radial / Card -->
+          <div class="bg-gradient-to-br from-slate-800/80 to-slate-900/90 border border-slate-700/60 rounded-xl p-5 text-center relative">
+            <div class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider" data-i18n="scoreMetricLabel">Alternative Credit Score</div>
+            
+            <div class="my-3 flex items-center justify-center gap-3">
+              <div class="w-24 h-24 rounded-full border-4 border-brand-500/40 flex flex-col items-center justify-center bg-slate-950/70 shadow-inner glow-emerald">
+                <span class="text-3xl font-black text-white" id="meterScoreVal">738</span>
+                <span class="text-[10px] text-brand-400 font-bold">/ 800</span>
+              </div>
+              <div class="text-left space-y-1">
+                <span class="inline-block px-2 py-0.5 rounded-full bg-brand-500/20 text-brand-300 text-xs font-bold border border-brand-500/30" id="meterRiskBadge">
+                  Prime Partner
+                </span>
+                <p class="text-xs text-slate-300 font-medium" data-i18n="meterApproval">Instant Loan Approval: <strong>Yes</strong></p>
+                <p class="text-[11px] text-slate-400">Max Credit: <strong class="text-emerald-400" id="meterCreditLimit">₹15,000</strong></p>
+              </div>
+            </div>
+
+            <!-- Score Weights Explanation -->
+            <div class="space-y-2.5 mt-4 pt-4 border-t border-slate-700/60 text-left">
+              <!-- Metric 1: Hours Consistency (35%) -->
+              <div>
+                <div class="flex justify-between text-xs mb-1">
+                  <span class="text-slate-300 flex items-center gap-1.5">
+                    <i class="fa-regular fa-clock text-accent-400 text-[11px]"></i>
+                    <span data-i18n="metricHours">Active Hours Consistency</span>
+                    <span class="text-[10px] text-slate-500">(35% weight)</span>
+                  </span>
+                  <span class="font-bold text-white" id="barHoursVal">92%</span>
+                </div>
+                <div class="w-full h-1.5 bg-slate-700 rounded-full overflow-hidden">
+                  <div id="barHours" class="h-full bg-accent-400 rounded-full" style="width: 92%;"></div>
+                </div>
+              </div>
+
+              <!-- Metric 2: Platform Rating (35%) -->
+              <div>
+                <div class="flex justify-between text-xs mb-1">
+                  <span class="text-slate-300 flex items-center gap-1.5">
+                    <i class="fa-regular fa-star text-amber-400 text-[11px]"></i>
+                    <span data-i18n="metricRating">Customer Rating</span>
+                    <span class="text-[10px] text-slate-500">(35% weight)</span>
+                  </span>
+                  <span class="font-bold text-white" id="barRatingVal">86%</span>
+                </div>
+                <div class="w-full h-1.5 bg-slate-700 rounded-full overflow-hidden">
+                  <div id="barRating" class="h-full bg-amber-400 rounded-full" style="width: 86%;"></div>
+                </div>
+              </div>
+
+              <!-- Metric 3: Income Regularity (30%) -->
+              <div>
+                <div class="flex justify-between text-xs mb-1">
+                  <span class="text-slate-300 flex items-center gap-1.5">
+                    <i class="fa-solid fa-arrow-trend-up text-brand-400 text-[11px]"></i>
+                    <span data-i18n="metricRegularity">30-Day Income Regularity</span>
+                    <span class="text-[10px] text-slate-500">(30% weight)</span>
+                  </span>
+                  <span class="font-bold text-white" id="barRegularityVal">84%</span>
+                </div>
+                <div class="w-full h-1.5 bg-slate-700 rounded-full overflow-hidden">
+                  <div id="barRegularity" class="h-full bg-brand-400 rounded-full" style="width: 84%;"></div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between">
+          <div class="text-[11px] text-slate-400">
+            <i class="fa-solid fa-shield-check text-brand-400 mr-1"></i>
+            <span data-i18n="antiPredatoryTag">0% Predatory Interest Guaranteed</span>
+          </div>
+          <button onclick="openAdvanceModal()" class="text-xs font-bold text-accent-400 hover:text-accent-300 flex items-center gap-1 transition-colors">
+            <span data-i18n="quickApply">Apply Now</span>
+            <i class="fa-solid fa-arrow-right text-[10px]"></i>
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Visual Time Series Chart (30-Day Volatile vs Smoothed Income) -->
+    <section class="glass-card rounded-2xl p-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
+        <div>
+          <h3 class="text-lg font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-chart-line text-brand-400"></i>
+            <span data-i18n="chartHeading">Income Volatility vs. EquiPulse Smoothed Security</span>
+          </h3>
+          <p class="text-xs text-slate-400 mt-0.5" data-i18n="chartSub">
+            Demonstrating how autonomous sweeps and disbursements turn irregular gig earnings into a predictable daily salary.
+          </p>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="flex items-center gap-2 text-xs">
+            <span class="inline-block w-3 h-3 rounded-full bg-rose-500"></span>
+            <span class="text-slate-300" data-i18n="chartLegendRaw">Raw Volatile</span>
+          </div>
+          <div class="flex items-center gap-2 text-xs">
+            <span class="inline-block w-3 h-3 rounded-full bg-brand-400"></span>
+            <span class="text-slate-300" data-i18n="chartLegendSmoothed">Smoothed Baseline</span>
+          </div>
+          <div class="flex items-center gap-2 text-xs">
+            <span class="inline-block w-3 h-1 bg-slate-500"></span>
+            <span class="text-slate-400" data-i18n="chartLegendExpense">Expenses</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chart Canvas Container -->
+      <div class="w-full h-80 relative">
+        <canvas id="incomeComparisonChart"></canvas>
+      </div>
+    </section>
+
+    <!-- Recent 30-Day Shifts & Financial Ledger -->
+    <section class="glass-card rounded-2xl p-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+        <div>
+          <h3 class="text-lg font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-clock-rotate-left text-accent-400"></i>
+            <span data-i18n="historyHeading">Shift Activity & Autonomous Buffer Ledger</span>
+          </h3>
+          <p class="text-xs text-slate-400 mt-0.5" data-i18n="historySub">
+            Detailed chronological record of daily earnings, expenses, weather, and automated vault actions.
+          </p>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-xs text-slate-400" data-i18n="filterLabel">Filter:</span>
+          <select id="weatherFilter" onchange="filterHistoryTable()" class="bg-slate-800 border border-slate-700 text-slate-200 text-xs rounded-lg px-2.5 py-1.5 outline-none">
+            <option value="ALL">All 30 Days</option>
+            <option value="Heavy Rain">Heavy Rain Days</option>
+            <option value="Surge Demand">Surge Days</option>
+            <option value="Clear">Normal / Lean Days</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Table -->
+      <div class="overflow-x-auto rounded-xl border border-slate-800">
+        <table class="w-full text-left text-xs text-slate-300">
+          <thead class="bg-slate-800/80 uppercase font-semibold text-slate-400 text-[10px] tracking-wider border-b border-slate-700">
+            <tr>
+              <th class="py-3 px-4" data-i18n="thDate">Date</th>
+              <th class="py-3 px-4" data-i18n="thWeather">Weather / Demand</th>
+              <th class="py-3 px-4" data-i18n="thHours">Active Hours</th>
+              <th class="py-3 px-4" data-i18n="thTrips">Trips</th>
+              <th class="py-3 px-4" data-i18n="thRaw">Raw Income</th>
+              <th class="py-3 px-4" data-i18n="thExpenses">Expenses</th>
+              <th class="py-3 px-4" data-i18n="thVaultAction">Autonomous Vault Action</th>
+              <th class="py-3 px-4" data-i18n="thFinalWallet">Effective Wallet</th>
+            </tr>
+          </thead>
+          <tbody id="historyTableBody" class="divide-y divide-slate-800/60 font-medium">
+            <!-- Populated dynamically by JavaScript -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MODAL: Shift-Backed Micro-Advance -->
+  <div id="advanceModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300">
+    <div class="glass-card bg-slate-900 border border-slate-700 rounded-2xl max-w-lg w-full p-6 shadow-2xl relative transform scale-95 transition-transform duration-300" id="advanceModalCard">
+      
+      <!-- Close Button -->
+      <button onclick="closeAdvanceModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white p-1 rounded-lg">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+
+      <!-- Modal Header -->
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-xl bg-accent-500/20 text-accent-400 flex items-center justify-center text-lg">
+          <i class="fa-solid fa-hand-holding-dollar"></i>
+        </div>
+        <div>
+          <h3 class="text-lg font-bold text-white" data-i18n="modalTitle">Request Shift-Backed Micro-Advance</h3>
+          <p class="text-xs text-slate-400" data-i18n="modalSub">Instant liquid credit based on your GIG-Score (738) • 0% Interest</p>
+        </div>
+      </div>
+
+      <!-- Advance Presets -->
+      <div class="space-y-3 mb-5">
+        <label class="text-xs font-semibold text-slate-300" data-i18n="modalSelectAmount">Select Advance Amount:</label>
+        <div class="grid grid-cols-4 gap-2">
+          <button type="button" onclick="selectAdvanceAmount(1000)" class="adv-amt-btn px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 hover:border-accent-400 text-center font-bold text-white text-xs transition-all">₹1,000</button>
+          <button type="button" onclick="selectAdvanceAmount(2000)" class="adv-amt-btn px-3 py-2 rounded-xl bg-slate-800 border border-accent-400 ring-2 ring-accent-400/40 text-center font-bold text-white text-xs transition-all">₹2,000</button>
+          <button type="button" onclick="selectAdvanceAmount(4000)" class="adv-amt-btn px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 hover:border-accent-400 text-center font-bold text-white text-xs transition-all">₹4,000</button>
+          <button type="button" onclick="selectAdvanceAmount(8000)" class="adv-amt-btn px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 hover:border-accent-400 text-center font-bold text-white text-xs transition-all">₹8,000</button>
+        </div>
+      </div>
+
+      <!-- Custom Amount Slider -->
+      <div class="bg-slate-800/60 p-4 rounded-xl border border-slate-700/60 mb-5">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs text-slate-400" data-i18n="modalChosenAmount">Selected Advance:</span>
+          <span class="text-xl font-black text-brand-400" id="modalDispAmount">₹2,000</span>
+        </div>
+        <input type="range" id="advanceRange" min="500" max="15000" step="500" value="2000" oninput="updateAdvanceAmount(this.value)" class="w-full accent-accent-400 h-2 bg-slate-700 rounded-lg cursor-pointer">
+        <div class="flex justify-between text-[10px] text-slate-500 mt-1">
+          <span>₹500</span>
+          <span>Max Pre-Approved: ₹15,000</span>
+        </div>
+      </div>
+
+      <!-- Repayment Schedule Transparency -->
+      <div class="bg-slate-950/60 rounded-xl p-4 border border-slate-800 space-y-2 mb-6">
+        <div class="flex justify-between text-xs">
+          <span class="text-slate-400" data-i18n="modalInterest">Interest Rate:</span>
+          <span class="font-bold text-brand-400">0.0% APR (Zero Predatory Debt)</span>
+        </div>
+        <div class="flex justify-between text-xs">
+          <span class="text-slate-400" data-i18n="modalProcessing">Platform Processing Fee:</span>
+          <span class="font-bold text-slate-200">₹0 (Waived for Prime Partners)</span>
+        </div>
+        <div class="flex justify-between text-xs">
+          <span class="text-slate-400" data-i18n="modalRepaymentMode">Repayment Mechanism:</span>
+          <span class="font-bold text-slate-200">4 Micro-Deductions via Swiggy/Uber Payouts</span>
+        </div>
+        <div class="flex justify-between text-xs pt-2 border-t border-slate-800">
+          <span class="text-slate-300 font-semibold" data-i18n="modalPerShift">Per-Shift Deduction:</span>
+          <span class="font-extrabold text-white" id="modalPerShiftVal">₹500 / shift for next 4 shifts</span>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex items-center justify-end gap-3">
+        <button onclick="closeAdvanceModal()" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-300 transition-colors" data-i18n="modalCancel">
+          Cancel
+        </button>
+        <button id="confirmAdvanceBtn" onclick="submitMicroAdvance()" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-accent-500 to-blue-600 hover:from-accent-400 hover:to-blue-500 text-white text-xs font-bold shadow-lg glow-cyan flex items-center gap-2 transition-all">
+          <i class="fa-solid fa-bolt"></i>
+          <span data-i18n="modalConfirm">Instant 1-Click Disbursal</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 border-t border-slate-800 text-center text-xs text-slate-500">
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2 text-slate-400">
+        <div class="w-5 h-5 rounded bg-brand-500/20 text-brand-400 flex items-center justify-center text-[10px]">
+          <i class="fa-solid fa-bolt"></i>
+        </div>
+        <span>EquiPulse Fintech • Built for Hackathon PS-4 (Financial Resilience for Gig & Informal Workers)</span>
+      </div>
+      <div>
+        <span>Bilingual Engine: Tamil & English • Real-time Node.js Express API</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Inline Script for UI & API Wire-up (Part A) -->
+  <script>
+    const API_BASE = window.location.port === '5000' ? '' : 'http://localhost:5000';
+    let currentLang = 'en';
+    let dashboardState = null;
+    let chartInstance = null;
+    let currentAdvanceAmount = 2000;
+
+    // Bilingual Dictionary
+    const i18n = {
+      en: {
+        tagline: "Financial Resilience for Gig & Informal Workers",
+        btnAdvance: "Get Micro-Advance",
+        mainWalletTitle: "Main Liquid Wallet",
+        mainWalletSub: "Available for daily grocery, fuel & instant spending",
+        vaultTitle: "Safety Vault Buffer",
+        vaultGoal: "10-Day Reserve Goal: ₹10,000",
+        gigScoreTitle: "Active GIG-Score",
+        riskTier: "Low Risk / Prime Partner",
+        creditPreApproved: "Pre-approved micro-credit: ",
+        totalIncomeTitle: "30-Day Platform Income",
+        weatherTitle: "⚠️ Chennai Monsoon Surge Advisory",
+        weatherBody: "Heavy rain forecast tomorrow evening! Food & parcel demand projected to spike by 60%. EquiPulse AI projects +₹650 extra surge earnings during 17:00-22:00. Working this peak shift allows auto-sweeping ₹750 surplus directly into your Safety Vault!",
+        simulateSurgeBtn: "Simulate This Surge Shift",
+        smootherHeading: "Autonomous AI Income Smoother",
+        smootherSub: "Eliminates the 'feast or famine' volatility of gig work. Surpluses are banked; shortfalls are topped up automatically.",
+        targetBaselineLabel: "Target Baseline",
+        presetLabel: "Select or Simulate Today's Shift Earnings:",
+        presetBreakdown: "Bike Puncture / Lean",
+        presetSlow: "Slow Mid-Week Day",
+        presetStandard: "Standard Baseline",
+        presetSurge: "Monsoon / Weekend",
+        earningInputLabel: "Simulated Shift Income (₹):",
+        runSmootherCTA: "Execute Autonomous AI Smoother",
+        gigScoreEngineHeading: "GIG-Score Credit Engine",
+        gigScoreEngineSub: "Work-based algorithmic credit scoring bypassing traditional CIBIL/payslip barriers.",
+        scoreMetricLabel: "Alternative Credit Score",
+        meterApproval: "Instant Loan Approval: ",
+        metricHours: "Active Hours Consistency",
+        metricRating: "Customer Rating",
+        metricRegularity: "30-Day Income Regularity",
+        antiPredatoryTag: "0% Predatory Interest Guaranteed",
+        quickApply: "Apply Now",
+        chartHeading: "Income Volatility vs. EquiPulse Smoothed Security",
+        chartSub: "Demonstrating how autonomous sweeps and disbursements turn irregular gig earnings into a predictable daily salary.",
+        chartLegendRaw: "Raw Volatile",
+        chartLegendSmoothed: "Smoothed Baseline",
+        chartLegendExpense: "Expenses",
+        historyHeading: "Shift Activity & Autonomous Buffer Ledger",
+        historySub: "Detailed chronological record of daily earnings, expenses, weather, and automated vault actions.",
+        filterLabel: "Filter:",
+        thDate: "Date",
+        thWeather: "Weather / Demand",
+        thHours: "Active Hours",
+        thTrips: "Trips",
+        thRaw: "Raw Income",
+        thExpenses: "Expenses",
+        thVaultAction: "Autonomous Vault Action",
+        thFinalWallet: "Effective Wallet",
+        modalTitle: "Request Shift-Backed Micro-Advance",
+        modalSub: "Instant liquid credit based on your GIG-Score (738) • 0% Interest",
+        modalSelectAmount: "Select Advance Amount:",
+        modalChosenAmount: "Selected Advance:",
+        modalInterest: "Interest Rate:",
+        modalProcessing: "Platform Processing Fee:",
+        modalRepaymentMode: "Repayment Mechanism:",
+        modalPerShift: "Per-Shift Deduction:",
+        modalCancel: "Cancel",
+        modalConfirm: "Instant 1-Click Disbursal"
+      },
+      ta: {
+        tagline: "கிக் & முறைசாரா தொழிலாளர்களுக்கான நிதிப் பாதுகாப்பு",
+        btnAdvance: "உடனடி முன்பணம் பெறுக",
+        mainWalletTitle: "முதன்மை பணப்பை",
+        mainWalletSub: "மளிகை, பெட்ரோல் மற்றும் தினசரி செலவுகளுக்கு உடனே பயன்படுத்தலாம்",
+        vaultTitle: "பாதுகாப்பு சேமிப்பு பெட்டகம்",
+        vaultGoal: "10-நாள் பாதுகாப்பு இலக்கு: ₹10,000",
+        gigScoreTitle: "பணி நன்மதிப்பீடு (GIG-Score)",
+        riskTier: "குறைந்த இடர் / பிரைம் பார்ட்னர்",
+        creditPreApproved: "முன்-ஒப்புதல் அளிக்கப்பட்ட கடன்: ",
+        totalIncomeTitle: "30-நாள் மொத்த வருமானம்",
+        weatherTitle: "⚠️ சென்னை பருவமழை மற்றும் சர்ஜ் முன்னறிவிப்பு",
+        weatherBody: "நாளை மாலை பலத்த மழை பெய்யக்கூடும் என வானிலை எச்சரிக்கை! உணவு & பார்சல் தேவைகள் 60% அதிகரிக்கும். EquiPulse AI கணக்கீட்டின்படி 17:00-22:00 மணி வரை +₹650 கூடுதல் வருவாய் கிடைக்கும். இந்த ஷிப்டில் வேலை செய்து ₹750 உபரி பணத்தை சேமிப்பு பெட்டகத்தில் சேர்க்கலாம்!",
+        simulateSurgeBtn: "மழை சர்ஜ் ஷிப்டை சோதிக்க",
+        smootherHeading: "AI வருமான சமநிலைப்படுத்தி (Income Smoother)",
+        smootherSub: "கிக் தொழிலின் ஏற்ற இறக்கங்களை நீக்குகிறது. அதிக வருமானம் சேமிக்கப்படும்; குறைந்த நாட்களில் பற்றாக்குறை தானாக ஈடுசெய்யப்படும்.",
+        targetBaselineLabel: "இலக்கு வருமானம்",
+        presetLabel: "இன்றைய ஷிப்ட் வருமானத்தை தேர்ந்தெடுக்கவும்:",
+        presetBreakdown: "வண்டி பழுது / குறைவு",
+        presetSlow: "மந்தமான வேலை நாள்",
+        presetStandard: "சராசரி இலக்கு",
+        presetSurge: "மழை / வார இறுதி சர்ஜ்",
+        earningInputLabel: "ஷிப்ட் வருமானம் (₹):",
+        runSmootherCTA: "AI சமநிலையை செயல்படுத்துக",
+        gigScoreEngineHeading: "கிக்-மதிப்பீடு கடன் இயந்திரம்",
+        gigScoreEngineSub: "பாரம்பரிய CIBIL/சம்பளச் சீட்டு இன்றி உழைப்பின் அடிப்படையில் கடன் வழங்கும் தொழில்நுட்பம்.",
+        scoreMetricLabel: "மாற்று கடன் மதிப்பீட்டு எண்",
+        meterApproval: "உடனடி கடன் தகுதி: ",
+        metricHours: "வேலை நேர நிலைத்தன்மை",
+        metricRating: "வாடிக்கையாளர் மதிப்பீடு",
+        metricRegularity: "30-நாள் வருமான ஒழுங்குமுறை",
+        antiPredatoryTag: "0% வட்டி உத்திரவாதம்",
+        quickApply: "உடனே பெறுக",
+        chartHeading: "வருமான ஏற்ற இறக்கம் vs EquiPulse சமப்படுத்திய பாதுகாப்பு",
+        chartSub: "தானியங்கி மாற்றங்கள் எவ்வாறு தினசரி வருமானத்தை நிலையான சம்பளமாக மாற்றுகிறது என்பதை காட்டுகிறது.",
+        chartLegendRaw: "உண்மையான ஏற்ற இறக்கம்",
+        chartLegendSmoothed: "சமப்படுத்திய வருமானம்",
+        chartLegendExpense: "செலவுகள்",
+        historyHeading: "ஷிப்ட் செயல்பாடுகள் & நிதிப் பதிவு ஏடு",
+        historySub: "தினசரி வருமானம், செலவு, வானிலை மற்றும் சேமிப்பு மாற்றங்களின் விரிவான காலவரிசை அறிக்கை.",
+        filterLabel: "வடிகட்டி:",
+        thDate: "தேதி",
+        thWeather: "வானிலை / தேவை",
+        thHours: "பணி நேரம்",
+        thTrips: "பயணங்கள்",
+        thRaw: "அன்றைய வருமானம்",
+        thExpenses: "செலவுகள்",
+        thVaultAction: "பெட்டக நடவடிக்கை",
+        thFinalWallet: "பயன்பாட்டு பணப்பை",
+        modalTitle: "ஷிப்ட் சார்ந்த உடனடி முன்பணம்",
+        modalSub: "உங்கள் நன்மதிப்பீடு (738) அடிப்படையில் உடனடி பண வரவு • 0% வட்டி",
+        modalSelectAmount: "முன்பணத் தொகையை தேர்ந்தெடுக்கவும்:",
+        modalChosenAmount: "தேர்ந்தெடுக்கப்பட்ட தொகை:",
+        modalInterest: "வட்டி விகிதம்:",
+        modalProcessing: "செயலாக்கக் கட்டணம்:",
+        modalRepaymentMode: "திருப்பிச் செலுத்தும் முறை:",
+        modalPerShift: "ஷிப்ட் பிடித்தம்:",
+        modalCancel: "ரத்து செய்",
+        modalConfirm: "1-கிளிக் உடனடி வரவு"
+      }
+    };
+
+    function toggleLanguage() {
+      currentLang = currentLang === 'en' ? 'ta' : 'en';
+      document.getElementById('langText').innerText = currentLang === 'en' ? 'English / தமிழ்' : 'தமிழ் / English';
+      applyTranslations();
+    }
+
+    function applyTranslations() {
+      const dict = i18n[currentLang];
+      document.querySelectorAll('[data-i18n]').forEach(elem => {
+        const key = elem.getAttribute('data-i18n');
+        if (dict[key]) {
+          elem.innerText = dict[key];
+        }
+      });
+      if (dashboardState && dashboardState.history) {
+        renderHistoryTable(dashboardState.history);
+      }
+    }
+
+    async function fetchDashboardData() {
+      try {
+        const res = await fetch(`${API_BASE}/api/dashboard-data`);
+        if (!res.ok) throw new Error('Failed to fetch dashboard data');
+        const data = await res.json();
+        dashboardState = data;
+        updateUI(data);
+        renderChart(data.history, data.smoothed_comparison);
+        renderHistoryTable(data.history);
+      } catch (err) {
+        console.error('API Error, using fallback display:', err);
+        showToast('Connected in demo mode.', false);
+      }
+    }
+
+    function updateUI(data) {
+      document.getElementById('dispMainBalance').innerText = `₹${data.main_balance.toLocaleString('en-IN')}`;
+      document.getElementById('dispVaultBalance').innerText = `₹${data.vault_balance.toLocaleString('en-IN')}`;
+      
+      const vaultDays = (data.vault_balance / data.target_baseline).toFixed(2);
+      document.getElementById('dispVaultDays').innerText = `${vaultDays} Days`;
+      
+      const vaultPct = Math.min(100, Math.round((data.vault_balance / (data.vault_capacity || 10000)) * 100));
+      document.getElementById('dispVaultPct').innerText = `${vaultPct}%`;
+      document.getElementById('vaultProgressBar').style.width = `${vaultPct}%`;
+
+      const gigDetails = data.gig_score_details;
+      document.getElementById('dispGigScore').innerText = gigDetails.gig_score;
+      document.getElementById('meterScoreVal').innerText = gigDetails.gig_score;
+      document.getElementById('dispRiskTier').innerText = gigDetails.risk_category;
+      document.getElementById('meterRiskBadge').innerText = gigDetails.risk_category;
+      document.getElementById('dispMaxCredit').innerText = `₹${gigDetails.max_eligible_credit.toLocaleString('en-IN')}`;
+      document.getElementById('meterCreditLimit').innerText = `₹${gigDetails.max_eligible_credit.toLocaleString('en-IN')}`;
+
+      if (gigDetails.breakdown) {
+        document.getElementById('barHoursVal').innerText = `${gigDetails.breakdown.hours_score}%`;
+        document.getElementById('barHours').style.width = `${gigDetails.breakdown.hours_score}%`;
+
+        document.getElementById('barRatingVal').innerText = `${gigDetails.breakdown.rating_score}%`;
+        document.getElementById('barRating').style.width = `${gigDetails.breakdown.rating_score}%`;
+
+        document.getElementById('barRegularityVal').innerText = `${gigDetails.breakdown.regularity_score}%`;
+        document.getElementById('barRegularity').style.width = `${gigDetails.breakdown.regularity_score}%`;
+      }
+
+      document.getElementById('dispTotalIncome').innerText = `₹${data.total_income_30d.toLocaleString('en-IN')}`;
+      document.getElementById('dispNetEarnings').innerText = `₹${data.net_earnings_30d.toLocaleString('en-IN')}`;
+
+      updateSimPreview(document.getElementById('simEarningInput').value);
+    }
+
+    function syncSlider(val) {
+      document.getElementById('simEarningSlider').value = val;
+      updateSimPreview(val);
+    }
+
+    function syncInput(val) {
+      document.getElementById('simEarningInput').value = val;
+      updateSimPreview(val);
+    }
+
+    function setSimulatePreset(amount) {
+      document.getElementById('simEarningInput').value = amount;
+      document.getElementById('simEarningSlider').value = amount;
+      updateSimPreview(amount);
+    }
+
+    function updateSimPreview(amount) {
+      const dailyIncome = parseFloat(amount) || 0;
+      const baseline = dashboardState ? dashboardState.target_baseline : 1000;
+      const previewBox = document.getElementById('simPreviewBox');
+      const previewIcon = document.getElementById('simPreviewIcon');
+      const previewTitle = document.getElementById('simPreviewTitle');
+      const previewDesc = document.getElementById('simPreviewDesc');
+
+      if (dailyIncome > baseline) {
+        const surplus = dailyIncome - baseline;
+        previewBox.className = "mt-4 p-4 rounded-xl bg-brand-500/10 border border-brand-500/30 text-xs text-slate-200 flex items-start gap-3";
+        previewIcon.className = "w-6 h-6 rounded-full bg-brand-500 text-white flex items-center justify-center shrink-0 mt-0.5 text-xs";
+        previewIcon.innerHTML = '<i class="fa-solid fa-arrow-down"></i>';
+        
+        if (currentLang === 'ta') {
+          previewTitle.innerText = "உபரி கண்டறியப்பட்டது: பெட்டகத்தில் சேமிக்கப்படும்";
+          previewDesc.innerText = `இன்றைய வருமானம் (₹${dailyIncome.toLocaleString('en-IN')}) உங்கள் இலக்கை விட ₹${surplus.toLocaleString('en-IN')} அதிகம். EquiPulse ₹${surplus.toLocaleString('en-IN')} தொகையை பாதுகாப்பு பெட்டகத்தில் சேமித்து, ₹1,000 ஐ உங்கள் பணப்பையில் வழங்கும்.`;
+        } else {
+          previewTitle.innerText = "Auto-Sweep Mode: Surplus Detected";
+          previewDesc.innerText = `Today's earning (₹${dailyIncome.toLocaleString('en-IN')}) is ₹${surplus.toLocaleString('en-IN')} above baseline. EquiPulse will auto-sweep ₹${surplus.toLocaleString('en-IN')} to your Safety Vault buffer and credit ₹1,000 to your spending wallet.`;
+        }
+      } else if (dailyIncome < baseline) {
+        const shortfall = baseline - dailyIncome;
+        previewBox.className = "mt-4 p-4 rounded-xl bg-accent-500/10 border border-accent-500/30 text-xs text-slate-200 flex items-start gap-3";
+        previewIcon.className = "w-6 h-6 rounded-full bg-accent-500 text-white flex items-center justify-center shrink-0 mt-0.5 text-xs";
+        previewIcon.innerHTML = '<i class="fa-solid fa-arrow-up"></i>';
+        
+        if (currentLang === 'ta') {
+          previewTitle.innerText = "வருமான குறைவு: பாதுகாப்பு பெட்டகத்திலிருந்து வழங்கப்படும்";
+          previewDesc.innerText = `இன்றைய வருமானம் (₹${dailyIncome.toLocaleString('en-IN')}) இலக்கை விட ₹${shortfall.toLocaleString('en-IN')} குறைவாக உள்ளது. பாதுகாப்பு சேமிப்பிலிருந்து ₹${shortfall.toLocaleString('en-IN')} வழங்கப்பட்டு முழு ₹1,000 உறுதி செய்யப்படும்.`;
+        } else {
+          previewTitle.innerText = "Autonomous Top-Up: Deficit Protected";
+          previewDesc.innerText = `Today's earning (₹${dailyIncome.toLocaleString('en-IN')}) is ₹${shortfall.toLocaleString('en-IN')} below baseline. EquiPulse will disburse ₹${shortfall.toLocaleString('en-IN')} from your Safety Vault so you still receive ₹1,000 guaranteed living income today.`;
+        }
+      } else {
+        previewBox.className = "mt-4 p-4 rounded-xl bg-slate-800/80 border border-slate-700 text-xs text-slate-200 flex items-start gap-3";
+        previewIcon.className = "w-6 h-6 rounded-full bg-slate-600 text-white flex items-center justify-center shrink-0 mt-0.5 text-xs";
+        previewIcon.innerHTML = '<i class="fa-solid fa-check"></i>';
+        
+        if (currentLang === 'ta') {
+          previewTitle.innerText = "வருமானம் சரியாக சமநிலையில் உள்ளது";
+          previewDesc.innerText = "இன்றைய வருமானம் ₹1,000 இலக்கை சரியாக எட்டியுள்ளது. பெட்டக மாற்றம் எதுவும் தேவையில்லை.";
+        } else {
+          previewTitle.innerText = "Perfect Equilibrium";
+          previewDesc.innerText = "Today's earning exactly equals your target baseline. No buffer sweep or disbursal required.";
+        }
+      }
+    }
+
+    async function runIncomeSmoother() {
+      const button = document.getElementById('runSmootherBtn');
+      const dailyIncome = parseFloat(document.getElementById('simEarningInput').value);
+      
+      button.disabled = true;
+      button.classList.add('opacity-70');
+      const originalHTML = button.innerHTML;
+      button.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Processing...';
+
+      try {
+        const res = await fetch(`${API_BASE}/api/smooth-income`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ daily_income: dailyIncome, target_baseline: 1000 })
+        });
+
+        const result = await res.json();
+        if (!result.success) throw new Error(result.error || 'Smoothing failed');
+
+        dashboardState.main_balance = result.main_balance;
+        dashboardState.vault_balance = result.vault_balance;
+        
+        document.getElementById('dispMainBalance').innerText = `₹${result.main_balance.toLocaleString('en-IN')}`;
+        document.getElementById('dispVaultBalance').innerText = `₹${result.vault_balance.toLocaleString('en-IN')}`;
+        
+        const vaultDays = (result.vault_balance / 1000).toFixed(2);
+        document.getElementById('dispVaultDays').innerText = `${vaultDays} Days`;
+        
+        const vaultPct = Math.min(100, Math.round((result.vault_balance / 10000) * 100));
+        document.getElementById('dispVaultPct').innerText = `${vaultPct}%`;
+        document.getElementById('vaultProgressBar').style.width = `${vaultPct}%`;
+
+        if (result.transaction) {
+          addTransactionToHistory(result.transaction);
+        }
+
+        const toastMsg = currentLang === 'ta' ? result.status_message_ta : result.status_message;
+        showToast(toastMsg, true);
+
+      } catch (err) {
+        console.error('Smoother Error:', err);
+        showToast('Error connecting to smoother API: ' + err.message, false);
+      } finally {
+        button.disabled = false;
+        button.classList.remove('opacity-70');
+        button.innerHTML = originalHTML;
+      }
+    }
+
+    function addTransactionToHistory(txn) {
+      const tbody = document.getElementById('historyTableBody');
+      const tr = document.createElement('tr');
+      tr.className = "hover:bg-slate-800/40 transition-colors bg-brand-500/10";
+
+      const actionBadge = txn.action === 'AUTO_SWEPT_TO_VAULT' 
+        ? `<span class="px-2 py-0.5 rounded-full bg-brand-500/20 text-brand-300 font-bold border border-brand-500/30">+₹${txn.amount} Swept</span>`
+        : (txn.action === 'DISBURSED_FROM_VAULT'
+          ? `<span class="px-2 py-0.5 rounded-full bg-accent-500/20 text-accent-300 font-bold border border-accent-500/30">-₹${txn.amount} Disbursed</span>`
+          : `<span class="px-2 py-0.5 rounded-full bg-slate-700 text-slate-300 font-bold">Balanced</span>`);
+
+      tr.innerHTML = `
+        <td class="py-3 px-4 text-white font-bold">${txn.date} <span class="text-[10px] text-brand-400 font-normal block">${txn.time || 'Live'}</span></td>
+        <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 font-semibold">Live Simulation</span></td>
+        <td class="py-3 px-4">8.5 hrs</td>
+        <td class="py-3 px-4">16</td>
+        <td class="py-3 px-4 font-bold text-white">₹${txn.daily_income.toLocaleString('en-IN')}</td>
+        <td class="py-3 px-4 text-slate-400">₹280</td>
+        <td class="py-3 px-4">${actionBadge}</td>
+        <td class="py-3 px-4 font-bold text-brand-400">₹${txn.main_balance_after.toLocaleString('en-IN')}</td>
+      `;
+
+      if (tbody.firstChild) {
+        tbody.insertBefore(tr, tbody.firstChild);
+      } else {
+        tbody.appendChild(tr);
+      }
+    }
+
+    function openAdvanceModal() {
+      const modal = document.getElementById('advanceModal');
+      const card = document.getElementById('advanceModalCard');
+      modal.classList.remove('hidden');
+      setTimeout(() => {
+        modal.classList.remove('opacity-0');
+        card.classList.remove('scale-95');
+        card.classList.add('scale-100');
+      }, 10);
+      selectAdvanceAmount(currentAdvanceAmount);
+    }
+
+    function closeAdvanceModal() {
+      const modal = document.getElementById('advanceModal');
+      const card = document.getElementById('advanceModalCard');
+      modal.classList.add('opacity-0');
+      card.classList.remove('scale-100');
+      card.classList.add('scale-95');
+      setTimeout(() => {
+        modal.classList.add('hidden');
+      }, 300);
+    }
+
+    function selectAdvanceAmount(amount) {
+      currentAdvanceAmount = parseInt(amount);
+      document.getElementById('advanceRange').value = currentAdvanceAmount;
+      updateAdvanceDetails(currentAdvanceAmount);
+
+      document.querySelectorAll('.adv-amt-btn').forEach(btn => {
+        if (btn.innerText.includes(currentAdvanceAmount.toLocaleString('en-IN'))) {
+          btn.className = "adv-amt-btn px-3 py-2 rounded-xl bg-slate-800 border border-accent-400 ring-2 ring-accent-400/40 text-center font-bold text-white text-xs transition-all";
+        } else {
+          btn.className = "adv-amt-btn px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 hover:border-accent-400 text-center font-bold text-white text-xs transition-all";
+        }
+      });
+    }
+
+    function updateAdvanceAmount(val) {
+      currentAdvanceAmount = parseInt(val);
+      updateAdvanceDetails(currentAdvanceAmount);
+    }
+
+    function updateAdvanceDetails(amount) {
+      document.getElementById('modalDispAmount').innerText = `₹${amount.toLocaleString('en-IN')}`;
+      const perShift = Math.round(amount / 4);
+      
+      if (currentLang === 'ta') {
+        document.getElementById('modalPerShiftVal').innerText = `அடுத்த 4 ஷிப்டுகளுக்கு ₹${perShift.toLocaleString('en-IN')} / ஷிப்ட்`;
+      } else {
+        document.getElementById('modalPerShiftVal').innerText = `₹${perShift.toLocaleString('en-IN')} / shift for next 4 shifts`;
+      }
+    }
+
+    async function submitMicroAdvance() {
+      const button = document.getElementById('confirmAdvanceBtn');
+      button.disabled = true;
+      button.classList.add('opacity-70');
+      const originalHTML = button.innerHTML;
+      button.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Disbursing...';
+
+      try {
+        const res = await fetch(`${API_BASE}/api/request-advance`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ requested_amount: currentAdvanceAmount })
+        });
+
+        const result = await res.json();
+        if (!result.success) throw new Error(result.error || 'Loan approval failed');
+
+        dashboardState.main_balance = result.new_main_balance;
+        document.getElementById('dispMainBalance').innerText = `₹${result.new_main_balance.toLocaleString('en-IN')}`;
+
+        closeAdvanceModal();
+        const toastMsg = currentLang === 'ta' ? result.message_ta : result.message;
+        showToast(toastMsg, true);
+
+      } catch (err) {
+        console.error('Advance error:', err);
+        showToast(err.message, false);
+      } finally {
+        button.disabled = false;
+        button.classList.remove('opacity-70');
+        button.innerHTML = originalHTML;
+      }
+    }
+
+    async function resetDemoState() {
+      try {
+        const res = await fetch(`${API_BASE}/api/reset-demo`, { method: 'POST' });
+        const result = await res.json();
+        if (result.success) {
+          showToast('Demo balances reset to initial state.', true);
+          fetchDashboardData();
+        }
+      } catch (err) {
+        showToast('Demo reset error', false);
+      }
+    }
+
+    function showToast(message, isSuccess = true) {
+      const toast = document.getElementById('toast');
+      const icon = document.getElementById('toastIcon');
+      const title = document.getElementById('toastTitle');
+      const msg = document.getElementById('toastMessage');
+
+      title.innerText = isSuccess ? 'EquiPulse Notice' : 'Notice';
+      msg.innerText = message;
+
+      if (isSuccess) {
+        icon.className = "w-8 h-8 rounded-full flex items-center justify-center shrink-0 mt-0.5 bg-brand-500/20 text-brand-400";
+        icon.innerHTML = '<i class="fa-solid fa-check"></i>';
+      } else {
+        icon.className = "w-8 h-8 rounded-full flex items-center justify-center shrink-0 mt-0.5 bg-rose-500/20 text-rose-400";
+        icon.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i>';
+      }
+
+      toast.classList.remove('translate-x-full');
+      setTimeout(() => {
+        toast.classList.add('translate-x-full');
+      }, 4000);
+    }
+
+    function renderChart(history, smoothed) {
+      const ctx = document.getElementById('incomeComparisonChart').getContext('2d');
+      if (chartInstance) chartInstance.destroy();
+
+      const labels = history.map(d => d.date.slice(5));
+      const rawIncomes = history.map(d => d.daily_income);
+      const smoothedIncomes = smoothed ? smoothed.map(d => d.smoothed_income) : history.map(() => 1000);
+      const expenses = history.map(d => d.expenses);
+
+      const rawGradient = ctx.createLinearGradient(0, 0, 0, 300);
+      rawGradient.addColorStop(0, 'rgba(244, 63, 94, 0.25)');
+      rawGradient.addColorStop(1, 'rgba(244, 63, 94, 0.0)');
+
+      const smoothedGradient = ctx.createLinearGradient(0, 0, 0, 300);
+      smoothedGradient.addColorStop(0, 'rgba(16, 185, 129, 0.3)');
+      smoothedGradient.addColorStop(1, 'rgba(16, 185, 129, 0.0)');
+
+      chartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: 'Smoothed Baseline Wallet (EquiPulse)',
+              data: smoothedIncomes,
+              borderColor: '#10b981',
+              backgroundColor: smoothedGradient,
+              borderWidth: 3,
+              fill: true,
+              tension: 0.2,
+              pointRadius: 3,
+              pointHoverRadius: 6,
+              pointBackgroundColor: '#10b981'
+            },
+            {
+              label: 'Raw Volatile Daily Income',
+              data: rawIncomes,
+              borderColor: '#f43f5e',
+              backgroundColor: rawGradient,
+              borderWidth: 2,
+              borderDash: [4, 4],
+              fill: false,
+              tension: 0.3,
+              pointRadius: 2,
+              pointHoverRadius: 5,
+              pointBackgroundColor: '#f43f5e'
+            },
+            {
+              label: 'Daily Expenses (Fuel & Upkeep)',
+              data: expenses,
+              borderColor: '#64748b',
+              borderWidth: 1.5,
+              borderDash: [2, 2],
+              fill: false,
+              pointRadius: 0
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: {
+            mode: 'index',
+            intersect: false
+          },
+          plugins: {
+            legend: {
+              display: false
+            },
+            tooltip: {
+              backgroundColor: '#1e293b',
+              titleColor: '#ffffff',
+              bodyColor: '#cbd5e1',
+              borderColor: '#334155',
+              borderWidth: 1,
+              padding: 12,
+              boxPadding: 6,
+              callbacks: {
+                label: function(context) {
+                  return `${context.dataset.label}: ₹${context.raw.toLocaleString('en-IN')}`;
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: {
+                color: 'rgba(255, 255, 255, 0.05)'
+              },
+              ticks: {
+                color: '#94a3b8',
+                font: { size: 10 }
+              }
+            },
+            y: {
+              min: 0,
+              max: 2200,
+              grid: {
+                color: 'rgba(255, 255, 255, 0.06)'
+              },
+              ticks: {
+                color: '#94a3b8',
+                font: { size: 10 },
+                callback: function(val) {
+                  return '₹' + val;
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    function renderHistoryTable(data) {
+      const tbody = document.getElementById('historyTableBody');
+      tbody.innerHTML = '';
+
+      data.slice().reverse().forEach(record => {
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-slate-800/40 transition-colors";
+
+        let weatherBadge = '';
+        if (record.weather_condition === 'Heavy Rain') {
+          weatherBadge = `<span class="px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30 text-[10px] font-semibold flex items-center gap-1 w-fit"><i class="fa-solid fa-cloud-showers-heavy text-[9px]"></i> Heavy Rain</span>`;
+        } else if (record.weather_condition === 'Surge Demand') {
+          weatherBadge = `<span class="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[10px] font-semibold flex items-center gap-1 w-fit"><i class="fa-solid fa-bolt text-[9px]"></i> Surge Demand</span>`;
+        } else {
+          weatherBadge = `<span class="px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 border border-slate-700 text-[10px] font-semibold flex items-center gap-1 w-fit"><i class="fa-regular fa-sun text-[9px]"></i> Clear</span>`;
+        }
+
+        const baseline = 1000;
+        let vaultActionHTML = '';
+        let effectiveWallet = baseline;
+
+        if (record.daily_income > baseline) {
+          const swept = record.daily_income - baseline;
+          vaultActionHTML = `<span class="px-2 py-0.5 rounded-full bg-brand-500/20 text-brand-300 border border-brand-500/30 font-semibold text-[11px]">+₹${swept} Auto-Swept</span>`;
+          effectiveWallet = baseline;
+        } else if (record.daily_income < baseline) {
+          const shortfall = baseline - record.daily_income;
+          vaultActionHTML = `<span class="px-2 py-0.5 rounded-full bg-accent-500/20 text-accent-300 border border-accent-500/30 font-semibold text-[11px]">-₹${shortfall} Disbursed</span>`;
+          effectiveWallet = baseline;
+        } else {
+          vaultActionHTML = `<span class="px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 font-semibold text-[11px]">Balanced</span>`;
+          effectiveWallet = baseline;
+        }
+
+        tr.innerHTML = `
+          <td class="py-3 px-4 text-white font-medium">${record.date}</td>
+          <td class="py-3 px-4">${weatherBadge}</td>
+          <td class="py-3 px-4">${record.active_hours} hrs</td>
+          <td class="py-3 px-4">${record.completed_trips}</td>
+          <td class="py-3 px-4 font-bold ${record.daily_income < 700 ? 'text-rose-400' : 'text-white'}">₹${record.daily_income.toLocaleString('en-IN')}</td>
+          <td class="py-3 px-4 text-slate-400">₹${record.expenses}</td>
+          <td class="py-3 px-4">${vaultActionHTML}</td>
+          <td class="py-3 px-4 font-bold text-brand-400">₹${effectiveWallet.toLocaleString('en-IN')}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function filterHistoryTable() {
+      const filter = document.getElementById('weatherFilter').value;
+      if (!dashboardState || !dashboardState.history) return;
+
+      if (filter === 'ALL') {
+        renderHistoryTable(dashboardState.history);
+      } else {
+        const filtered = dashboardState.history.filter(item => item.weather_condition === filter);
+        renderHistoryTable(filtered);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      fetchDashboardData();
+    });
+  </script>
+</body>
+</html>

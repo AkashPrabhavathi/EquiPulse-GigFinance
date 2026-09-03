@@ -1,0 +1,23 @@
+﻿{
+  "name": "equipulse-backend",
+  "version": "1.0.0",
+  "description": "EquiPulse - Autonomous Financial Resilience Engine for Gig and Informal Workers",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "keywords": [
+    "fintech",
+    "gig-economy",
+    "financial-resilience",
+    "income-smoothing",
+    "alternative-credit-scoring"
+  ],
+  "author": "EquiPulse Core Team",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2"
+  }
+}
