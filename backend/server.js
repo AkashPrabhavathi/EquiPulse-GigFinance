@@ -29,14 +29,14 @@ try {
   historicalData = [];
 }
 
-// In-Memory Fintech State (Simulating Core Banking & Platform Vault)
+// In-Memory Fintech State (Simulating Core Banking, Platform Vault & Insurance)
 const DEFAULT_STATE = {
   workerProfile: {
-    name: 'Kumaravel S. (குமார்)',
+    name: 'Akash S.',
     id: 'GP-CHE-8942',
     city: 'Chennai, Tamil Nadu',
     hub: 'T. Nagar / Central Hub',
-    platforms: ['Swiggy Delivery Partner', 'Uber Auto Premier'],
+    platforms: ['Swiggy Super-Partner', 'Uber Auto Premier'],
     tier: 'Diamond Super-Partner',
     completedShifts: 1428,
     rating: 4.89,
@@ -46,6 +46,19 @@ const DEFAULT_STATE = {
   vaultBalance: 4250,   // Accumulated emergency safety buffer in INR
   mainBalance: 1850,    // Current liquid UPI wallet balance in INR
   vaultCapacity: 10000, // 10-day safety reserve target
+  goalPots: [
+    { id: 'pot_diwali', name: 'Diwali & Festive Fund', name_ta: 'தீபாவளி / பண்டிகை சேமிப்பு', current: 2500, target: 5000, emoji: '🪔' },
+    { id: 'pot_bike', name: 'Bike Service & Insurance', name_ta: 'பைக் பராமரிப்பு & இன்சூரன்ஸ்', current: 1800, target: 3000, emoji: '🏍️' },
+    { id: 'pot_school', name: 'Children Education Fund', name_ta: 'குழந்தைகள் கல்வி நிதி', current: 4200, target: 10000, emoji: '🎒' }
+  ],
+  insurancePolicy: {
+    policyNumber: 'EP-INS-CHE-9942',
+    provider: 'EquiPulse Parametric Shield x HDFC ERGO',
+    status: 'ACTIVE_COVERAGE',
+    payoutPerRainEvent: 400,
+    rainfallThresholdMm: 35,
+    lastClaimDate: null
+  },
   activeAdvances: [
     {
       id: 'ADV-2026-0801',
@@ -74,10 +87,6 @@ let appState = JSON.parse(JSON.stringify(DEFAULT_STATE));
 
 /**
  * Calculates work-based GIG-Score (300 - 800)
- * Weights:
- * - Active Hours consistency: 35%
- * - Platform Customer Rating: 35%
- * - Income regularity across 30 days: 30%
  */
 function computeGigScore(data) {
   if (!data || data.length === 0) {
@@ -115,7 +124,6 @@ function computeGigScore(data) {
   
   const incomeRegularityNormalized = Math.min(1, Math.max(0, 1 - (coefficientOfVariation / 0.9)));
 
-  // Final Composite GIG-Score computation (Range: 300 to 800)
   const compositeRatio = (0.35 * hoursScoreNormalized) + (0.35 * ratingScoreNormalized) + (0.30 * incomeRegularityNormalized);
   const gigScore = Math.round(300 + (compositeRatio * 500));
 
@@ -153,7 +161,6 @@ function computeGigScore(data) {
 
 /**
  * 1. GET /api/dashboard-data
- * Returns the 30-day data history, total income, current Safety Vault balance, and active GIG-Score.
  */
 app.get('/api/dashboard-data', (req, res) => {
   const gigScoreData = computeGigScore(historicalData);
@@ -161,7 +168,7 @@ app.get('/api/dashboard-data', (req, res) => {
   const totalExpenses = historicalData.reduce((acc, curr) => acc + curr.expenses, 0);
   const netEarnings = totalIncome - totalExpenses;
 
-  // Compute Smoothed Series for visual comparison:
+  // Compute Smoothed Series
   let runningVault = 2500;
   const smoothedSeries = historicalData.map(record => {
     let smoothedWallet = record.daily_income;
@@ -194,6 +201,8 @@ app.get('/api/dashboard-data', (req, res) => {
     main_balance: appState.mainBalance,
     vault_balance: appState.vaultBalance,
     vault_capacity: appState.vaultCapacity,
+    goal_pots: appState.goalPots,
+    insurance_policy: appState.insurancePolicy,
     total_income_30d: totalIncome,
     total_expenses_30d: totalExpenses,
     net_earnings_30d: netEarnings,
@@ -216,7 +225,6 @@ app.get('/api/dashboard-data', (req, res) => {
 
 /**
  * 2. POST /api/update-profile
- * Updates the active logged-in worker profile dynamically
  */
 app.post('/api/update-profile', (req, res) => {
   const { name, platform, city, hub, phone } = req.body;
@@ -237,10 +245,6 @@ app.post('/api/update-profile', (req, res) => {
 
 /**
  * 3. POST /api/smooth-income
- * Takes { daily_income, target_baseline = 1000 }
- * - If daily_income > target_baseline: Auto-sweeps difference into vault_balance
- * - If daily_income < target_baseline: Disburses shortfall from vault_balance into main_balance
- * Returns updated main_balance, vault_balance, and transaction status.
  */
 app.post('/api/smooth-income', (req, res) => {
   const dailyIncome = parseFloat(req.body.daily_income);
@@ -282,7 +286,6 @@ app.post('/api/smooth-income', (req, res) => {
     statusMessageTa = 'இன்றைய வருமானம் இலக்கை சரியாக எட்டியுள்ளது. பெட்டக மாற்றம் தேவையில்லை.';
   }
 
-  // Record transaction
   const txn = {
     id: 'TXN-' + Date.now().toString().slice(-5),
     date: new Date().toISOString().split('T')[0],
@@ -317,7 +320,6 @@ app.post('/api/smooth-income', (req, res) => {
 
 /**
  * 4. POST /api/calculate-gigscore
- * Calculates work-based credit rating (300 to 800)
  */
 app.post('/api/calculate-gigscore', (req, res) => {
   const customData = req.body.data && Array.isArray(req.body.data) ? req.body.data : historicalData;
@@ -330,8 +332,6 @@ app.post('/api/calculate-gigscore', (req, res) => {
 
 /**
  * 5. POST /api/request-advance
- * Takes { requested_amount }, verifies eligibility against gig_score,
- * and credits funds instantly into main_balance with automated repayment schedule against upcoming shifts.
  */
 app.post('/api/request-advance', (req, res) => {
   const requestedAmount = parseFloat(req.body.requested_amount);
@@ -352,10 +352,8 @@ app.post('/api/request-advance', (req, res) => {
     });
   }
 
-  // Credit funds instantly to main liquid balance
   appState.mainBalance += requestedAmount;
 
-  // Generate 4-shift micro-repayment schedule (anti-predatory, 0% interest)
   const installmentCount = 4;
   const perShiftDeduction = Math.round(requestedAmount / installmentCount);
   const repaymentSchedule = [];
@@ -388,7 +386,6 @@ app.post('/api/request-advance', (req, res) => {
 
   appState.activeAdvances.unshift(advanceRecord);
 
-  // Record audit transaction
   appState.transactions.unshift({
     id: 'TXN-' + Date.now().toString().slice(-5),
     date: new Date().toISOString().split('T')[0],
@@ -412,7 +409,90 @@ app.post('/api/request-advance', (req, res) => {
 });
 
 /**
- * 6. GET /api/weather-surge
+ * 6. POST /api/claim-insurance (NEW: Parametric Rain Shield Claim)
+ */
+app.post('/api/claim-insurance', (req, res) => {
+  const payout = 400; // ₹400 instant zero-friction parametric rainfall insurance payout
+  appState.mainBalance += payout;
+  appState.insurancePolicy.lastClaimDate = new Date().toISOString().split('T')[0];
+
+  const claimRecord = {
+    id: 'CLM-' + Date.now().toString().slice(-5),
+    type: 'PARAMETRIC_RAIN_PAYOUT',
+    amount: payout,
+    trigger: 'Chennai Monsoon Cloudburst (>35mm/hr)',
+    status: 'SETTLED_INSTANTLY',
+    beneficiary: appState.workerProfile.name
+  };
+
+  appState.transactions.unshift({
+    id: 'TXN-' + Date.now().toString().slice(-5),
+    date: new Date().toISOString().split('T')[0],
+    time: new Date().toLocaleTimeString('en-IN'),
+    action: 'PARAMETRIC_INSURANCE_CLAIM_PAID',
+    amount: payout,
+    vault_balance_after: appState.vaultBalance,
+    main_balance_after: appState.mainBalance,
+    message: `Parametric Weather Shield: ₹${payout} instant rain compensation credited to ${appState.workerProfile.name}'s wallet!`,
+    message_ta: `பருவமழை உடனடி காப்பீடு: ₹${payout} இழப்பீட்டுத் தொகை உங்கள் பணப்பையில் சேர்க்கப்பட்டது!`
+  });
+
+  res.json({
+    success: true,
+    payout_amount: payout,
+    new_main_balance: appState.mainBalance,
+    claim: claimRecord,
+    message: `Instant Parametric Claim Approved! ₹${payout} compensation credited to your wallet. Zero paperwork.`,
+    message_ta: `மழை நிவாரண காப்பீடு ஒப்புதல்! ₹${payout} உடனடி இழப்பீடு உங்கள் பணப்பையில் வரவு வைக்கப்பட்டது. ஆவணங்கள் தேவையில்லை.`
+  });
+});
+
+/**
+ * 7. POST /api/transfer-pot (NEW: Transfer Vault funds to Goal Savings Pots)
+ */
+app.post('/api/transfer-pot', (req, res) => {
+  const { pot_id, amount } = req.body;
+  const transferAmt = parseFloat(amount) || 250;
+
+  if (appState.vaultBalance < transferAmt) {
+    return res.status(400).json({
+      success: false,
+      error: `Insufficient Safety Vault balance (₹${appState.vaultBalance}) to allocate ₹${transferAmt}.`
+    });
+  }
+
+  const pot = appState.goalPots.find(p => p.id === pot_id);
+  if (!pot) {
+    return res.status(404).json({ success: false, error: 'Goal pot not found.' });
+  }
+
+  appState.vaultBalance -= transferAmt;
+  pot.current += transferAmt;
+
+  appState.transactions.unshift({
+    id: 'TXN-' + Date.now().toString().slice(-5),
+    date: new Date().toISOString().split('T')[0],
+    time: new Date().toLocaleTimeString('en-IN'),
+    action: 'GOAL_POT_ALLOCATION',
+    amount: transferAmt,
+    vault_balance_after: appState.vaultBalance,
+    main_balance_after: appState.mainBalance,
+    message: `Allocated ₹${transferAmt} from Safety Vault into ${pot.name}`,
+    message_ta: `பாதுகாப்பு சேமிப்பிலிருந்து ₹${transferAmt} "${pot.name_ta}" பெட்டகத்திற்கு மாற்றப்பட்டது.`
+  });
+
+  res.json({
+    success: true,
+    vault_balance: appState.vaultBalance,
+    pot: pot,
+    goal_pots: appState.goalPots,
+    message: `Allocated ₹${transferAmt} to ${pot.name}! Current progress: ₹${pot.current} / ₹${pot.target}`,
+    message_ta: `₹${transferAmt} "${pot.name_ta}" பெட்டகத்தில் சேர்க்கப்பட்டது! தற்போதைய சேமிப்பு: ₹${pot.current} / ₹${pot.target}`
+  });
+});
+
+/**
+ * 8. GET /api/weather-surge
  */
 app.get('/api/weather-surge', (req, res) => {
   res.json({
@@ -430,12 +510,11 @@ app.get('/api/weather-surge', (req, res) => {
 });
 
 /**
- * 7. POST /api/reset-demo
+ * 9. POST /api/reset-demo
  */
 app.post('/api/reset-demo', (req, res) => {
   const currentWorker = JSON.parse(JSON.stringify(appState.workerProfile));
   appState = JSON.parse(JSON.stringify(DEFAULT_STATE));
-  // Preserve custom name if user logged in
   if (currentWorker && currentWorker.name) {
     appState.workerProfile.name = currentWorker.name;
     appState.workerProfile.platforms = currentWorker.platforms;
