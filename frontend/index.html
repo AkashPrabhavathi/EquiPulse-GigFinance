@@ -89,20 +89,22 @@
     .glow-emerald {
       box-shadow: 0 0 20px -3px rgba(16, 185, 129, 0.35);
     }
-    /* Page View Transitions */
-    @keyframes viewFadeIn {
-      from {
+    
+    /* 🌊 Staggered Cascading Entrance Animations */
+    @keyframes cardCascade {
+      0% {
         opacity: 0;
-        transform: translateY(14px);
+        transform: translateY(22px) scale(0.97);
       }
-      to {
+      100% {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateY(0) scale(1);
       }
     }
-    .view-animate {
-      animation: viewFadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    .stagger-item {
+      animation: cardCascade 0.42s cubic-bezier(0.16, 1, 0.3, 1) both;
     }
+
     .nav-item-active {
       background: #996d48 !important;
       color: #ffffff !important;
@@ -127,6 +129,27 @@
   </style>
 </head>
 <body class="min-h-screen bg-[#faf6ee] text-warmgray-800 antialiased selection:bg-sandal-300 selection:text-warmgray-900">
+
+  <!-- 🚀 Ultra-Thin Top Progress Bar (YouTube/Stripe style) -->
+  <div id="topProgressBar" class="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-sandal-600 via-brand-500 to-sandal-500 z-50 transform -translate-x-full transition-transform duration-300 pointer-events-none"></div>
+
+  <!-- 💫 Page Transition Micro-Loader Overlay -->
+  <div id="pageLoader" class="fixed inset-0 z-50 flex items-center justify-center bg-sandal-50/70 backdrop-blur-xs transition-opacity duration-200 pointer-events-none opacity-0">
+    <div class="sandal-card rounded-2xl p-4 bg-white/95 border border-sandal-300 shadow-2xl flex items-center gap-3.5 transform scale-95 transition-transform duration-200">
+      <div class="relative w-9 h-9 flex items-center justify-center">
+        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-sandal-400 opacity-30"></span>
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-sandal-700 to-brand-600 flex items-center justify-center text-white text-sm shadow-sm">
+          <i class="fa-solid fa-bolt"></i>
+        </div>
+      </div>
+      <div>
+        <div class="text-xs font-black text-warmgray-900 flex items-center gap-1.5" id="loaderTitle">
+          <span>Loading Module...</span>
+        </div>
+        <div class="text-[10px] text-warmgray-500 font-semibold mt-0.5" id="loaderSub">Synchronizing EquiPulse Engine</div>
+      </div>
+    </div>
+  </div>
 
   <!-- ============================================================== -->
   <!-- 🔐 FRONT LOGIN OVERLAY MODAL                                   -->
@@ -260,7 +283,6 @@
     <!-- ============================================================== -->
     <aside id="leftSidebar" class="sandal-sidebar w-72 shrink-0 p-5 flex flex-col justify-between fixed lg:sticky top-0 h-screen z-40 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 overflow-y-auto">
       
-      <!-- Top Section -->
       <div class="space-y-6">
         
         <!-- Brand Logo -->
@@ -294,11 +316,10 @@
           </div>
         </div>
 
-        <!-- 6 Dedicated Page Navigation Links with Smooth Animations -->
+        <!-- 6 Dedicated Page Navigation Links -->
         <nav class="space-y-1.5">
           <div class="text-[10px] font-bold uppercase tracking-wider text-warmgray-400 px-3 pb-1" data-i18n="menuSectionMain">6 Core Features</div>
           
-          <!-- Page 1: Overview -->
           <button id="btn-nav-overview" onclick="navigateTo('overview')" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl nav-item-active font-bold text-xs shadow-sm transition-all text-left">
             <span class="icon-box w-7 h-7 rounded-lg bg-white/20 text-white flex items-center justify-center text-xs shrink-0">
               <i class="fa-solid fa-chart-pie"></i>
@@ -306,7 +327,6 @@
             <span data-i18n="menuOverview">Overview Dashboard</span>
           </button>
 
-          <!-- Page 2: AI Smoother -->
           <button id="btn-nav-smoother" onclick="navigateTo('smoother')" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-warmgray-700 hover:bg-white/80 font-semibold text-xs transition-all hover:text-warmgray-900 text-left">
             <span class="icon-box w-7 h-7 rounded-lg bg-sandal-200/80 text-sandal-800 flex items-center justify-center text-xs shrink-0">
               <i class="fa-solid fa-sliders"></i>
@@ -314,7 +334,6 @@
             <span data-i18n="menuSmoother">AI Income Smoother</span>
           </button>
 
-          <!-- Page 3: GIG-Score Credit -->
           <button id="btn-nav-gigscore" onclick="navigateTo('gigscore')" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-warmgray-700 hover:bg-white/80 font-semibold text-xs transition-all hover:text-warmgray-900 text-left">
             <span class="icon-box w-7 h-7 rounded-lg bg-amber-100 text-amber-800 flex items-center justify-center text-xs shrink-0">
               <i class="fa-solid fa-id-card-clip"></i>
@@ -322,7 +341,6 @@
             <span data-i18n="menuGigScore">GIG-Score Credit Engine</span>
           </button>
 
-          <!-- Page 4: Monsoon & Surge Radar -->
           <button id="btn-nav-weather" onclick="navigateTo('weather')" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-warmgray-700 hover:bg-white/80 font-semibold text-xs transition-all hover:text-warmgray-900 text-left">
             <span class="icon-box w-7 h-7 rounded-lg bg-blue-100 text-blue-800 flex items-center justify-center text-xs shrink-0">
               <i class="fa-solid fa-cloud-showers-heavy"></i>
@@ -330,7 +348,6 @@
             <span data-i18n="menuWeather">Monsoon & Surge Radar</span>
           </button>
 
-          <!-- Page 5: Volatility Chart -->
           <button id="btn-nav-chart" onclick="navigateTo('chart')" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-warmgray-700 hover:bg-white/80 font-semibold text-xs transition-all hover:text-warmgray-900 text-left">
             <span class="icon-box w-7 h-7 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center text-xs shrink-0">
               <i class="fa-solid fa-chart-line"></i>
@@ -338,7 +355,6 @@
             <span data-i18n="menuChart">Income Volatility Visualizer</span>
           </button>
 
-          <!-- Page 6: Shift Ledger -->
           <button id="btn-nav-ledger" onclick="navigateTo('ledger')" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-warmgray-700 hover:bg-white/80 font-semibold text-xs transition-all hover:text-warmgray-900 text-left">
             <span class="icon-box w-7 h-7 rounded-lg bg-purple-100 text-purple-800 flex items-center justify-center text-xs shrink-0">
               <i class="fa-solid fa-clock-rotate-left"></i>
@@ -347,7 +363,6 @@
           </button>
         </nav>
 
-        <!-- Sidebar Micro-Advance CTA -->
         <div class="pt-2">
           <button onclick="openAdvanceModal()" class="w-full py-2.5 px-3.5 rounded-xl bg-gradient-to-r from-brand-600 to-emerald-700 hover:from-brand-500 hover:to-emerald-600 text-white text-xs font-bold shadow-md glow-emerald flex items-center justify-center gap-2 transition-all">
             <i class="fa-solid fa-hand-holding-dollar"></i>
@@ -357,10 +372,7 @@
 
       </div>
 
-      <!-- Bottom Controls -->
       <div class="pt-6 border-t border-sandal-300 space-y-2.5">
-        
-        <!-- Language Switcher Button -->
         <button id="langToggleBtn" onclick="toggleLanguage()" class="w-full flex items-center justify-between px-3.5 py-2 rounded-xl bg-white hover:bg-sandal-100 border border-sandal-300 text-xs font-bold text-warmgray-700 transition-colors shadow-sm">
           <span class="flex items-center gap-2">
             <i class="fa-solid fa-language text-sandal-700 text-sm"></i>
@@ -369,7 +381,6 @@
           <i class="fa-solid fa-chevron-right text-[10px] text-warmgray-400"></i>
         </button>
 
-        <!-- Switch Partner Button -->
         <button onclick="showLoginModal()" class="w-full flex items-center justify-between px-3.5 py-2 rounded-xl bg-white hover:bg-sandal-100 border border-sandal-300 text-xs font-semibold text-warmgray-700 transition-colors shadow-sm">
           <span class="flex items-center gap-2">
             <i class="fa-solid fa-user-pen text-sandal-700 text-xs"></i>
@@ -378,7 +389,6 @@
           <i class="fa-solid fa-pen text-[10px] text-warmgray-400"></i>
         </button>
 
-        <!-- Logout Button -->
         <button onclick="handleLogout()" class="w-full flex items-center justify-between px-3.5 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 border border-rose-200 text-xs font-bold text-rose-700 transition-colors shadow-sm">
           <span class="flex items-center gap-2">
             <i class="fa-solid fa-arrow-right-from-bracket text-rose-600 text-xs"></i>
@@ -387,12 +397,10 @@
           <i class="fa-solid fa-power-off text-[10px] text-rose-400"></i>
         </button>
 
-        <!-- Reset Demo Defaults -->
         <button onclick="resetDemoState()" class="w-full flex items-center justify-center gap-1.5 py-1.5 text-[11px] font-semibold text-warmgray-500 hover:text-warmgray-800 transition-colors">
           <i class="fa-solid fa-arrow-rotate-right text-[10px]"></i>
           <span>Reset Demo Defaults</span>
         </button>
-
       </div>
     </aside>
 
@@ -401,8 +409,8 @@
     <!-- ============================================================== -->
     <main class="flex-1 min-w-0 p-4 sm:p-6 lg:p-8 space-y-6 overflow-y-auto">
 
-      <!-- Top Greeting & Live Liquid Balances Bar -->
-      <header class="sandal-card rounded-2xl p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <!-- Top Greeting & Live Balances Bar -->
+      <header class="sandal-card rounded-2xl p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 stagger-item">
         <div>
           <h1 class="text-xl sm:text-2xl font-black text-warmgray-900 flex items-center gap-2">
             <span id="greetingPrefix" data-i18n="greetingHello">Welcome back,</span>
@@ -414,7 +422,6 @@
           </p>
         </div>
 
-        <!-- Live Balances Quick Pills -->
         <div class="flex items-center gap-3 flex-wrap">
           <div class="px-3.5 py-2 rounded-xl bg-sandal-100 border border-sandal-300 flex items-center gap-2.5 shadow-sm">
             <span class="w-7 h-7 rounded-lg bg-brand-500 text-white flex items-center justify-center text-xs">
@@ -441,12 +448,11 @@
       <!-- ============================================================== -->
       <!-- 📄 PAGE 1: 📊 OVERVIEW DASHBOARD VIEW (#view-overview)          -->
       <!-- ============================================================== -->
-      <div id="view-overview" class="page-view view-animate space-y-6">
+      <div id="view-overview" class="page-view space-y-6">
         
-        <!-- 4 Top KPI Cards -->
+        <!-- 4 Top KPI Cards (stagger-item marked) -->
         <section class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-          <!-- Main Liquid Wallet -->
-          <div class="sandal-card rounded-2xl p-5 relative overflow-hidden group">
+          <div class="sandal-card rounded-2xl p-5 relative overflow-hidden group stagger-item">
             <div class="flex items-center justify-between text-warmgray-500 mb-2">
               <span class="text-xs font-bold uppercase tracking-wider text-warmgray-600" data-i18n="mainWalletTitle">Main Liquid Wallet</span>
               <span class="p-2 rounded-xl bg-brand-50 text-brand-700 border border-brand-200 text-sm">
@@ -462,8 +468,7 @@
             <p class="text-[11px] text-warmgray-500 mt-2 font-medium" data-i18n="mainWalletSub">Available for daily grocery, fuel & instant spending</p>
           </div>
 
-          <!-- Autonomous Safety Vault Buffer -->
-          <div class="sandal-card rounded-2xl p-5 relative overflow-hidden group border-sandal-400">
+          <div class="sandal-card rounded-2xl p-5 relative overflow-hidden group border-sandal-400 stagger-item">
             <div class="flex items-center justify-between text-warmgray-500 mb-2">
               <span class="text-xs font-bold uppercase tracking-wider text-sandal-800" data-i18n="vaultTitle">Safety Vault Buffer</span>
               <span class="p-2 rounded-xl bg-sandal-100 text-sandal-800 border border-sandal-300 text-sm">
@@ -483,8 +488,7 @@
             </div>
           </div>
 
-          <!-- GIG-Score Live Meter Card -->
-          <div class="sandal-card rounded-2xl p-5 relative overflow-hidden group">
+          <div class="sandal-card rounded-2xl p-5 relative overflow-hidden group stagger-item">
             <div class="flex items-center justify-between text-warmgray-500 mb-2">
               <span class="text-xs font-bold uppercase tracking-wider text-warmgray-600" data-i18n="gigScoreTitle">Active GIG-Score</span>
               <span class="p-2 rounded-xl bg-amber-50 text-amber-700 border border-amber-200 text-sm">
@@ -502,8 +506,7 @@
             <p class="text-[11px] text-warmgray-500 mt-1 font-medium" data-i18n="creditPreApproved">Pre-approved credit: <strong class="text-warmgray-900" id="dispMaxCredit">₹8,000</strong></p>
           </div>
 
-          <!-- 30-Day Total & Net Income -->
-          <div class="sandal-card rounded-2xl p-5 relative overflow-hidden group">
+          <div class="sandal-card rounded-2xl p-5 relative overflow-hidden group stagger-item">
             <div class="flex items-center justify-between text-warmgray-500 mb-2">
               <span class="text-xs font-bold uppercase tracking-wider text-warmgray-600" data-i18n="totalIncomeTitle">30-Day Platform Income</span>
               <span class="p-2 rounded-xl bg-purple-50 text-purple-700 border border-purple-200 text-sm">
@@ -521,10 +524,9 @@
           </div>
         </section>
 
-        <!-- Quick Feature Hub Cards (Navigates to other dedicated pages) -->
+        <!-- 3 Feature Hubs with Cascading Animations -->
         <section class="grid grid-cols-1 md:grid-cols-3 gap-5">
-          
-          <div onclick="navigateTo('smoother')" class="sandal-card rounded-2xl p-5 cursor-pointer hover:border-sandal-500 transition-all group shadow-sm flex flex-col justify-between">
+          <div onclick="navigateTo('smoother')" class="sandal-card rounded-2xl p-5 cursor-pointer hover:border-sandal-500 transition-all group shadow-sm flex flex-col justify-between stagger-item">
             <div>
               <div class="w-10 h-10 rounded-xl bg-sandal-100 text-sandal-800 flex items-center justify-center text-lg mb-3">
                 <i class="fa-solid fa-sliders"></i>
@@ -540,7 +542,7 @@
             </div>
           </div>
 
-          <div onclick="navigateTo('gigscore')" class="sandal-card rounded-2xl p-5 cursor-pointer hover:border-amber-400 transition-all group shadow-sm flex flex-col justify-between">
+          <div onclick="navigateTo('gigscore')" class="sandal-card rounded-2xl p-5 cursor-pointer hover:border-amber-400 transition-all group shadow-sm flex flex-col justify-between stagger-item">
             <div>
               <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center text-lg mb-3">
                 <i class="fa-solid fa-id-card-clip"></i>
@@ -556,7 +558,7 @@
             </div>
           </div>
 
-          <div onclick="navigateTo('weather')" class="sandal-card rounded-2xl p-5 cursor-pointer hover:border-blue-400 transition-all group shadow-sm flex flex-col justify-between">
+          <div onclick="navigateTo('weather')" class="sandal-card rounded-2xl p-5 cursor-pointer hover:border-blue-400 transition-all group shadow-sm flex flex-col justify-between stagger-item">
             <div>
               <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center text-lg mb-3">
                 <i class="fa-solid fa-cloud-showers-heavy"></i>
@@ -571,7 +573,6 @@
               <i class="fa-solid fa-arrow-right text-[10px]"></i>
             </div>
           </div>
-
         </section>
 
       </div>
@@ -579,9 +580,9 @@
       <!-- ============================================================== -->
       <!-- 📄 PAGE 2: 🛡️ AI INCOME SMOOTHER VIEW (#view-smoother)          -->
       <!-- ============================================================== -->
-      <div id="view-smoother" class="page-view hidden view-animate space-y-6">
+      <div id="view-smoother" class="page-view hidden space-y-6">
         
-        <div class="sandal-card rounded-2xl p-6">
+        <div class="sandal-card rounded-2xl p-6 stagger-item">
           <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pb-5 border-b border-sandal-200">
             <div>
               <h2 class="text-xl font-black text-warmgray-900 flex items-center gap-2">
@@ -598,8 +599,8 @@
             </div>
           </div>
 
-          <!-- Scenario Presets -->
-          <div class="mt-6 space-y-2">
+          <!-- Scenario Presets (Staggered Entrance) -->
+          <div class="mt-6 space-y-2 stagger-item">
             <label class="text-xs font-bold text-warmgray-700" data-i18n="presetLabel">Select or Simulate Today's Shift Earnings:</label>
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
               <button onclick="setSimulatePreset(350)" class="preset-btn px-4 py-3 rounded-xl bg-rose-50 hover:bg-rose-100 border border-rose-200 text-left transition-all group">
@@ -626,7 +627,7 @@
           </div>
 
           <!-- Slider & Manual Input -->
-          <div class="bg-sandal-50 border border-sandal-200 rounded-2xl p-5 space-y-4 mt-6">
+          <div class="bg-sandal-50 border border-sandal-200 rounded-2xl p-5 space-y-4 mt-6 stagger-item">
             <div class="flex items-center justify-between">
               <span class="text-xs text-warmgray-700 font-bold" data-i18n="earningInputLabel">Simulated Shift Income (₹):</span>
               <div class="flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-xl border border-sandal-300 shadow-sm">
@@ -645,7 +646,7 @@
           </div>
 
           <!-- Dynamic Projected Box -->
-          <div id="simPreviewBox" class="mt-6 p-4 rounded-xl bg-brand-50 border border-brand-200 text-xs text-warmgray-800 flex items-start gap-3 shadow-sm">
+          <div id="simPreviewBox" class="mt-6 p-4 rounded-xl bg-brand-50 border border-brand-200 text-xs text-warmgray-800 flex items-start gap-3 shadow-sm stagger-item">
             <div id="simPreviewIcon" class="w-7 h-7 rounded-full bg-brand-600 text-white flex items-center justify-center shrink-0 mt-0.5 text-xs shadow-sm">
               <i class="fa-solid fa-arrow-down"></i>
             </div>
@@ -658,7 +659,7 @@
           </div>
 
           <!-- Action Button -->
-          <div class="mt-6 flex items-center justify-end">
+          <div class="mt-6 flex items-center justify-end stagger-item">
             <button id="runSmootherBtn" onclick="runIncomeSmoother()" class="w-full sm:w-auto px-7 py-3.5 rounded-xl bg-gradient-to-r from-brand-600 to-emerald-700 hover:from-brand-500 hover:to-emerald-600 text-white font-bold text-sm shadow-md glow-emerald flex items-center justify-center gap-2 transition-all">
               <i class="fa-solid fa-wand-magic-sparkles"></i>
               <span data-i18n="runSmootherCTA">Execute Autonomous AI Smoother</span>
@@ -671,10 +672,10 @@
       <!-- ============================================================== -->
       <!-- 📄 PAGE 3: 💳 GIG-SCORE CREDIT ENGINE VIEW (#view-gigscore)    -->
       <!-- ============================================================== -->
-      <div id="view-gigscore" class="page-view hidden view-animate space-y-6">
+      <div id="view-gigscore" class="page-view hidden space-y-6">
         
         <div class="sandal-card rounded-2xl p-6">
-          <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pb-5 border-b border-sandal-200">
+          <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pb-5 border-b border-sandal-200 stagger-item">
             <div>
               <h2 class="text-xl font-black text-warmgray-900 flex items-center gap-2">
                 <i class="fa-solid fa-award text-amber-600"></i>
@@ -692,8 +693,8 @@
 
           <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-6">
             
-            <!-- Left: Credit Score Radial / Meter (5 cols) -->
-            <div class="lg:col-span-5 bg-gradient-to-br from-sandal-50 to-sandal-100/60 border border-sandal-200 rounded-2xl p-6 text-center flex flex-col justify-between">
+            <!-- Left: Credit Score Radial (5 cols) -->
+            <div class="lg:col-span-5 bg-gradient-to-br from-sandal-50 to-sandal-100/60 border border-sandal-200 rounded-2xl p-6 text-center flex flex-col justify-between stagger-item">
               <div>
                 <div class="text-xs font-bold text-warmgray-500 uppercase tracking-wider" data-i18n="scoreMetricLabel">Alternative Credit Score</div>
                 <div class="my-4 w-28 h-28 mx-auto rounded-3xl border-2 border-sandal-400 flex flex-col items-center justify-center bg-white shadow-md">
@@ -719,58 +720,57 @@
 
             <!-- Right: Tri-Factor Breakdown (7 cols) -->
             <div class="lg:col-span-7 space-y-4 flex flex-col justify-between">
-              <div>
-                <h4 class="text-sm font-bold text-warmgray-800 mb-3">Tri-Factor Algorithmic Breakdown:</h4>
-                <div class="space-y-4">
-                  <!-- Metric 1: Hours Consistency (35%) -->
-                  <div class="bg-white p-4 rounded-xl border border-sandal-200 shadow-sm">
-                    <div class="flex justify-between text-xs mb-1.5">
-                      <span class="text-warmgray-800 font-bold flex items-center gap-1.5">
-                        <i class="fa-regular fa-clock text-sandal-700"></i>
-                        <span data-i18n="metricHours">Active Hours Consistency</span>
-                        <span class="text-[10px] text-warmgray-400 font-normal">(35% weight)</span>
-                      </span>
-                      <span class="font-black text-sandal-900" id="barHoursVal">86%</span>
-                    </div>
-                    <div class="w-full h-2.5 bg-sandal-100 rounded-full overflow-hidden">
-                      <div id="barHours" class="h-full bg-sandal-600 rounded-full" style="width: 86%;"></div>
-                    </div>
+              <div class="space-y-3">
+                <h4 class="text-sm font-bold text-warmgray-800 mb-2 stagger-item">Tri-Factor Algorithmic Breakdown:</h4>
+                
+                <!-- Metric 1: Hours Consistency (35%) -->
+                <div class="bg-white p-4 rounded-xl border border-sandal-200 shadow-sm stagger-item">
+                  <div class="flex justify-between text-xs mb-1.5">
+                    <span class="text-warmgray-800 font-bold flex items-center gap-1.5">
+                      <i class="fa-regular fa-clock text-sandal-700"></i>
+                      <span data-i18n="metricHours">Active Hours Consistency</span>
+                      <span class="text-[10px] text-warmgray-400 font-normal">(35% weight)</span>
+                    </span>
+                    <span class="font-black text-sandal-900" id="barHoursVal">86%</span>
                   </div>
-
-                  <!-- Metric 2: Platform Rating (35%) -->
-                  <div class="bg-white p-4 rounded-xl border border-sandal-200 shadow-sm">
-                    <div class="flex justify-between text-xs mb-1.5">
-                      <span class="text-warmgray-800 font-bold flex items-center gap-1.5">
-                        <i class="fa-regular fa-star text-amber-600"></i>
-                        <span data-i18n="metricRating">Customer Rating</span>
-                        <span class="text-[10px] text-warmgray-400 font-normal">(35% weight)</span>
-                      </span>
-                      <span class="font-black text-amber-600" id="barRatingVal">84%</span>
-                    </div>
-                    <div class="w-full h-2.5 bg-sandal-100 rounded-full overflow-hidden">
-                      <div id="barRating" class="h-full bg-amber-500 rounded-full" style="width: 84%;"></div>
-                    </div>
+                  <div class="w-full h-2.5 bg-sandal-100 rounded-full overflow-hidden">
+                    <div id="barHours" class="h-full bg-sandal-600 rounded-full" style="width: 86%;"></div>
                   </div>
+                </div>
 
-                  <!-- Metric 3: Income Regularity (30%) -->
-                  <div class="bg-white p-4 rounded-xl border border-sandal-200 shadow-sm">
-                    <div class="flex justify-between text-xs mb-1.5">
-                      <span class="text-warmgray-800 font-bold flex items-center gap-1.5">
-                        <i class="fa-solid fa-arrow-trend-up text-brand-700"></i>
-                        <span data-i18n="metricRegularity">30-Day Income Regularity</span>
-                        <span class="text-[10px] text-warmgray-400 font-normal">(30% weight)</span>
-                      </span>
-                      <span class="font-black text-brand-700" id="barRegularityVal">64%</span>
-                    </div>
-                    <div class="w-full h-2.5 bg-sandal-100 rounded-full overflow-hidden">
-                      <div id="barRegularity" class="h-full bg-brand-600 rounded-full" style="width: 64%;"></div>
-                    </div>
+                <!-- Metric 2: Platform Rating (35%) -->
+                <div class="bg-white p-4 rounded-xl border border-sandal-200 shadow-sm stagger-item">
+                  <div class="flex justify-between text-xs mb-1.5">
+                    <span class="text-warmgray-800 font-bold flex items-center gap-1.5">
+                      <i class="fa-regular fa-star text-amber-600"></i>
+                      <span data-i18n="metricRating">Customer Rating</span>
+                      <span class="text-[10px] text-warmgray-400 font-normal">(35% weight)</span>
+                    </span>
+                    <span class="font-black text-amber-600" id="barRatingVal">84%</span>
+                  </div>
+                  <div class="w-full h-2.5 bg-sandal-100 rounded-full overflow-hidden">
+                    <div id="barRating" class="h-full bg-amber-500 rounded-full" style="width: 84%;"></div>
+                  </div>
+                </div>
+
+                <!-- Metric 3: Income Regularity (30%) -->
+                <div class="bg-white p-4 rounded-xl border border-sandal-200 shadow-sm stagger-item">
+                  <div class="flex justify-between text-xs mb-1.5">
+                    <span class="text-warmgray-800 font-bold flex items-center gap-1.5">
+                      <i class="fa-solid fa-arrow-trend-up text-brand-700"></i>
+                      <span data-i18n="metricRegularity">30-Day Income Regularity</span>
+                      <span class="text-[10px] text-warmgray-400 font-normal">(30% weight)</span>
+                    </span>
+                    <span class="font-black text-brand-700" id="barRegularityVal">64%</span>
+                  </div>
+                  <div class="w-full h-2.5 bg-sandal-100 rounded-full overflow-hidden">
+                    <div id="barRegularity" class="h-full bg-brand-600 rounded-full" style="width: 64%;"></div>
                   </div>
                 </div>
               </div>
 
               <!-- Quick Micro-Advance Button -->
-              <div class="pt-3">
+              <div class="pt-3 stagger-item">
                 <button onclick="openAdvanceModal()" class="w-full py-3 rounded-xl bg-sandal-700 hover:bg-sandal-800 text-white text-xs font-bold shadow-md flex items-center justify-center gap-2 transition-all">
                   <i class="fa-solid fa-hand-holding-dollar"></i>
                   <span>Apply for Shift-Backed Micro-Advance (0% Interest)</span>
@@ -787,10 +787,9 @@
       <!-- ============================================================== -->
       <!-- 📄 PAGE 4: 🌧️ MONSOON & SURGE RADAR VIEW (#view-weather)        -->
       <!-- ============================================================== -->
-      <div id="view-weather" class="page-view hidden view-animate space-y-6">
+      <div id="view-weather" class="page-view hidden space-y-6">
         
-        <!-- Weather Banner -->
-        <div class="sandal-card rounded-2xl p-6 border-l-4 border-l-sandal-600 bg-gradient-to-r from-white via-sandal-50 to-white">
+        <div class="sandal-card rounded-2xl p-6 border-l-4 border-l-sandal-600 bg-gradient-to-r from-white via-sandal-50 to-white stagger-item">
           <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div class="flex items-start gap-4">
               <div class="w-14 h-14 rounded-2xl bg-sandal-200 text-sandal-800 flex items-center justify-center shrink-0 text-3xl shadow-sm">
@@ -815,28 +814,28 @@
 
         <!-- Zone-Wise Demand Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div class="sandal-card rounded-2xl p-4 bg-white border border-sandal-200">
+          <div class="sandal-card rounded-2xl p-4 bg-white border border-sandal-200 stagger-item">
             <div class="flex items-center justify-between mb-2">
               <span class="text-xs font-bold text-warmgray-900">OMR IT Corridor</span>
               <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-rose-100 text-rose-700 border border-rose-200">1.5x Surge</span>
             </div>
             <p class="text-xs text-warmgray-500 font-medium">Sholinganallur & Navalur dinner deliveries</p>
           </div>
-          <div class="sandal-card rounded-2xl p-4 bg-white border border-sandal-200">
+          <div class="sandal-card rounded-2xl p-4 bg-white border border-sandal-200 stagger-item">
             <div class="flex items-center justify-between mb-2">
               <span class="text-xs font-bold text-warmgray-900">T. Nagar / Central</span>
               <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-100 text-amber-700 border border-amber-200">1.6x Surge</span>
             </div>
             <p class="text-xs text-warmgray-500 font-medium">Shopping peak & quick auto trips</p>
           </div>
-          <div class="sandal-card rounded-2xl p-4 bg-white border border-sandal-200">
+          <div class="sandal-card rounded-2xl p-4 bg-white border border-sandal-200 stagger-item">
             <div class="flex items-center justify-between mb-2">
               <span class="text-xs font-bold text-warmgray-900">Velachery Hub</span>
               <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-brand-100 text-brand-700 border border-brand-200">1.45x Surge</span>
             </div>
             <p class="text-xs text-warmgray-500 font-medium">Phoenix Marketcity food parcel demand</p>
           </div>
-          <div class="sandal-card rounded-2xl p-4 bg-white border border-sandal-200">
+          <div class="sandal-card rounded-2xl p-4 bg-white border border-sandal-200 stagger-item">
             <div class="flex items-center justify-between mb-2">
               <span class="text-xs font-bold text-warmgray-900">Guindy & Airport</span>
               <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-sandal-100 text-sandal-800 border border-sandal-300">1.25x Normal</span>
@@ -850,9 +849,9 @@
       <!-- ============================================================== -->
       <!-- 📄 PAGE 5: 📈 VOLATILITY CHART VIEW (#view-chart)               -->
       <!-- ============================================================== -->
-      <div id="view-chart" class="page-view hidden view-animate space-y-6">
+      <div id="view-chart" class="page-view hidden space-y-6">
         
-        <div class="sandal-card rounded-2xl p-6">
+        <div class="sandal-card rounded-2xl p-6 stagger-item">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
             <div>
               <h2 class="text-xl font-black text-warmgray-900 flex items-center gap-2">
@@ -880,21 +879,21 @@
           </div>
 
           <!-- Chart Canvas Container -->
-          <div class="w-full h-96 relative bg-sandal-50/50 rounded-xl p-2 border border-sandal-200">
+          <div class="w-full h-96 relative bg-sandal-50/50 rounded-xl p-2 border border-sandal-200 stagger-item">
             <canvas id="incomeComparisonChart"></canvas>
           </div>
 
           <!-- Financial Resilience Stats Row -->
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6 pt-5 border-t border-sandal-200 text-center">
-            <div class="p-3 rounded-xl bg-brand-50 border border-brand-200">
+            <div class="p-3.5 rounded-xl bg-brand-50 border border-brand-200 stagger-item">
               <div class="text-[10px] uppercase font-bold text-brand-700">Income Stability Index</div>
               <div class="text-xl font-black text-warmgray-900 mt-0.5">92% Stabilized</div>
             </div>
-            <div class="p-3 rounded-xl bg-sandal-100 border border-sandal-300">
+            <div class="p-3.5 rounded-xl bg-sandal-100 border border-sandal-300 stagger-item">
               <div class="text-[10px] uppercase font-bold text-sandal-800">Total Surpluses Swept</div>
               <div class="text-xl font-black text-warmgray-900 mt-0.5">₹6,840</div>
             </div>
-            <div class="p-3 rounded-xl bg-amber-50 border border-amber-200">
+            <div class="p-3.5 rounded-xl bg-amber-50 border border-amber-200 stagger-item">
               <div class="text-[10px] uppercase font-bold text-amber-700">Total Deficits Covered</div>
               <div class="text-xl font-black text-warmgray-900 mt-0.5">₹2,590</div>
             </div>
@@ -906,9 +905,9 @@
       <!-- ============================================================== -->
       <!-- 📄 PAGE 6: 📋 30-DAY SHIFT LEDGER VIEW (#view-ledger)           -->
       <!-- ============================================================== -->
-      <div id="view-ledger" class="page-view hidden view-animate space-y-6">
+      <div id="view-ledger" class="page-view hidden space-y-6">
         
-        <div class="sandal-card rounded-2xl p-6">
+        <div class="sandal-card rounded-2xl p-6 stagger-item">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
             <div>
               <h2 class="text-xl font-black text-warmgray-900 flex items-center gap-2">
@@ -931,7 +930,7 @@
           </div>
 
           <!-- Table Container -->
-          <div class="overflow-x-auto rounded-xl border border-sandal-200 shadow-sm">
+          <div class="overflow-x-auto rounded-xl border border-sandal-200 shadow-sm stagger-item">
             <table class="w-full text-left text-xs text-warmgray-700">
               <thead class="bg-sandal-100 uppercase font-bold text-warmgray-600 text-[10px] tracking-wider border-b border-sandal-200">
                 <tr>
@@ -955,7 +954,7 @@
       </div>
 
       <!-- Footer -->
-      <footer class="pt-4 pb-2 border-t border-sandal-200 text-center text-xs text-warmgray-500">
+      <footer class="pt-4 pb-2 border-t border-sandal-200 text-center text-xs text-warmgray-500 stagger-item">
         <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
           <div class="flex items-center gap-2 font-medium">
             <span class="w-5 h-5 rounded-md bg-sandal-200 text-sandal-800 flex items-center justify-center text-[10px]">
@@ -964,7 +963,7 @@
             <span>EquiPulse Fintech • Built for Hackathon PS-4 (Financial Resilience for Gig Workers)</span>
           </div>
           <div class="font-medium text-warmgray-400">
-            <span>Sandal & White Theme • Multi-Page Architecture with Smooth Animations</span>
+            <span>Sandal & White Theme • Staggered Entrance Animations & Micro-Loader</span>
           </div>
         </div>
       </footer>
@@ -1053,6 +1052,7 @@
     let chartInstance = null;
     let currentAdvanceAmount = 2000;
     let activePage = 'overview';
+    let isTransitioning = false;
     let activeProfile = {
       name: 'Akash S.',
       platform: 'Uber Premier Auto / Moto Captain',
@@ -1060,12 +1060,59 @@
     };
 
     // ==========================================
-    // 🔀 MULTI-PAGE VIEW ROUTER WITH ANIMATIONS
+    // 💫 STAGGERED ENTRANCE CASCADING ANIMATION
+    // ==========================================
+    function triggerStaggerAnimation(container) {
+      if (!container) return;
+      const items = container.querySelectorAll('.stagger-item');
+      items.forEach((item, index) => {
+        item.style.animation = 'none';
+        void item.offsetWidth; // Force reflow
+        const delay = index * 55;
+        item.style.animation = `cardCascade 0.42s cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms both`;
+      });
+    }
+
+    // ==========================================
+    // 🔀 MULTI-PAGE ROUTER WITH FINTECH LOADER
     // ==========================================
     function navigateTo(pageId) {
+      if (isTransitioning) return;
+      isTransitioning = true;
       activePage = pageId;
 
-      // Update sidebar nav buttons styling
+      const progressBar = document.getElementById('topProgressBar');
+      const loader = document.getElementById('pageLoader');
+      const loaderTitle = document.getElementById('loaderTitle');
+
+      const titles = {
+        overview: { en: "Loading Overview Dashboard...", ta: "கண்ணோட்ட பக்கம் ஏற்றப்படுகிறது..." },
+        smoother: { en: "Synchronizing AI Smoother Studio...", ta: "AI வருமான சமநிலைப்படுத்தி தயாராகிறது..." },
+        gigscore: { en: "Calculating GIG-Score Credit Rating...", ta: "கிக்-கடன் நன்மதிப்பீடு கணக்கிடப்படுகிறது..." },
+        weather: { en: "Scanning Chennai Monsoon Radar...", ta: "சென்னை மழை மற்றும் சர்ஜ் ரேடார் ஸ்கேன் செய்யப்படுகிறது..." },
+        chart: { en: "Rendering Volatility Analytics...", ta: "வருமான வரைபடம் தயாராகிறது..." },
+        ledger: { en: "Loading 30-Day Financial Ledger...", ta: "30-நாள் பதிவு ஏடு ஏற்றப்படுகிறது..." }
+      };
+
+      if (loaderTitle && titles[pageId]) {
+        loaderTitle.innerText = currentLang === 'ta' ? titles[pageId].ta : titles[pageId].en;
+      }
+
+      if (progressBar) {
+        progressBar.style.transition = 'none';
+        progressBar.style.transform = 'translateX(-100%)';
+        void progressBar.offsetWidth;
+        progressBar.style.transition = 'transform 260ms cubic-bezier(0.16, 1, 0.3, 1)';
+        progressBar.style.transform = 'translateX(-15%)';
+      }
+
+      if (loader) {
+        loader.classList.remove('opacity-0', 'pointer-events-none');
+        loader.firstElementChild.classList.remove('scale-95');
+        loader.firstElementChild.classList.add('scale-100');
+      }
+
+      // Sidebar button active state
       document.querySelectorAll('.nav-btn').forEach(btn => {
         btn.className = "nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-warmgray-700 hover:bg-white/80 font-semibold text-xs transition-all hover:text-warmgray-900 text-left";
         const iconBox = btn.querySelector('.icon-box');
@@ -1083,36 +1130,55 @@
         }
       }
 
-      // Hide all pages, show target page with animation
-      document.querySelectorAll('.page-view').forEach(view => {
-        view.classList.add('hidden');
-        view.classList.remove('view-animate');
-      });
+      // Smooth switch after micro-loading delay
+      setTimeout(() => {
+        if (progressBar) progressBar.style.transform = 'translateX(0%)';
 
-      const targetView = document.getElementById('view-' + pageId);
-      if (targetView) {
-        targetView.classList.remove('hidden');
-        // Force reflow to re-trigger CSS animation
-        void targetView.offsetWidth;
-        targetView.classList.add('view-animate');
-      }
+        document.querySelectorAll('.page-view').forEach(view => {
+          view.classList.add('hidden');
+        });
 
-      // If switching to Chart page, resize chart to fit canvas perfectly
-      if (pageId === 'chart' && chartInstance) {
+        const targetView = document.getElementById('view-' + pageId);
+        if (targetView) {
+          targetView.classList.remove('hidden');
+          triggerStaggerAnimation(targetView);
+        }
+
+        if (pageId === 'chart' && chartInstance) {
+          setTimeout(() => { chartInstance.resize(); }, 50);
+        }
+
+        const sidebar = document.getElementById('leftSidebar');
+        const backdrop = document.getElementById('mobileBackdrop');
+        if (sidebar && !sidebar.classList.contains('-translate-x-full') && window.innerWidth < 1024) {
+          sidebar.classList.add('-translate-x-full');
+          if (backdrop) backdrop.classList.add('hidden');
+        }
+
+        window.location.hash = pageId;
+
+        // Dismiss micro-loader
         setTimeout(() => {
-          chartInstance.resize();
-        }, 50);
-      }
+          if (loader) {
+            loader.classList.add('opacity-0', 'pointer-events-none');
+            loader.firstElementChild.classList.remove('scale-100');
+            loader.firstElementChild.classList.add('scale-95');
+          }
+          if (progressBar) {
+            setTimeout(() => {
+              progressBar.style.transform = 'translateX(100%)';
+              setTimeout(() => {
+                progressBar.style.transition = 'none';
+                progressBar.style.transform = 'translateX(-100%)';
+                isTransitioning = false;
+              }, 200);
+            }, 100);
+          } else {
+            isTransitioning = false;
+          }
+        }, 80);
 
-      // Close mobile drawer if open
-      const sidebar = document.getElementById('leftSidebar');
-      const backdrop = document.getElementById('mobileBackdrop');
-      if (sidebar && !sidebar.classList.contains('-translate-x-full') && window.innerWidth < 1024) {
-        sidebar.classList.add('-translate-x-full');
-        if (backdrop) backdrop.classList.add('hidden');
-      }
-
-      window.location.hash = pageId;
+      }, 220);
     }
 
     function toggleMobileSidebar() {
@@ -1131,7 +1197,7 @@
 
     window.addEventListener('hashchange', () => {
       const hash = window.location.hash.replace('#', '');
-      if (hash && ['overview', 'smoother', 'gigscore', 'weather', 'chart', 'ledger'].includes(hash)) {
+      if (hash && ['overview', 'smoother', 'gigscore', 'weather', 'chart', 'ledger'].includes(hash) && hash !== activePage) {
         navigateTo(hash);
       }
     });
@@ -1606,6 +1672,7 @@
 
     function addTransactionToHistory(txn) {
       const tbody = document.getElementById('historyTableBody');
+      if (!tbody) return;
       const tr = document.createElement('tr');
       tr.className = "hover:bg-sandal-50/70 transition-colors bg-brand-50/40";
 
