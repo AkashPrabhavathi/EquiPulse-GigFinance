@@ -350,9 +350,15 @@
         </div>
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
           <div class="sandal-card rounded-2xl p-4 stagger-item">
-            <div class="text-xs font-bold text-warmgray-500 mb-1">Predicted Next Week</div>
-            <div class="text-3xl font-black text-sandal-700">₹5,200</div>
-            <div class="text-xs text-brand-600 font-medium mt-1">AI confidence: 84%</div>
+            <div class="flex justify-between items-center mb-1">
+              <div class="text-xs font-bold text-warmgray-500">AI Prediction</div>
+              <select id="predictionPeriod" onchange="updatePrediction()" class="text-[10px] bg-sandal-50 border border-sandal-200 rounded px-1 py-0.5 font-bold text-sandal-800 outline-none">
+                <option value="week">Next Week</option>
+                <option value="month">Next Month</option>
+              </select>
+            </div>
+            <div id="predictAmount" class="text-3xl font-black text-sandal-700 transition-all">₹5,200</div>
+            <div id="predictConfidence" class="text-xs text-brand-600 font-medium mt-1 transition-all">AI confidence: 84%</div>
           </div>
           <div class="sandal-card rounded-2xl p-4 stagger-item">
             <div class="text-xs font-bold text-warmgray-500 mb-1">Low-Income Alert</div>
@@ -679,6 +685,19 @@
         const modal = document.getElementById('microAdvanceModal');
         modal.classList.add('hidden');
         modal.classList.remove('flex');
+      }
+      function updatePrediction() {
+        const period = document.getElementById('predictionPeriod').value;
+        const amt = document.getElementById('predictAmount');
+        const conf = document.getElementById('predictConfidence');
+        if (period === 'month') {
+          amt.textContent = '₹22,450';
+          conf.textContent = 'AI confidence: 78%';
+        } else {
+          amt.textContent = '₹5,200';
+          conf.textContent = 'AI confidence: 84%';
+        }
+        showToast('AI Model recalibrated for Next ' + (period === 'month' ? 'Month' : 'Week'), 'Prediction Updated');
       }
 
       // ── Chart.js Income Chart (init when navigated to) ────────────
