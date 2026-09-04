@@ -191,7 +191,7 @@
   </div>
 
   <!-- MAIN WRAPPER -->
-  <div class="min-h-screen flex flex-col lg:flex-row bg-[#faf6ee]">
+  <div id="mainWrapper" class="min-h-screen flex flex-col lg:flex-row bg-[#faf6ee] hidden">
     <!-- Mobile Top Header -->
     <div class="lg:hidden flex items-center justify-between p-4 bg-[#f4ece0] border-b border-sandal-300 sticky top-0 z-30 shadow-sm">
       <div class="flex items-center gap-2.5">
@@ -297,7 +297,191 @@
       </div>
     </aside>
 
-    <!-- New Pages -->
+    <!-- MAIN CONTENT AREA -->
+    <main class="flex-1 overflow-y-auto">
+
+      <!-- ── OVERVIEW DASHBOARD ─────────────────────────────────────── -->
+      <section id="overview" class="p-6 space-y-6">
+        <div class="flex items-center justify-between mb-2">
+          <div>
+            <h2 class="text-2xl font-black text-warmgray-900">Overview Dashboard</h2>
+            <p class="text-sm text-warmgray-500 font-medium">Your financial resilience at a glance</p>
+          </div>
+          <span class="text-xs px-3 py-1 rounded-full bg-brand-100 text-brand-800 border border-brand-300 font-bold">🟢 Live</span>
+        </div>
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="sandal-card rounded-2xl p-4 stagger-item">
+            <div class="text-xs font-bold text-warmgray-500 mb-1">This Week</div>
+            <div class="text-2xl font-black text-warmgray-900">₹4,820</div>
+            <div class="text-xs text-brand-600 font-semibold mt-1">↑ 12% vs last week</div>
+          </div>
+          <div class="sandal-card rounded-2xl p-4 stagger-item">
+            <div class="text-xs font-bold text-warmgray-500 mb-1">GIG-Score</div>
+            <div class="text-2xl font-black text-amber-600">742</div>
+            <div class="text-xs text-warmgray-500 font-semibold mt-1">Good Standing</div>
+          </div>
+          <div class="sandal-card rounded-2xl p-4 stagger-item">
+            <div class="text-xs font-bold text-warmgray-500 mb-1">Income Buffer</div>
+            <div class="text-2xl font-black text-brand-600">₹2,150</div>
+            <div class="text-xs text-warmgray-500 font-semibold mt-1">AI-smoothed reserve</div>
+          </div>
+          <div class="sandal-card rounded-2xl p-4 stagger-item">
+            <div class="text-xs font-bold text-warmgray-500 mb-1">Total Trips</div>
+            <div class="text-2xl font-black text-warmgray-900">1,247</div>
+            <div class="text-xs text-warmgray-500 font-semibold mt-1">Last 30 days</div>
+          </div>
+        </div>
+        <div class="sandal-card rounded-2xl p-5 stagger-item">
+          <h3 class="font-bold text-warmgray-800 mb-3">Quick Actions</h3>
+          <div class="flex flex-wrap gap-2">
+            <button onclick="navigateTo('smoother')" class="px-4 py-2 rounded-xl bg-sandal-100 hover:bg-sandal-200 border border-sandal-300 text-sandal-800 text-xs font-bold transition-colors">📊 Income Smoother</button>
+            <button onclick="navigateTo('gigscore')" class="px-4 py-2 rounded-xl bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-800 text-xs font-bold transition-colors">⭐ GIG-Score</button>
+            <button onclick="navigateTo('sos')" class="px-4 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-800 text-xs font-bold transition-colors">🚨 SOS Fund</button>
+            <button onclick="openAdvanceModal()" class="px-4 py-2 rounded-xl bg-brand-50 hover:bg-brand-100 border border-brand-200 text-brand-800 text-xs font-bold transition-colors">💸 Get Advance</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── AI INCOME SMOOTHER ──────────────────────────────────────── -->
+      <section id="smoother" class="hidden p-6 space-y-6">
+        <div>
+          <h2 class="text-2xl font-black text-warmgray-900">AI Income Smoother</h2>
+          <p class="text-sm text-warmgray-500 font-medium">Predict and stabilize your weekly income</p>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          <div class="sandal-card rounded-2xl p-4 stagger-item">
+            <div class="text-xs font-bold text-warmgray-500 mb-1">Predicted Next Week</div>
+            <div class="text-3xl font-black text-sandal-700">₹5,200</div>
+            <div class="text-xs text-brand-600 font-medium mt-1">AI confidence: 84%</div>
+          </div>
+          <div class="sandal-card rounded-2xl p-4 stagger-item">
+            <div class="text-xs font-bold text-warmgray-500 mb-1">Low-Income Alert</div>
+            <div class="text-xl font-black text-amber-600">Wednesday</div>
+            <div class="text-xs text-warmgray-500 font-medium mt-1">Estimated ₹350 – avoid big spends</div>
+          </div>
+          <div class="sandal-card rounded-2xl p-4 stagger-item">
+            <div class="text-xs font-bold text-warmgray-500 mb-1">Buffer Recommended</div>
+            <div class="text-xl font-black text-brand-600">₹800</div>
+            <div class="text-xs text-warmgray-500 font-medium mt-1">Set aside from today's earnings</div>
+          </div>
+        </div>
+        <div class="sandal-card rounded-2xl p-5 stagger-item">
+          <h3 class="font-bold text-warmgray-800 mb-2">💡 AI Recommendation</h3>
+          <p class="text-sm text-warmgray-600">Based on your 30-day earnings pattern, Tuesday and Thursday are your peak earning days. Schedule your longest routes on these days and keep Wednesday light. Auto-transfer ₹800 to your buffer today.</p>
+        </div>
+      </section>
+
+      <!-- ── GIG-SCORE ───────────────────────────────────────────────── -->
+      <section id="gigscore" class="hidden p-6 space-y-6">
+        <div>
+          <h2 class="text-2xl font-black text-warmgray-900">GIG-Score Credit Engine</h2>
+          <p class="text-sm text-warmgray-500 font-medium">Your alternative credit profile for gig workers</p>
+        </div>
+        <div class="sandal-card rounded-2xl p-6 text-center stagger-item">
+          <div class="text-7xl font-black text-amber-600 mb-2">742</div>
+          <div class="text-lg font-bold text-warmgray-700 mb-1">Good Standing</div>
+          <div class="w-48 mx-auto h-3 bg-sandal-200 rounded-full overflow-hidden mb-4">
+            <div class="h-full bg-gradient-to-r from-sandal-600 to-amber-500 rounded-full" style="width:74%"></div>
+          </div>
+          <p class="text-xs text-warmgray-500">Score range: 300–900 | Your percentile: Top 38%</p>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="sandal-card rounded-2xl p-4 stagger-item">
+            <div class="text-xs font-bold text-warmgray-500 mb-1">Trip Consistency</div>
+            <div class="text-xl font-black text-brand-600">91%</div>
+          </div>
+          <div class="sandal-card rounded-2xl p-4 stagger-item">
+            <div class="text-xs font-bold text-warmgray-500 mb-1">Rating Score</div>
+            <div class="text-xl font-black text-amber-600">4.89 ⭐</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── MONSOON & SURGE RADAR ───────────────────────────────────── -->
+      <section id="weather" class="hidden p-6 space-y-6">
+        <div>
+          <h2 class="text-2xl font-black text-warmgray-900">Monsoon &amp; Surge Radar</h2>
+          <p class="text-sm text-warmgray-500 font-medium">Weather-aware income planning</p>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          <div class="sandal-card rounded-2xl p-4 stagger-item border-l-4 border-blue-400">
+            <div class="text-2xl mb-1">🌧️</div>
+            <div class="text-xs font-bold text-warmgray-500 mb-1">Today</div>
+            <div class="text-lg font-black text-blue-700">Heavy Rain</div>
+            <div class="text-xs text-brand-600 font-bold mt-1">Surge: +35% 🔥</div>
+          </div>
+          <div class="sandal-card rounded-2xl p-4 stagger-item border-l-4 border-amber-400">
+            <div class="text-2xl mb-1">⛅</div>
+            <div class="text-xs font-bold text-warmgray-500 mb-1">Tomorrow</div>
+            <div class="text-lg font-black text-amber-700">Partly Cloudy</div>
+            <div class="text-xs text-amber-600 font-bold mt-1">Surge: +10%</div>
+          </div>
+          <div class="sandal-card rounded-2xl p-4 stagger-item border-l-4 border-brand-400">
+            <div class="text-2xl mb-1">☀️</div>
+            <div class="text-xs font-bold text-warmgray-500 mb-1">Day After</div>
+            <div class="text-lg font-black text-brand-700">Clear</div>
+            <div class="text-xs text-warmgray-500 font-bold mt-1">Normal rates</div>
+          </div>
+        </div>
+        <div class="sandal-card rounded-2xl p-5 stagger-item" style="background:#eff6ff;border-color:#bfdbfe">
+          <h3 class="font-bold mb-2" style="color:#1d4ed8">🌊 Surge Alert</h3>
+          <p class="text-sm" style="color:#1e40af">Heavy rainfall expected in T. Nagar and Velachery today 2–8 PM. Demand surge predicted +35%. Position yourself near Nungambakkam for maximum trips.</p>
+        </div>
+      </section>
+
+      <!-- ── INCOME VOLATILITY CHART ─────────────────────────────────── -->
+      <section id="chart" class="hidden p-6 space-y-6">
+        <div>
+          <h2 class="text-2xl font-black text-warmgray-900">Income Volatility Visualizer</h2>
+          <p class="text-sm text-warmgray-500 font-medium">30-day earnings pattern and trends</p>
+        </div>
+        <div class="sandal-card rounded-2xl p-5 stagger-item">
+          <canvas id="incomeChart" height="120"></canvas>
+        </div>
+        <div class="grid grid-cols-3 gap-3">
+          <div class="sandal-card rounded-2xl p-3 text-center stagger-item">
+            <div class="text-xs text-warmgray-500 font-bold">Peak Day</div>
+            <div class="text-lg font-black text-brand-600">Tuesday</div>
+          </div>
+          <div class="sandal-card rounded-2xl p-3 text-center stagger-item">
+            <div class="text-xs text-warmgray-500 font-bold">Low Day</div>
+            <div class="text-lg font-black text-rose-500">Wednesday</div>
+          </div>
+          <div class="sandal-card rounded-2xl p-3 text-center stagger-item">
+            <div class="text-xs text-warmgray-500 font-bold">Avg/Day</div>
+            <div class="text-lg font-black text-warmgray-900">₹688</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── 30-DAY LEDGER ───────────────────────────────────────────── -->
+      <section id="ledger" class="hidden p-6 space-y-4">
+        <div>
+          <h2 class="text-2xl font-black text-warmgray-900">30-Day Activity Ledger</h2>
+          <p class="text-sm text-warmgray-500 font-medium">Your recent earnings and activity log</p>
+        </div>
+        <div class="sandal-card rounded-2xl overflow-hidden stagger-item">
+          <table class="w-full text-xs">
+            <thead class="bg-sandal-100 text-warmgray-700">
+              <tr>
+                <th class="px-4 py-3 text-left font-bold">Date</th>
+                <th class="px-4 py-3 text-left font-bold">Trips</th>
+                <th class="px-4 py-3 text-right font-bold">Earned</th>
+                <th class="px-4 py-3 text-right font-bold">Status</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-sandal-100">
+              <tr class="hover:bg-sandal-50"><td class="px-4 py-3 font-semibold">Sep 3</td><td class="px-4 py-3">14</td><td class="px-4 py-3 text-right font-bold text-brand-700">₹820</td><td class="px-4 py-3 text-right"><span class="px-2 py-0.5 rounded-full bg-brand-100 text-brand-800 font-bold">Great</span></td></tr>
+              <tr class="hover:bg-sandal-50"><td class="px-4 py-3 font-semibold">Sep 2</td><td class="px-4 py-3">9</td><td class="px-4 py-3 text-right font-bold text-amber-600">₹540</td><td class="px-4 py-3 text-right"><span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 font-bold">OK</span></td></tr>
+              <tr class="hover:bg-sandal-50"><td class="px-4 py-3 font-semibold">Sep 1</td><td class="px-4 py-3">16</td><td class="px-4 py-3 text-right font-bold text-brand-700">₹960</td><td class="px-4 py-3 text-right"><span class="px-2 py-0.5 rounded-full bg-brand-100 text-brand-800 font-bold">Great</span></td></tr>
+              <tr class="hover:bg-sandal-50"><td class="px-4 py-3 font-semibold">Aug 31</td><td class="px-4 py-3">6</td><td class="px-4 py-3 text-right font-bold text-rose-600">₹320</td><td class="px-4 py-3 text-right"><span class="px-2 py-0.5 rounded-full bg-rose-100 text-rose-800 font-bold">Low</span></td></tr>
+              <tr class="hover:bg-sandal-50"><td class="px-4 py-3 font-semibold">Aug 30</td><td class="px-4 py-3">12</td><td class="px-4 py-3 text-right font-bold text-brand-700">₹710</td><td class="px-4 py-3 text-right"><span class="px-2 py-0.5 rounded-full bg-brand-100 text-brand-800 font-bold">Good</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ── NEW FEATURE PAGES ──────────────────────────────────────── -->
     <section id="sos" class="hidden p-6">
       <h2 class="text-2xl font-bold mb-4">Emergency SOS Fund</h2>
       <p class="mb-4">Instant claim of ₹5000 for emergencies.</p>
@@ -333,29 +517,118 @@
     </footer>
 
     <script>
-      // Splash screen logic
-      const splashStatus = document.getElementById('splashStatus');
-      const statusTexts = [
+      /* ================================================================
+         ALL APP JAVASCRIPT - single unified block
+         ================================================================ */
+
+      // ── Splash screen ──────────────────────────────────────────────
+      const splashStatusEl = document.getElementById('splashStatus');
+      const splashTexts = [
         'Initializing AI Resilience Engine...',
         'Loading Financial Models...',
+        'Calibrating GIG-Score...',
         'Preparing Dashboard...'
       ];
-      let idx = 0;
-      const interval = setInterval(() => {
-        splashStatus.textContent = statusTexts[idx++] || statusTexts[statusTexts.length-1];
-        if (idx >= statusTexts.length) {
-          clearInterval(interval);
+      let splashIdx = 0;
+      const splashInterval = setInterval(() => {
+        if (splashIdx < splashTexts.length) {
+          splashStatusEl.textContent = splashTexts[splashIdx++];
+        }
+        if (splashIdx >= splashTexts.length) {
+          clearInterval(splashInterval);
           setTimeout(() => {
-            document.getElementById('splashScreen').classList.add('animate-fadeOut');
+            const splash = document.getElementById('splashScreen');
+            splash.style.animation = 'splashFadeOut .6s ease forwards';
             setTimeout(() => {
-              document.getElementById('splashScreen').remove();
+              splash.remove();
               document.getElementById('loginOverlay').classList.remove('hidden');
-            }, 800);
+            }, 600);
           }, 500);
         }
-      }, 1200);
+      }, 1000);
 
-      // Navigation function
+      // ── Toast notification ─────────────────────────────────────────
+      function showToast(message, title, type) {
+        title = title || 'EquiPulse';
+        type  = type  || 'success';
+        const toast   = document.getElementById('toast');
+        const tTitle  = document.getElementById('toastTitle');
+        const tMsg    = document.getElementById('toastMessage');
+        const tIcon   = document.getElementById('toastIcon');
+        tTitle.textContent   = title;
+        tMsg.textContent     = message;
+        tIcon.className      = 'w-8 h-8 rounded-full flex items-center justify-center shrink-0 mt-0.5 ' +
+          (type === 'error' ? 'bg-rose-100 text-rose-600' : 'bg-brand-100 text-brand-600');
+        tIcon.innerHTML      = type === 'error'
+          ? '<i class="fa-solid fa-xmark"></i>'
+          : '<i class="fa-solid fa-check"></i>';
+        toast.classList.remove('translate-x-full');
+        setTimeout(() => toast.classList.add('translate-x-full'), 3500);
+      }
+
+      // ── Login submit ───────────────────────────────────────────────
+      function handleLoginSubmit(event) {
+        event.preventDefault();
+        const name     = document.getElementById('loginNameInput').value.trim() || 'Partner';
+        const platform = document.getElementById('loginPlatformSelect').value;
+        const city     = document.getElementById('loginCitySelect').value;
+
+        // Update the sidebar user info
+        document.getElementById('userName').textContent     = name;
+        document.getElementById('userPlatform').textContent = platform.split(' ')[0];
+        document.getElementById('userAvatar').textContent   = name.charAt(0).toUpperCase();
+
+        // Hide login overlay, show dashboard
+        document.getElementById('loginOverlay').classList.add('hidden');
+        document.getElementById('mainWrapper').classList.remove('hidden');
+
+        // Navigate to overview
+        navigateTo('overview');
+        showToast('Welcome back, ' + name + '! 🎉', 'Logged In');
+      }
+
+      // ── Quick-login fill ───────────────────────────────────────────
+      function fillQuickLogin(name, platform, city) {
+        document.getElementById('loginNameInput').value = name;
+        const pSel = document.getElementById('loginPlatformSelect');
+        for (let opt of pSel.options) { if (opt.value === platform) { pSel.value = platform; break; } }
+        const cSel = document.getElementById('loginCitySelect');
+        for (let opt of cSel.options) { if (opt.value === city)     { cSel.value = city;     break; } }
+      }
+
+      // ── Show/hide login modal ──────────────────────────────────────
+      function showLoginModal() {
+        document.getElementById('mainWrapper').classList.add('hidden');
+        document.getElementById('loginOverlay').classList.remove('hidden');
+      }
+
+      // ── Logout ─────────────────────────────────────────────────────
+      function handleLogout() {
+        document.getElementById('mainWrapper').classList.add('hidden');
+        document.getElementById('loginOverlay').classList.remove('hidden');
+        showToast('Logged out successfully.', 'Goodbye!');
+      }
+
+      // ── Reset demo ─────────────────────────────────────────────────
+      function resetDemoState() {
+        document.getElementById('loginNameInput').value = 'Akash S.';
+        showToast('Demo state reset!', 'Reset');
+      }
+
+      // ── Mobile sidebar ─────────────────────────────────────────────
+      function toggleMobileSidebar() {
+        const sidebar  = document.getElementById('leftSidebar');
+        const backdrop = document.getElementById('mobileBackdrop');
+        sidebar.classList.toggle('-translate-x-full');
+        backdrop.classList.toggle('hidden');
+      }
+
+      // ── Language toggle (stub) ─────────────────────────────────────
+      function toggleLanguage() {
+        showToast('Language toggle coming soon!', 'Info');
+      }
+
+      // ── Navigation ─────────────────────────────────────────────────
       function navigateTo(page) {
         document.querySelectorAll('section[id]').forEach(sec => sec.classList.add('hidden'));
         const target = document.getElementById(page);
@@ -363,109 +636,86 @@
         document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('nav-item-active'));
         const btn = document.querySelector('#btn-nav-' + page);
         if (btn) btn.classList.add('nav-item-active');
-        // Stagger animation for cards inside target
         if (target) {
-          const cards = target.querySelectorAll('.stagger-item');
-          cards.forEach((c,i) => { c.style.animationDelay = `${i*0.1}s`; c.classList.remove('hidden'); });
+          target.querySelectorAll('.stagger-item').forEach((c, i) => {
+            c.style.animationDelay = `${i * 0.1}s`;
+          });
+        }
+        // Close mobile sidebar after navigation
+        const sidebar = document.getElementById('leftSidebar');
+        if (!sidebar.classList.contains('-translate-x-full')) {
+          toggleMobileSidebar();
         }
       }
 
-      // New feature functions
-      function claimSOSFund() { fetch('/api/claim-sos', {method:'POST'}).then(r => r.json()).then(d => showToast('SOS Fund claimed!')); }
-      function createGoalPot() { fetch('/api/create-goal', {method:'POST'}).then(r => r.json()).then(d => showToast('Goal pot created!')); }
-      function viewInsuranceCoverage() { fetch('/api/insurance-info').then(r => r.json()).then(d => showToast('Insurance details loaded.')); }
+      // ── Feature functions ──────────────────────────────────────────
+      function claimSOSFund() {
+        showToast('Emergency SOS Fund of ₹5,000 claimed successfully!', 'SOS Fund');
+      }
+      function createGoalPot() {
+        showToast('New savings pot created! Start contributing today.', 'Goal Pots');
+      }
+      function viewInsuranceCoverage() {
+        showToast('You are covered up to ₹2,00,000 under the Gig Shield plan.', 'Insurance');
+      }
       function requestMicroAdvance() {
         const amount = document.getElementById('advanceAmount').value;
-        fetch('/api/request-advance', {
-          method: 'POST',
-          headers: {'Content-Type':'application/json'},
-          body: JSON.stringify({amount})
-        }).then(r => r.json()).then(d => { showToast('Advance requested'); closeMicroAdvance(); });
+        if (!amount || amount <= 0) { showToast('Please enter a valid amount.', 'Error', 'error'); return; }
+        showToast(`Advance of ₹${amount} requested! Approval in 2 minutes.`, 'Micro-Advance');
+        closeMicroAdvance();
       }
-      function openAdvanceModal(){ document.getElementById('microAdvanceModal').classList.remove('hidden'); }
-      function closeMicroAdvance(){ document.getElementById('microAdvanceModal').classList.add('hidden'); }
+      function openAdvanceModal() {
+        const modal = document.getElementById('microAdvanceModal');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
+      function closeMicroAdvance() {
+        const modal = document.getElementById('microAdvanceModal');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+
+      // ── Chart.js Income Chart (init when navigated to) ────────────
+      let incomeChartInstance = null;
+      function initIncomeChart() {
+        const ctx = document.getElementById('incomeChart');
+        if (!ctx || incomeChartInstance) return;
+        incomeChartInstance = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: ['Aug 1','Aug 5','Aug 10','Aug 15','Aug 20','Aug 25','Sep 1','Sep 3'],
+            datasets: [{
+              label: 'Daily Earnings (₹)',
+              data: [620,450,780,320,910,540,960,820],
+              borderColor: '#996d48',
+              backgroundColor: 'rgba(153,109,72,0.1)',
+              fill: true,
+              tension: 0.4,
+              pointBackgroundColor: '#996d48',
+              pointRadius: 5
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: {
+              y: { beginAtZero: true, grid: { color:'rgba(0,0,0,.05)' } },
+              x: { grid: { display: false } }
+            }
+          }
+        });
+      }
+
+      // Override navigateTo to also init chart when needed
+      const _navOriginal = navigateTo;
+      function navigateTo(page) {
+        _navOriginal(page);
+        if (page === 'chart') setTimeout(initIncomeChart, 50);
+      }
     </script>
 
+    </main><!-- /main content -->
 
-<!-- New Pages -->
-<section id="sos" class="hidden p-6">
-  <h2 class="text-2xl font-bold mb-4">Emergency SOS Fund</h2>
-  <p class="mb-4">Instant claim of ₹5000 for emergencies.</p>
-  <button onclick="claimSOSFund()" class="px-4 py-2 bg-rose-500 text-white rounded hover:bg-rose-600">Claim Now</button>
-</section>
-
-<section id="goals" class="hidden p-6">
-  <h2 class="text-2xl font-bold mb-4">Goal Savings Pots</h2>
-  <p class="mb-4">Create and track savings pots for your goals.</p>
-  <button onclick="createGoalPot()" class="px-4 py-2 bg-indigo-500 text-white rounded hover:bg-indigo-600">Create Pot</button>
-</section>
-
-<section id="insurance" class="hidden p-6">
-  <h2 class="text-2xl font-bold mb-4">Insurance Shield</h2>
-  <p class="mb-4">Basic accident insurance coverage.</p>
-  <button onclick="viewInsuranceCoverage()" class="px-4 py-2 bg-teal-500 text-white rounded hover:bg-teal-600">View Coverage</button>
-</section>
-
-<!-- Micro-Advance Modal -->
-<div id="microAdvanceModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50">
-  <div class="bg-white rounded-xl p-6 max-w-md w-full shadow-lg">
-    <h3 class="text-xl font-bold mb-2">Micro-Advance</h3>
-    <p class="mb-4">Request a short-term advance.</p>
-    <input type="number" id="advanceAmount" placeholder="Amount (₹)" class="w-full mb-2 p-2 border rounded">
-    <button onclick="requestMicroAdvance()" class="w-full py-2 bg-brand-600 text-white rounded hover:bg-brand-500">Request</button>
-    <button onclick="closeMicroAdvance()" class="w-full mt-2 py-2 bg-warmgray-200 text-warmgray-800 rounded">Cancel</button>
-  </div>
-</div>
-
-<!-- Footer -->
-<footer class="bg-sandal-200 text-warmgray-800 text-center py-3 text-sm">
-  © 2026 EquiPulse – Empowering Gig Workers
-</footer>
-
-<script>
-  // Splash screen logic
-  const splashStatus = document.getElementById('splashStatus');
-  const statusTexts = [
-    'Initializing AI Resilience Engine...',
-    'Loading Financial Models...',
-    'Preparing Dashboard...'
-  ];
-  let idx = 0;
-  const interval = setInterval(() => {
-    splashStatus.textContent = statusTexts[idx++] || statusTexts[statusTexts.length-1];
-    if (idx >= statusTexts.length) {
-      clearInterval(interval);
-      setTimeout(() => {
-        document.getElementById('splashScreen').classList.add('animate-fadeOut');
-        setTimeout(() => {
-          document.getElementById('splashScreen').remove();
-          document.getElementById('loginOverlay').classList.remove('hidden');
-        }, 800);
-      }, 500);
-    }
-  }, 1200);
-
-  // Navigation
-  function navigateTo(page) {
-    document.querySelectorAll('section[id]').forEach(sec => sec.classList.add('hidden'));
-    const target = document.getElementById(page);
-    if (target) target.classList.remove('hidden');
-    document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('nav-item-active'));
-    const btn = document.querySelector('#btn-nav-' + page);
-    if (btn) btn.classList.add('nav-item-active');
-    const cards = target ? target.querySelectorAll('.stagger-item') : [];
-    cards.forEach((c,i)=>{c.style.animationDelay = `${i*0.1}s`; c.classList.remove('hidden');});
-  }
-
-  // New feature functions
-  function claimSOSFund() { fetch('/api/claim-sos', {method:'POST'}).then(r=>r.json()).then(d=>showToast('SOS Fund claimed!')); }
-  function createGoalPot() { fetch('/api/create-goal', {method:'POST'}).then(r=>r.json()).then(d=>showToast('Goal pot created!')); }
-  function viewInsuranceCoverage() { fetch('/api/insurance-info').then(r=>r.json()).then(d=>showToast('Insurance details loaded.')); }
-  function requestMicroAdvance() {
-    const amount = document.getElementById('advanceAmount').value;
-    fetch('/api/request-advance', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({amount})})
-      .then(r=>r.json()).then(d=> {showToast('Advance requested'); closeMicroAdvance();});
-  }
-  function openAdvanceModal(){document.getElementById('microAdvanceModal').classList.remove('hidden');}
-  function closeMicroAdvance(){document.getElementById('microAdvanceModal').classList.add('hidden');}
-</script>
+  </div><!-- /mainWrapper -->
+</body>
+</html>
