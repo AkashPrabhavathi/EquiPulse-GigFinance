@@ -633,19 +633,25 @@
         document.querySelectorAll('section[id]').forEach(sec => sec.classList.add('hidden'));
         const target = document.getElementById(page);
         if (target) target.classList.remove('hidden');
+        
         document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('nav-item-active'));
         const btn = document.querySelector('#btn-nav-' + page);
         if (btn) btn.classList.add('nav-item-active');
+        
         if (target) {
           target.querySelectorAll('.stagger-item').forEach((c, i) => {
             c.style.animationDelay = `${i * 0.1}s`;
           });
         }
+        
         // Close mobile sidebar after navigation
         const sidebar = document.getElementById('leftSidebar');
-        if (!sidebar.classList.contains('-translate-x-full')) {
+        if (sidebar && !sidebar.classList.contains('-translate-x-full')) {
           toggleMobileSidebar();
         }
+
+        // Initialize chart if navigating to chart page
+        if (page === 'chart') setTimeout(initIncomeChart, 50);
       }
 
       // ── Feature functions ──────────────────────────────────────────
@@ -704,13 +710,6 @@
             }
           }
         });
-      }
-
-      // Override navigateTo to also init chart when needed
-      const _navOriginal = navigateTo;
-      function navigateTo(page) {
-        _navOriginal(page);
-        if (page === 'chart') setTimeout(initIncomeChart, 50);
       }
     </script>
 
